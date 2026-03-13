@@ -1,0 +1,267 @@
+---
+title: "Markdown Styling Reference"
+section: "main"
+description: "A comprehensive demonstration of all supported markdown and MDX elements with their rendered styles."
+sidebar:
+  label: "Markdown Styling"
+  order: 5
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "ref-elements"
+---
+
+## Overview
+
+This page demonstrates every markdown element supported by Pathfinder. Use it as a visual reference for how different elements render in both light and dark modes.
+
+## Headings
+
+Markdown headings are rendered with consistent sizing and spacing:
+
+```markdown
+## Heading Level 2
+### Heading Level 3
+#### Heading Level 4
+##### Heading Level 5
+###### Heading Level 6
+```
+
+Each heading automatically generates an anchor ID based on its text, which can be used for direct linking.
+
+## Inline Text Formatting
+
+### Emphasis
+
+- *Italic text* is created with single asterisks: `*italic*`
+- **Bold text** is created with double asterisks: `**bold**`
+- ***Bold italic text*** uses triple asterisks: `***bold italic***`
+- ~~Strikethrough text~~ uses double tildes: `~~strikethrough~~`
+
+### Inline Code
+
+Use backticks for `inline code`. This is useful for referencing variable names, file paths, or short commands within a sentence.
+
+For example: Run `npm install` to install dependencies, then check the `package.json` file.
+
+### Links
+
+- [Internal link to another page](/docs/getting-started/configuration)
+- [External link to Astro docs](https://docs.astro.build)
+- [Link with title](https://example.com "Example Website")
+
+## Lists
+
+### Unordered Lists
+
+- First item
+- Second item
+  - Nested item A
+  - Nested item B
+    - Deeply nested item
+- Third item
+
+### Ordered Lists
+
+1. First step
+2. Second step
+   1. Sub-step A
+   2. Sub-step B
+3. Third step
+
+### Task Lists
+
+- [x] Completed task
+- [x] Another completed task
+- [ ] Pending task
+- [ ] Future task
+
+## Blockquotes
+
+> This is a simple blockquote. It is useful for highlighting a quote or important statement from another source.
+
+Nested blockquotes are also supported:
+
+> This is the outer quote.
+>
+> > This is a nested quote within the outer quote.
+>
+> Back to the outer quote.
+
+## Code Blocks
+
+### Basic Code Block
+
+```javascript
+function greet(name) {
+  return `Hello, ${name}! Welcome to Pathfinder.`;
+}
+
+const message = greet("Developer");
+console.log(message);
+```
+
+### Code Block with Line Highlighting
+
+```typescript
+interface DocPage {
+  title: string;
+  description?: string;
+  sidebar: {
+    label: string;
+    order: number;
+  };
+  draft: boolean;
+}
+
+const page: DocPage = {
+  title: "My Page",
+  sidebar: {
+    label: "My Page",
+    order: 1,
+  },
+  draft: false,
+};
+```
+
+### Code Block with Filename
+
+```bash title="Terminal"
+npm create astro@latest
+cd my-project
+npm install
+npm run dev
+```
+
+### Multi-Language Code Examples
+
+```python
+# Python example
+def calculate_total(items):
+    """Calculate the total price of all items."""
+    return sum(item.price * item.quantity for item in items)
+
+total = calculate_total(cart_items)
+print(f"Total: ${total:.2f}")
+```
+
+```json
+{
+  "name": "pathfinder-docs",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  }
+}
+```
+
+## Tables
+
+### Basic Table
+
+| Feature | Status | Version |
+|---|---|---|
+| Multi-language support | Available | 1.0 |
+| Dark mode | Available | 1.0 |
+| Search integration | Available | 1.1 |
+| View transitions | Available | 1.2 |
+| PDF export | Planned | 2.0 |
+
+### Alignment
+
+| Left Aligned | Center Aligned | Right Aligned |
+|:---|:---:|---:|
+| Content | Content | Content |
+| Left | Center | Right |
+| Text | Text | 123.45 |
+
+## Horizontal Rules
+
+Content above the horizontal rule.
+
+---
+
+Content below the horizontal rule.
+
+## Images
+
+Images are rendered responsively and support alt text:
+
+```markdown
+![Description of the image](/path/to/image.png)
+```
+
+## Keyboard Shortcuts
+
+Reference keyboard shortcuts using the `<kbd>` element:
+
+Press <kbd>Ctrl</kbd> + <kbd>C</kbd> to copy selected text.
+
+Use <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> to open the command palette.
+
+## Abbreviations and Definitions
+
+Use HTML definition lists for glossary-style content:
+
+<dl>
+  <dt>MDX</dt>
+  <dd>Markdown with JSX support, allowing you to use React/Astro components within Markdown files.</dd>
+
+  <dt>SSG</dt>
+  <dd>Static Site Generation — the process of generating HTML pages at build time rather than at request time.</dd>
+
+  <dt>HMR</dt>
+  <dd>Hot Module Replacement — a development feature that updates the browser without a full page reload.</dd>
+</dl>
+
+## Footnotes
+
+Pathfinder supports markdown footnotes for adding references and citations:
+
+```markdown
+This statement needs a citation[^1].
+
+[^1]: Source: Documentation Best Practices, 2024.
+```
+
+## Combining Elements
+
+Here is an example of how different elements work together in realistic documentation:
+
+### Configuring the Build Pipeline
+
+The build pipeline compiles your MDX content into static HTML. You can customize the build behavior by modifying `astro.config.mjs`.
+
+> **Note:** Changes to the Astro configuration require a server restart.
+
+To enable source maps for debugging:
+
+1. Open `astro.config.mjs`
+2. Add the `vite.build.sourcemap` option:
+
+```javascript
+// astro.config.mjs
+export default defineConfig({
+  vite: {
+    build: {
+      sourcemap: true,
+    },
+  },
+});
+```
+
+3. Restart the development server with `npm run dev`
+
+The following table summarizes the available build options:
+
+| Option | Type | Default | Description |
+|---|---|---|---|
+| `sourcemap` | `boolean` | `false` | Generate source maps for debugging |
+| `minify` | `boolean` | `true` | Minify the output HTML and CSS |
+| `outDir` | `string` | `"dist"` | Output directory for the build |
+
+For more information, see the [Astro Build Configuration](https://docs.astro.build/en/reference/configuration-reference/) documentation.

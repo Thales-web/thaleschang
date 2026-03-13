@@ -1,0 +1,256 @@
+---
+title: "Steps"
+section: "main"
+description: "Documentation for the Steps component that transforms ordered lists into visually distinct step-by-step instructions."
+sidebar:
+  label: "Steps"
+  order: 5
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: true
+mappingKey: "comp-steps"
+---
+
+## Overview
+
+The Steps component wraps standard Markdown ordered lists to create visually distinct, numbered step-by-step instructions. Each step is displayed with a prominent number indicator, a connecting vertical line, and clear visual separation between steps.
+
+Steps is auto-imported into every MDX file. You do not need to add any import statements to use it.
+
+## Basic Usage
+
+Wrap an ordered list inside the `<Steps>` component to transform it into a step-by-step guide:
+
+```mdx
+<Steps>
+
+1. Clone the repository from GitHub
+
+2. Install the project dependencies
+
+3. Start the development server
+
+4. Open your browser to view the site
+
+</Steps>
+```
+
+<Steps>
+
+1. Clone the repository from GitHub
+
+2. Install the project dependencies
+
+3. Start the development server
+
+4. Open your browser to view the site
+
+</Steps>
+
+<Aside variant="caution" title="Blank lines required">
+You must include blank lines between the `<Steps>` tags and the ordered list content. Without these blank lines, the Markdown parser will not process the list correctly.
+</Aside>
+
+## Rich Content in Steps
+
+Each step can contain any valid Markdown content, including paragraphs, code blocks, images, and nested components. This makes Steps ideal for tutorials and setup guides where each step needs detailed explanation.
+
+### Steps with Code Blocks
+
+```mdx
+<Steps>
+
+1. **Install dependencies**
+
+   Run the following command in your project directory:
+
+   ```bash
+   npm install
+   ```
+
+2. **Create a configuration file**
+
+   Add a new file called `docs.config.ts` to your project root:
+
+   ```typescript
+   import { defineConfig } from "./src/docs/config";
+
+   export default defineConfig({
+     title: "My Documentation",
+     defaultLocale: "en",
+     sidebar: {
+       collapsed: false,
+     },
+   });
+   ```
+
+3. **Start the development server**
+
+   Launch the dev server and verify everything is working:
+
+   ```bash
+   npm run dev
+   ```
+
+   The site should be available at `http://localhost:4321`.
+
+</Steps>
+```
+
+<Steps>
+
+1. **Install dependencies**
+
+   Run the following command in your project directory:
+
+   ```bash
+   npm install
+   ```
+
+2. **Create a configuration file**
+
+   Add a new file called `docs.config.ts` to your project root:
+
+   ```typescript
+   import { defineConfig } from "./src/docs/config";
+
+   export default defineConfig({
+     title: "My Documentation",
+     defaultLocale: "en",
+     sidebar: {
+       collapsed: false,
+     },
+   });
+   ```
+
+3. **Start the development server**
+
+   Launch the dev server and verify everything is working:
+
+   ```bash
+   npm run dev
+   ```
+
+   The site should be available at `http://localhost:4321`.
+
+</Steps>
+
+### Steps with Nested Components
+
+You can use other auto-imported components inside steps:
+
+```mdx
+<Steps>
+
+1. **Choose your authentication method**
+
+   <Aside variant="tip" title="Recommendation">
+   For most applications, OAuth 2.0 is the recommended authentication method.
+   It provides the best balance of security and developer experience.
+   </Aside>
+
+2. **Generate your API credentials**
+
+   Navigate to the developer dashboard and create a new application.
+   You will receive a client ID and client secret.
+
+   <Aside variant="danger" title="Keep secrets safe">
+   Never commit your client secret to version control. Use environment
+   variables instead.
+   </Aside>
+
+3. **Implement the authorization flow**
+
+   Follow the OAuth 2.0 guide for your chosen framework.
+
+</Steps>
+```
+
+### Steps with Lists and Tables
+
+Steps can contain sub-lists and tables for additional detail:
+
+```mdx
+<Steps>
+
+1. **Review the system requirements**
+
+   Ensure your environment meets these minimum requirements:
+
+   | Requirement | Minimum Version |
+   |---|---|
+   | Node.js | 18.14.1 |
+   | npm | 9.0 |
+   | Astro | 4.0 |
+
+2. **Choose your package manager**
+
+   Pathfinder supports all major Node.js package managers:
+
+   - **npm** — Included with Node.js, no additional installation needed
+   - **pnpm** — Faster and more disk-efficient than npm
+   - **yarn** — Feature-rich alternative with workspaces support
+
+3. **Verify your installation**
+
+   Run the following command to confirm everything is set up correctly:
+
+   ```bash
+   npx astro --version
+   ```
+
+</Steps>
+```
+
+## How It Works
+
+The Steps component applies custom CSS to transform a standard `<ol>` element into a visually styled step-by-step layout. Specifically, it:
+
+1. Replaces the default list numbering with large, styled number indicators
+2. Adds a vertical connecting line between steps
+3. Increases the spacing between list items for better readability
+4. Applies consistent typography for step headings and body content
+
+Because Steps operates on standard Markdown ordered lists, you get the benefit of graceful degradation. If the component fails to load for any reason, the content still renders as a normal numbered list.
+
+## Usage Guidelines
+
+### When to Use Steps
+
+- Installation and setup procedures with a clear sequence
+- Tutorial walkthroughs where order matters
+- Multi-stage processes like deployment pipelines
+- Configuration workflows with dependencies between stages
+
+### When Not to Use Steps
+
+- Unordered collections of tips or suggestions (use a regular list instead)
+- Single-step instructions (prose is sufficient)
+- Long reference lists (use tables or definition lists)
+- Steps that can be performed in any order (use an unordered list)
+
+### Writing Effective Steps
+
+Follow these guidelines for clear, actionable step content:
+
+1. **Start each step with a bold action phrase** — Begin with a verb that tells the reader what to do: "Install dependencies", "Create a configuration file", "Start the server".
+
+2. **Keep the number of steps manageable** — Aim for 3 to 7 steps. If you need more, consider breaking the process into multiple sections.
+
+3. **Include verification at the end** — The final step should help the reader confirm that the process was successful.
+
+4. **Provide context before code** — Add a brief explanation before each code block so the reader understands what the command does before running it.
+
+## Accessibility
+
+The Steps component preserves the semantic `<ol>` structure of the ordered list, which means:
+
+- Screen readers announce each item with its number in the sequence
+- The list can be navigated with standard list keyboard shortcuts
+- The total number of steps is communicated to assistive technology
+- The visual styling enhances readability without affecting the document outline

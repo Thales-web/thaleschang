@@ -1,0 +1,261 @@
+---
+title: "Button"
+section: "main"
+description: "Documentation for the Button component with eight visual variants, four sizes, and accessibility best practices."
+sidebar:
+  label: "Button"
+  order: 4
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "comp-button"
+---
+
+## Overview
+
+The Button component provides a styled, accessible clickable element for navigation and actions within your documentation. It supports eight visual variants and four sizes, making it suitable for primary calls to action, secondary navigation, and inline contextual actions.
+
+Button is auto-imported into every MDX file, so you can use it directly without an import statement.
+
+## Basic Usage
+
+```mdx
+<Button href="/docs/getting-started/configuration">Get Started</Button>
+```
+
+<Button href="/docs/getting-started/configuration">Get Started</Button>
+
+## Variants
+
+Button supports eight visual variants to match different levels of emphasis and semantic meaning.
+
+### Primary
+
+A high-emphasis button for the most important action on the page:
+
+```mdx
+<Button variant="primary" href="/docs/getting-started">Get Started</Button>
+```
+
+<Button variant="primary" href="/docs/getting-started">Get Started</Button>
+
+### Secondary (Default)
+
+The default variant with moderate emphasis, suitable for most actions:
+
+```mdx
+<Button variant="secondary" href="/docs/components">View Components</Button>
+```
+
+<Button variant="secondary" href="/docs/components">View Components</Button>
+
+### Outline
+
+A bordered button with a transparent background for low-emphasis actions:
+
+```mdx
+<Button variant="outline" href="/docs/reference/frontmatter-reference">Reference</Button>
+```
+
+<Button variant="outline" href="/docs/reference/frontmatter-reference">Reference</Button>
+
+### Ghost
+
+A minimal button with no border or background, appearing as styled text:
+
+```mdx
+<Button variant="ghost" href="/docs/components">Learn More</Button>
+```
+
+<Button variant="ghost" href="/docs/components">Learn More</Button>
+
+### Info
+
+A blue-toned button for informational actions:
+
+```mdx
+<Button variant="info" href="/docs/reference/nav-config">View Documentation</Button>
+```
+
+<Button variant="info" href="/docs/reference/nav-config">View Documentation</Button>
+
+### Success
+
+A green-toned button for confirmation or positive actions:
+
+```mdx
+<Button variant="success" href="/docs/getting-started">Installation Complete</Button>
+```
+
+<Button variant="success" href="/docs/getting-started">Installation Complete</Button>
+
+### Warning
+
+A yellow-toned button for actions that require caution:
+
+```mdx
+<Button variant="warning" href="/docs/reference/site-settings">Review Settings</Button>
+```
+
+<Button variant="warning" href="/docs/reference/site-settings">Review Settings</Button>
+
+### Error
+
+A red-toned button for destructive or irreversible actions:
+
+```mdx
+<Button variant="error" href="/docs/reference/frontmatter-reference">Delete Account</Button>
+```
+
+<Button variant="error" href="/docs/reference/frontmatter-reference">Delete Account</Button>
+
+### All Variants at a Glance
+
+```mdx
+<div class="not-content flex flex-wrap gap-2">
+  <Button variant="primary">Primary</Button>
+  <Button variant="secondary">Secondary</Button>
+  <Button variant="outline">Outline</Button>
+  <Button variant="ghost">Ghost</Button>
+  <Button variant="info">Info</Button>
+  <Button variant="success">Success</Button>
+  <Button variant="warning">Warning</Button>
+  <Button variant="error">Error</Button>
+</div>
+```
+
+## Sizes
+
+Button supports four size options to fit different layout contexts.
+
+### Small
+
+Compact buttons for inline use or dense layouts:
+
+```mdx
+<Button size="sm" variant="primary">Small Button</Button>
+```
+
+<Button size="sm" variant="primary">Small Button</Button>
+
+### Medium (Default)
+
+The standard size for most use cases:
+
+```mdx
+<Button size="md" variant="primary">Medium Button</Button>
+```
+
+<Button size="md" variant="primary">Medium Button</Button>
+
+### Large
+
+Larger buttons for hero sections or prominent calls to action:
+
+```mdx
+<Button size="lg" variant="primary">Large Button</Button>
+```
+
+<Button size="lg" variant="primary">Large Button</Button>
+
+### Icon
+
+A square button sized for icon-only content:
+
+```mdx
+<Button size="icon" variant="outline">+</Button>
+```
+
+<Button size="icon" variant="outline">+</Button>
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `variant` | `"primary" \| "secondary" \| "outline" \| "ghost" \| "info" \| "success" \| "warning" \| "error"` | `"secondary"` | The visual style and color scheme of the button |
+| `size` | `"sm" \| "md" \| "lg" \| "icon"` | `"md"` | Controls the padding, font size, and overall dimensions |
+| `href` | `string` | — | URL to navigate to when the button is clicked. When provided, the button renders as an anchor element |
+| `disabled` | `boolean` | `false` | When true, the button is visually dimmed and non-interactive |
+| `newTab` | `boolean` | `false` | When true, the link opens in a new browser tab with `target="_blank"` |
+
+## Practical Examples
+
+### Call-to-Action Pair
+
+A common pattern is pairing a primary button with a secondary button:
+
+```mdx
+<div class="not-content flex gap-3">
+  <Button variant="primary" href="/docs/getting-started/configuration">
+    Get Started
+  </Button>
+  <Button variant="outline" href="https://github.com/your-org/pathfinder">
+    View on GitHub
+  </Button>
+</div>
+```
+
+### Navigation Cards
+
+Use buttons inside card layouts to guide readers to related sections:
+
+```mdx
+<div class="not-content grid grid-cols-1 gap-4 sm:grid-cols-2">
+  <div class="rounded-lg border p-4 dark:border-gray-700">
+    <h3 class="mt-0 mb-2 text-lg font-semibold">Components</h3>
+    <p class="mb-3 text-sm text-gray-600 dark:text-gray-400">
+      Explore pre-built MDX components.
+    </p>
+    <Button variant="secondary" size="sm" href="/docs/components">
+      Browse Components
+    </Button>
+  </div>
+  <div class="rounded-lg border p-4 dark:border-gray-700">
+    <h3 class="mt-0 mb-2 text-lg font-semibold">Reference</h3>
+    <p class="mb-3 text-sm text-gray-600 dark:text-gray-400">
+      Configuration and frontmatter reference.
+    </p>
+    <Button variant="secondary" size="sm" href="/docs/reference/frontmatter-reference">
+      View Reference
+    </Button>
+  </div>
+</div>
+```
+
+### External Links
+
+Open external links in a new tab using the `newTab` prop:
+
+```mdx
+<Button variant="outline" href="https://astro.build" newTab>
+  Astro Documentation
+</Button>
+```
+
+## Accessibility
+
+The Button component follows WAI-ARIA button best practices:
+
+- **Semantic HTML** — When `href` is provided, the button renders as an `<a>` element. Without `href`, it renders as a `<button>` element. This ensures correct keyboard behavior and screen reader announcements.
+
+- **Focus indicators** — All button variants include visible focus rings that meet WCAG 2.1 AA contrast requirements. Focus rings are visible in both light and dark modes.
+
+- **Disabled state** — When `disabled` is true, the button sets `aria-disabled="true"` and removes the element from the tab order. The cursor changes to `not-allowed` to provide a visual cue.
+
+- **External links** — When `newTab` is true, the button adds `rel="noopener noreferrer"` for security and includes a visually hidden screen reader label indicating the link opens in a new window.
+
+- **Color contrast** — All variant and size combinations meet WCAG 2.1 AA minimum contrast ratio of 4.5:1 for normal text and 3:1 for large text.
+
+### Keyboard Interaction
+
+| Key | Behavior |
+|---|---|
+| `Enter` | Activates the button |
+| `Space` | Activates the button (when rendered as `<button>`) |
+| `Tab` | Moves focus to the next focusable element |
+| `Shift + Tab` | Moves focus to the previous focusable element |

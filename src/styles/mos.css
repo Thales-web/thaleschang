@@ -28,3 +28,18 @@
   transform: rotateY(-180deg);
   backface-visibility: hidden;
 }
+
+/* Fallback: if MOS JS fails to load, reveal elements after 2s */
+@keyframes mos-fallback-reveal {
+  to {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
+.use-animations [data-mos^="fade"]:not(.mos-animate),
+.use-animations [data-mos^="zoom"]:not(.mos-animate),
+.use-animations [data-mos^="flip"]:not(.mos-animate) {
+  animation: mos-fallback-reveal 0.6s ease-out 2s forwards;
+}

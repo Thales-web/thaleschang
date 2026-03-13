@@ -1,0 +1,239 @@
+---
+title: "Frontmatter Reference"
+section: "main"
+description: "A comprehensive reference of all available frontmatter fields for Pathfinder documentation pages."
+sidebar:
+  label: "Frontmatter Reference"
+  order: 1
+  badge:
+    text: "Updated"
+    variant: "caution"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "ref-frontmatter"
+---
+
+## Overview
+
+Every MDX documentation page in Pathfinder uses YAML frontmatter to define metadata, sidebar behavior, and page-level settings. This reference documents every available frontmatter field, its type, default value, and usage.
+
+Frontmatter is defined at the top of each MDX file between triple-dash delimiters:
+
+```yaml
+---
+title: "Page Title"
+section: "main"
+description: "A brief description of the page content."
+sidebar:
+  label: "Sidebar Label"
+  order: 1
+---
+```
+
+## Required Fields
+
+### `title`
+
+| Property | Value |
+|---|---|
+| Type | `string` |
+| Required | Yes |
+| Default | — |
+
+The page title displayed in the browser tab, at the top of the page, and used as the default sidebar label if no explicit label is set.
+
+```yaml
+title: "Getting Started with Pathfinder"
+section: "main"
+```
+
+## Optional Fields
+
+### `description`
+
+| Property | Value |
+|---|---|
+| Type | `string` |
+| Required | No |
+| Default | `""` |
+
+A brief description of the page content. Used in meta tags for SEO and may be displayed in search results.
+
+```yaml
+description: "Learn how to install and configure the Pathfinder documentation theme."
+```
+
+### `sidebar`
+
+The `sidebar` field is an object that controls how the page appears in the sidebar navigation.
+
+#### `sidebar.label`
+
+| Property | Value |
+|---|---|
+| Type | `string` |
+| Required | No |
+| Default | Value of `title` |
+
+The text displayed in the sidebar navigation. Use this to provide a shorter label than the full page title.
+
+```yaml
+sidebar:
+  label: "Setup"
+```
+
+#### `sidebar.order`
+
+| Property | Value |
+|---|---|
+| Type | `number` |
+| Required | No |
+| Default | `0` |
+
+Controls the sort order of the page within its sidebar section. Lower numbers appear first. Pages with the same order value are sorted alphabetically by label.
+
+```yaml
+sidebar:
+  order: 3
+```
+
+#### `sidebar.badge`
+
+| Property | Value |
+|---|---|
+| Type | `object` |
+| Required | No |
+| Default | — |
+
+Displays a small badge next to the sidebar label. Useful for marking pages as "New", "Updated", "Beta", etc.
+
+```yaml
+sidebar:
+  badge:
+    text: "New"
+    variant: "tip"
+```
+
+The `variant` property accepts: `"default"`, `"info"`, `"tip"`, `"caution"`, `"danger"`.
+
+### `tableOfContents`
+
+Controls the automatic table of contents generated for the page.
+
+#### `tableOfContents.minHeadingLevel`
+
+| Property | Value |
+|---|---|
+| Type | `number` |
+| Required | No |
+| Default | `2` |
+
+The minimum heading level to include in the table of contents. Set to `2` to start with `## H2` headings (excluding the page title).
+
+#### `tableOfContents.maxHeadingLevel`
+
+| Property | Value |
+|---|---|
+| Type | `number` |
+| Required | No |
+| Default | `3` |
+
+The maximum heading level to include. Set to `3` to include `## H2` and `### H3` headings but exclude deeper levels.
+
+```yaml
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 4
+```
+
+### `pagefind`
+
+| Property | Value |
+|---|---|
+| Type | `boolean` |
+| Required | No |
+| Default | `true` |
+
+Whether this page should be included in the Pagefind search index. Set to `false` to exclude a page from search results.
+
+```yaml
+pagefind: false
+```
+
+### `draft`
+
+| Property | Value |
+|---|---|
+| Type | `boolean` |
+| Required | No |
+| Default | `false` |
+
+When set to `true`, the page is excluded from the production build. Draft pages are still visible during development.
+
+```yaml
+draft: true
+```
+
+### `mappingKey`
+
+| Property | Value |
+|---|---|
+| Type | `string` |
+| Required | No |
+| Default | — |
+
+A unique key used to link equivalent pages across different locales for i18n support. Pages with the same `mappingKey` are treated as translations of each other, enabling the language switcher to navigate between them.
+
+```yaml
+mappingKey: "gs-intro"
+```
+
+## Complete Frontmatter Fields Table
+
+| Field | Type | Default | Required | Description |
+|---|---|---|---|---|
+| `title` | `string` | — | Yes | Page title |
+| `description` | `string` | `""` | No | SEO meta description |
+| `sidebar.label` | `string` | `title` | No | Sidebar display text |
+| `sidebar.order` | `number` | `0` | No | Sort order in sidebar |
+| `sidebar.badge.text` | `string` | — | No | Badge label text |
+| `sidebar.badge.variant` | `string` | `"default"` | No | Badge color variant |
+| `tableOfContents.minHeadingLevel` | `number` | `2` | No | Min heading level for TOC |
+| `tableOfContents.maxHeadingLevel` | `number` | `3` | No | Max heading level for TOC |
+| `pagefind` | `boolean` | `true` | No | Include in search index |
+| `draft` | `boolean` | `false` | No | Exclude from production |
+| `mappingKey` | `string` | — | No | i18n page linking key |
+
+## Example: Complete Frontmatter
+
+Here is an example with all available fields:
+
+```yaml
+---
+title: "Advanced Configuration"
+section: "main"
+description: "Deep dive into advanced Pathfinder configuration options for power users."
+sidebar:
+  label: "Advanced Config"
+  order: 5
+  badge:
+    text: "Updated"
+    variant: "caution"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 4
+pagefind: true
+draft: false
+mappingKey: "gs-advanced"
+---
+```
+
+## Notes
+
+- The `title` field is the only required field. All other fields have sensible defaults.
+- The `sidebar.order` field determines page ordering within a section. Use consistent numbering (e.g., increments of 1) to make reordering easier.
+- The `mappingKey` should be unique across all pages within a locale but identical across locales for the same conceptual page.
+- Setting `draft: true` during development lets you work on pages without publishing them. Remember to set it back to `false` when the page is ready.

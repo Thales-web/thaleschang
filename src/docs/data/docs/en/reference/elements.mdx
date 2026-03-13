@@ -1,0 +1,367 @@
+---
+title: "Markdown Styling"
+section: "main"
+description: "A comprehensive showcase of all supported Markdown and MDX elements with Pathfinder's typography styling."
+sidebar:
+  label: "Markdown Styling"
+  order: 5
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "ref-elements"
+---
+
+## Overview
+
+This page demonstrates every standard Markdown element supported by Pathfinder. Use it as a reference for how different elements are styled in both light and dark modes, and as a quick syntax guide when writing your own documentation.
+
+All elements below are rendered using Pathfinder's built-in typography styles, which are based on the Tailwind CSS Typography plugin with custom overrides for documentation-specific needs.
+
+## Headings
+
+Headings create the hierarchical structure of your page. They are also used to generate the table of contents displayed in the right sidebar. Use heading levels h2 through h4 for content structure. The h1 level is reserved for the page title generated from the `title` frontmatter field.
+
+## Second-Level Heading (H2)
+
+Second-level headings divide your page into major sections. They appear in the table of contents and are the primary structural unit for documentation pages.
+
+### Third-Level Heading (H3)
+
+Third-level headings subdivide sections into subtopics. They also appear in the table of contents when `maxHeadingLevel` is set to 3 or higher.
+
+#### Fourth-Level Heading (H4)
+
+Fourth-level headings are useful for detailed breakdowns within a subsection. They do not appear in the default table of contents configuration but can be included by setting `maxHeadingLevel: 4` in the frontmatter.
+
+## Emphasis and Inline Formatting
+
+Markdown provides several ways to emphasize text inline:
+
+- *Italic text* is created with single asterisks: `*italic text*`
+- **Bold text** is created with double asterisks: `**bold text**`
+- ***Bold italic text*** is created with triple asterisks: `***bold italic text***`
+- ~~Strikethrough text~~ is created with double tildes: `~~strikethrough text~~`
+- `Inline code` is created with backticks: `` `inline code` ``
+
+You can combine these styles within a sentence. For example: **This is bold with *italic inside* it**, or `code with **no bold** rendering`.
+
+## Links
+
+### Internal Links
+
+Link to other documentation pages using relative paths:
+
+- [Introduction](/docs/getting-started) — Link to the Getting Started overview
+- [Initial Setup](/docs/getting-started/configuration) — Link to the setup guide
+- [Aside Component](/docs/components/aside) — Link to a component page
+
+### External Links
+
+Link to external resources with full URLs:
+
+- [Astro Documentation](https://docs.astro.build) — The official Astro docs
+- [Tailwind CSS](https://tailwindcss.com) — The Tailwind CSS framework
+- [MDX](https://mdxjs.com) — The MDX specification and tooling
+
+### Anchor Links
+
+Link to headings on the same page using anchor fragments:
+
+- [Back to Overview](#overview) — Jump to the top of this page
+- [Code Blocks Section](#code-blocks) — Jump to the code blocks section
+
+## Paragraphs
+
+Paragraphs are the fundamental building block of documentation content. They are separated by blank lines in Markdown source. The Pathfinder typography styles apply comfortable line spacing (1.75) and a readable maximum line width to prevent eye strain on wide monitors.
+
+This is a second paragraph demonstrating the vertical spacing between paragraphs. Notice the consistent margin that creates clear visual separation without excessive whitespace.
+
+Short paragraphs like this one are perfectly fine. Not every paragraph needs to be long.
+
+## Lists
+
+### Unordered Lists
+
+Use unordered lists for items where the sequence does not matter:
+
+- First item in the list
+- Second item in the list
+- Third item with a **bold phrase** inside it
+- Fourth item with an [inline link](/docs/getting-started)
+
+Nested unordered lists are supported:
+
+- Top-level item
+  - Nested item one
+  - Nested item two
+    - Deeply nested item
+    - Another deeply nested item
+  - Nested item three
+- Another top-level item
+
+### Ordered Lists
+
+Use ordered lists when the sequence or priority matters:
+
+1. First step in the process
+2. Second step in the process
+3. Third step with additional context
+4. Fourth and final step
+
+Nested ordered lists:
+
+1. Prepare the environment
+   1. Install Node.js
+   2. Install npm packages
+   3. Verify the installation
+2. Configure the project
+   1. Create the configuration file
+   2. Set required values
+3. Deploy the site
+
+### Mixed Lists
+
+You can nest ordered lists inside unordered lists and vice versa:
+
+- Authentication methods:
+  1. API Key
+  2. OAuth 2.0
+  3. JWT Token
+- Authorization levels:
+  1. Read-only
+  2. Read-write
+  3. Admin
+
+## Code Blocks
+
+### Inline Code
+
+Use backticks for inline code: `const x = 42`, `npm install`, or `src/docs/config/`.
+
+### Fenced Code Blocks
+
+Use triple backticks with a language identifier for syntax-highlighted code blocks.
+
+#### TypeScript
+
+```typescript
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: "admin" | "editor" | "viewer";
+  createdAt: Date;
+}
+
+async function getUser(id: number): Promise<User> {
+  const response = await fetch(`/api/users/${id}`, {
+    headers: {
+      Authorization: `Bearer ${process.env.API_TOKEN}`,
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch user: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+const user = await getUser(123);
+console.log(`Welcome, ${user.name}!`);
+```
+
+#### Bash
+
+```bash
+# Clone the repository
+git clone https://github.com/your-org/pathfinder.git
+cd pathfinder
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+#### JSON
+
+```json
+{
+  "name": "@pathfinder/docs",
+  "version": "2.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^4.0.0",
+    "@astrojs/mdx": "^3.0.0"
+  }
+}
+```
+
+#### CSS
+
+```css
+.docs-sidebar {
+  position: sticky;
+  top: 4rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  padding: 1.5rem 0;
+  border-right: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+  .docs-sidebar {
+    position: fixed;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-in-out;
+  }
+}
+```
+
+#### HTML
+
+```html
+<nav class="docs-nav" aria-label="Documentation navigation">
+  <ul role="list">
+    <li>
+      <a href="/docs/getting-started" class="nav-link active">
+        Getting Started
+      </a>
+    </li>
+    <li>
+      <a href="/docs/components" class="nav-link">
+        Components
+      </a>
+    </li>
+  </ul>
+</nav>
+```
+
+## Blockquotes
+
+Use blockquotes to cite external sources or highlight quoted material:
+
+> Good documentation is not about writing perfect prose. It is about helping people accomplish their goals with the least amount of friction.
+
+Blockquotes can contain multiple paragraphs:
+
+> The first paragraph of the quote provides context.
+>
+> The second paragraph elaborates on the initial point with additional detail and supporting evidence.
+
+Blockquotes can also contain other Markdown elements:
+
+> **Key Principle:** Documentation should be organized around the reader's tasks, not the software's architecture.
+>
+> - Start with what the reader wants to achieve
+> - Provide the minimum necessary context
+> - Show a complete, working example
+> - Explain what happens and why
+
+## Tables
+
+Tables are useful for structured reference data:
+
+### Simple Table
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/users` | List all users |
+| GET | `/api/users/{id}` | Get a specific user |
+| POST | `/api/users` | Create a new user |
+| PUT | `/api/users/{id}` | Update a user |
+| DELETE | `/api/users/{id}` | Delete a user |
+
+### Table with Alignment
+
+| Property | Type | Default | Required |
+|:---|:---|:---:|:---:|
+| `title` | `string` | — | Yes |
+| `description` | `string` | `""` | No |
+| `order` | `number` | `0` | No |
+| `draft` | `boolean` | `false` | No |
+
+### Wide Table
+
+Tables that exceed the content width will scroll horizontally on smaller screens:
+
+| Status Code | Name | Category | Description | Common Cause |
+|---|---|---|---|---|
+| 200 | OK | Success | Request succeeded | Normal operation |
+| 201 | Created | Success | Resource created | Successful POST |
+| 400 | Bad Request | Client Error | Invalid syntax | Malformed JSON |
+| 401 | Unauthorized | Client Error | Authentication required | Missing token |
+| 403 | Forbidden | Client Error | Access denied | Insufficient permissions |
+| 404 | Not Found | Client Error | Resource missing | Invalid URL |
+| 429 | Too Many Requests | Client Error | Rate limited | Exceeded quota |
+| 500 | Internal Server Error | Server Error | Server failure | Unhandled exception |
+
+## Horizontal Rules
+
+Use horizontal rules to create visual separation between unrelated sections of content. They are created with three or more hyphens on a blank line:
+
+---
+
+The content above and below the horizontal rule are visually separated by a thin line with vertical spacing on both sides.
+
+## Images
+
+Images can be included using standard Markdown syntax:
+
+```markdown
+![Alt text describing the image](/path/to/image.png)
+```
+
+Images are automatically styled with:
+
+- Responsive width (never exceeds the content area)
+- Rounded corners
+- A subtle border in light mode and a darker border in dark mode
+- Centered alignment within the content column
+
+## Keyboard Shortcuts
+
+While not standard Markdown, you can represent keyboard shortcuts using the `<kbd>` HTML element:
+
+Press <kbd>Ctrl</kbd> + <kbd>S</kbd> to save the file.
+
+Use <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> to open the command palette.
+
+## Combining Elements
+
+In practice, documentation pages combine multiple element types. Here is an example of how different elements work together naturally:
+
+### Authentication Setup
+
+To configure API authentication, you need to generate an API key and include it in your request headers.
+
+1. Navigate to the **Developer Settings** page in your account dashboard
+2. Click **Generate New Key** and copy the generated value
+3. Add the key to your request headers:
+
+```typescript
+const headers = {
+  Authorization: "Bearer your-api-key-here",
+  "Content-Type": "application/json",
+};
+```
+
+> **Security note:** Never commit API keys to version control. Use environment variables instead.
+
+For more information, see the [Authentication Overview](/docs/authentication/overview).

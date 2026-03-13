@@ -171,6 +171,108 @@ const otherPagesCollection = defineCollection({
     }),
 });
 
+// documentation pages
+const docsCollection = defineCollection({
+  loader: glob({ pattern: "**/[^_]*{md,mdx}", base: "./src/docs/data/docs" }),
+  schema: () =>
+    z.object({
+      title: z.string(),
+      description: z.string().optional(),
+      // section field associates docs with specific documentation tabs (e.g. "main", "api", "tutorials")
+      section: z.string().default("main"),
+      sidebar: z
+        .object({
+          label: z.string().optional(),
+          order: z.number().optional(),
+          badge: z
+            .object({
+              text: z.string(),
+              variant: z
+                .enum(["note", "tip", "caution", "danger", "info"])
+                .default("note"),
+            })
+            .optional(),
+        })
+        .optional(),
+      tableOfContents: z
+        .object({
+          minHeadingLevel: z.number().min(1).max(6).optional(),
+          maxHeadingLevel: z.number().min(1).max(6).optional(),
+        })
+        .optional(),
+      pagefind: z.boolean().optional(),
+      draft: z.boolean().optional(),
+      // mappingKey allows you to match docs entries across languages
+      mappingKey: z.string().optional(),
+    }),
+});
+
+// candidates directory
+const candidatesCollection = defineCollection({
+  loader: glob({ pattern: "**/[^_]*{md,mdx}", base: "./src/data/candidates" }),
+  schema: ({ image }) =>
+    z.object({
+      firstName: z.string(),
+      lastName: z.string(),
+      email: z.string().email(),
+      phone: z.string().optional(),
+      resumeUrl: z.string().optional(),
+      coverLetter: z.string().optional(),
+      location: z.string().optional(),
+      experienceLevel: z.string().optional(),
+      jobPreferences: z.array(z.string()).optional(),
+      dateApplied: z.string(),
+      linkedinProfile: z.string().optional(),
+      githubProfile: z.string().optional(),
+      portfolioUrl: z.string().optional(),
+      status: z.string().optional(),
+      avatar: z
+        .object({
+          url: image(),
+          alt: z.string(),
+        })
+        .optional(),
+      isFeatured: z.boolean().optional(),
+      mappingKey: z.string().optional(),
+      draft: z.boolean().optional(),
+    }),
+});
+
+// companies directory
+const companiesCollection = defineCollection({
+  loader: glob({ pattern: "**/[^_]*{md,mdx}", base: "./src/data/companies" }),
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      founded: z.string().optional(),
+      headquarters: z.string().optional(),
+      website: z.string(),
+      hiringPage: z.string().optional(),
+      description: z.string(),
+      logo: image().optional(),
+      location: z.string().optional(),
+      size: z.string().optional(),
+      industry: z.string().optional(),
+      benefits: z.array(z.string()).optional(),
+      companyType: z.string().optional(),
+      remotePolicy: z.string().optional(),
+      culture: z.string().optional(),
+      mission: z.string().optional(),
+      about: z.string().optional(),
+      values: z.array(z.string()).optional(),
+      milestones: z.array(z.string()).optional(),
+      socials: z
+        .object({
+          twitter: z.string().optional(),
+          linkedin: z.string().optional(),
+          github: z.string().optional(),
+        })
+        .optional(),
+      mappingKey: z.string().optional(),
+      draft: z.boolean().optional(),
+    }),
+});
+
 // each code toggle section is it's own content file
 const codeToggleCollection = defineCollection({
   loader: glob({ pattern: "**/[^_]*{md,mdx}", base: "./src/data/codeToggles" }),
@@ -192,4 +294,7 @@ export const collections = {
   resume: resumeCollection,
   otherPages: otherPagesCollection,
   codeToggles: codeToggleCollection,
+  docs: docsCollection,
+  candidates: candidatesCollection,
+  companies: companiesCollection,
 };

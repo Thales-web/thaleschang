@@ -1,0 +1,352 @@
+---
+title: "REST API Endpoints"
+section: "api"
+description: "Complete reference for all REST API endpoints, including request and response formats, authentication, and error handling."
+sidebar:
+  label: "REST API Endpoints"
+  order: 1
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "api-rest"
+---
+
+## Overview
+
+The REST API provides programmatic access to all platform resources. All endpoints follow RESTful conventions, accept JSON request bodies, and return JSON responses. Authentication is required for all endpoints unless otherwise noted.
+
+## Base URL
+
+All API requests should be made to the following base URL:
+
+```
+https://api.example.com/v1
+```
+
+All endpoints described in this document are relative to this base URL. For example, the Users list endpoint is accessed at:
+
+```
+GET https://api.example.com/v1/users
+```
+
+<Aside variant="info" title="API versioning">
+The API is versioned using a URL prefix (`/v1`). When breaking changes are introduced, a new version prefix will be created (e.g., `/v2`). Existing versions will continue to receive bug fixes and security patches for at least 12 months after the next version is released.
+</Aside>
+
+## Authentication
+
+All API requests must include a valid authentication token in the `Authorization` header:
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_TOKEN" \
+  https://api.example.com/v1/users
+```
+
+See the [Authentication Overview](/docs/authentication/overview) for details on obtaining and managing API tokens.
+
+## Users Endpoints
+
+The Users API allows you to create, read, update, and delete user accounts.
+
+### List All Users
+
+Retrieve a paginated list of all users in the system.
+
+```
+GET /users
+```
+
+#### Query Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `page` | `integer` | `1` | Page number for pagination |
+| `limit` | `integer` | `25` | Number of results per page (max 100) |
+| `sort` | `string` | `"created_at"` | Field to sort by: `name`, `email`, `created_at` |
+| `order` | `string` | `"desc"` | Sort direction: `asc` or `desc` |
+| `role` | `string` | — | Filter by role: `admin`, `editor`, `viewer` |
+
+#### Example Request
+
+```bash
+curl -X GET "https://api.example.com/v1/users?page=1&limit=10&sort=name&order=asc" \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+#### Example Response
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "role": "admin",
+      "created_at": "2025-01-15T08:30:00Z",
+      "updated_at": "2025-06-20T14:45:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Bob Smith",
+      "email": "bob@example.com",
+      "role": "editor",
+      "created_at": "2025-02-10T11:00:00Z",
+      "updated_at": "2025-05-18T09:30:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total_items": 47,
+    "total_pages": 5
+  }
+}
+```
+
+### Get a Specific User
+
+Retrieve a single user by their unique identifier.
+
+```
+GET /users/{id}
+```
+
+#### Path Parameters
+
+| Parameter | Type | Description |
+|---|---|---|
+| `id` | `integer` | The unique identifier of the user |
+
+#### Example Request
+
+```bash
+curl -X GET "https://api.example.com/v1/users/1" \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+#### Example Response
+
+```json
+{
+  "data": {
+    "id": 1,
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
+    "role": "admin",
+    "avatar_url": "https://cdn.example.com/avatars/alice.jpg",
+    "created_at": "2025-01-15T08:30:00Z",
+    "updated_at": "2025-06-20T14:45:00Z",
+    "last_login_at": "2025-07-01T09:15:00Z",
+    "preferences": {
+      "theme": "dark",
+      "language": "en",
+      "notifications": true
+    }
+  }
+}
+```
+
+### Create a User
+
+Create a new user account.
+
+```
+POST /users
+```
+
+#### Request Body
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `name` | `string` | Yes | Full name of the user (2-100 characters) |
+| `email` | `string` | Yes | Valid email address (must be unique) |
+| `role` | `string` | No | User role: `admin`, `editor`, `viewer` (default: `viewer`) |
+| `password` | `string` | Yes | Password (minimum 8 characters, must include uppercase, lowercase, and number) |
+
+#### Example Request
+
+```bash
+curl -X POST "https://api.example.com/v1/users" \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Carol Davis",
+    "email": "carol@example.com",
+    "role": "editor",
+    "password": "SecurePass123"
+  }'
+```
+
+#### Example Response
+
+```json
+{
+  "data": {
+    "id": 48,
+    "name": "Carol Davis",
+    "email": "carol@example.com",
+    "role": "editor",
+    "created_at": "2025-07-15T10:30:00Z",
+    "updated_at": "2025-07-15T10:30:00Z"
+  },
+  "message": "User created successfully"
+}
+```
+
+<Aside variant="caution" title="Email uniqueness">
+The `email` field must be unique across all users. Attempting to create a user with an email that already exists will return a `409 Conflict` error.
+</Aside>
+
+## Products Endpoints
+
+The Products API provides access to the product catalog.
+
+### List All Products
+
+Retrieve a paginated list of all products.
+
+```
+GET /products
+```
+
+#### Query Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `page` | `integer` | `1` | Page number for pagination |
+| `limit` | `integer` | `25` | Number of results per page (max 100) |
+| `category` | `string` | — | Filter by product category |
+| `min_price` | `number` | — | Minimum price filter |
+| `max_price` | `number` | — | Maximum price filter |
+| `in_stock` | `boolean` | — | Filter by stock availability |
+| `search` | `string` | — | Full-text search across name and description |
+
+#### Example Request
+
+```bash
+curl -X GET "https://api.example.com/v1/products?category=electronics&in_stock=true&limit=5" \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json"
+```
+
+#### Example Response
+
+```json
+{
+  "data": [
+    {
+      "id": 101,
+      "name": "Wireless Keyboard",
+      "description": "Ergonomic wireless keyboard with backlit keys",
+      "category": "electronics",
+      "price": 79.99,
+      "currency": "USD",
+      "in_stock": true,
+      "stock_quantity": 142,
+      "created_at": "2025-03-01T12:00:00Z"
+    },
+    {
+      "id": 102,
+      "name": "USB-C Hub",
+      "description": "7-port USB-C hub with HDMI and ethernet",
+      "category": "electronics",
+      "price": 49.99,
+      "currency": "USD",
+      "in_stock": true,
+      "stock_quantity": 85,
+      "created_at": "2025-03-15T08:00:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 5,
+    "total_items": 23,
+    "total_pages": 5
+  }
+}
+```
+
+## Error Handling
+
+The API uses standard HTTP status codes to indicate the success or failure of requests. Error responses include a JSON body with additional details.
+
+### HTTP Status Codes
+
+| Status Code | Name | Description |
+|---|---|---|
+| `200` | OK | The request succeeded |
+| `201` | Created | A new resource was created successfully |
+| `204` | No Content | The request succeeded with no response body (e.g., DELETE) |
+| `400` | Bad Request | The request body is malformed or missing required fields |
+| `401` | Unauthorized | Authentication is missing or invalid |
+| `403` | Forbidden | The authenticated user lacks permission for this action |
+| `404` | Not Found | The requested resource does not exist |
+| `409` | Conflict | The request conflicts with existing data (e.g., duplicate email) |
+| `422` | Unprocessable Entity | The request body is valid JSON but contains semantic errors |
+| `429` | Too Many Requests | The rate limit has been exceeded |
+| `500` | Internal Server Error | An unexpected server error occurred |
+
+### Error Response Format
+
+All error responses follow a consistent format:
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Request validation failed",
+    "details": [
+      {
+        "field": "email",
+        "message": "Must be a valid email address"
+      },
+      {
+        "field": "password",
+        "message": "Must be at least 8 characters"
+      }
+    ]
+  }
+}
+```
+
+### Error Codes
+
+| Error Code | HTTP Status | Description |
+|---|---|---|
+| `VALIDATION_ERROR` | 400/422 | One or more request fields are invalid |
+| `AUTHENTICATION_REQUIRED` | 401 | No valid authentication token provided |
+| `PERMISSION_DENIED` | 403 | Insufficient permissions for the requested action |
+| `RESOURCE_NOT_FOUND` | 404 | The requested resource does not exist |
+| `DUPLICATE_RESOURCE` | 409 | A resource with the same unique field already exists |
+| `RATE_LIMITED` | 429 | Too many requests in the current window |
+| `INTERNAL_ERROR` | 500 | An unexpected server error occurred |
+
+<Aside variant="tip" title="Retry logic">
+For `429` and `500` errors, implement exponential backoff with jitter. The `Retry-After` header on `429` responses indicates how many seconds to wait before retrying. For `500` errors, retry up to 3 times with increasing delays.
+</Aside>
+
+## Rate Limiting
+
+All API endpoints are rate-limited to ensure fair usage. The current limits are:
+
+| Plan | Requests per Minute | Requests per Day |
+|---|---|---|
+| Free | 30 | 1,000 |
+| Pro | 100 | 10,000 |
+| Enterprise | 500 | 100,000 |
+
+Rate limit information is included in the response headers:
+
+```
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 87
+X-RateLimit-Reset: 1720000000
+```

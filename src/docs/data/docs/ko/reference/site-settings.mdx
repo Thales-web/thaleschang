@@ -1,0 +1,198 @@
+---
+title: "Site Settings"
+section: "main"
+description: "Reference guide for configuring global site settings in Pathfinder, including pagination, view transitions, and routing."
+sidebar:
+  label: "Site Settings"
+  order: 4
+  badge:
+    text: "Updated"
+    variant: "caution"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "ref-settings"
+---
+
+## Overview
+
+Global site settings are configured in `src/docs/config/siteSettings.ts`. This file controls site-wide behavior including pagination, view transitions, heading link buttons, and the documentation base route.
+
+## Configuration File
+
+The settings configuration is located at:
+
+```
+src/docs/config/siteSettings.ts
+```
+
+## Basic Structure
+
+```typescript
+// src/docs/config/siteSettings.ts
+export const siteSettings = {
+  copyLinkButtons: true,
+  useViewTransitions: true,
+  pagination: true,
+  docsRoute: "/docs",
+};
+```
+
+## Settings Reference
+
+### `copyLinkButtons`
+
+| Property | Value |
+|---|---|
+| Type | `boolean` |
+| Default | `true` |
+
+When enabled, every heading (H2, H3, H4) in the documentation content displays a small link icon on hover. Clicking the icon copies the heading's anchor URL to the clipboard.
+
+```typescript
+copyLinkButtons: true,
+```
+
+This feature is useful for sharing direct links to specific sections of a page. Set to `false` if you prefer a cleaner heading appearance.
+
+### `useViewTransitions`
+
+| Property | Value |
+|---|---|
+| Type | `boolean` |
+| Default | `true` |
+
+Enables the View Transitions API for smooth page transitions within the documentation. When a user navigates between pages, the content fades and slides instead of performing a full page reload.
+
+```typescript
+useViewTransitions: true,
+```
+
+View transitions require browser support. In browsers that do not support the API, navigation falls back to standard page loads automatically.
+
+### `pagination`
+
+| Property | Value |
+|---|---|
+| Type | `boolean` |
+| Default | `true` |
+
+Controls whether "Previous" and "Next" navigation links are displayed at the bottom of each documentation page. These links follow the sidebar ordering, making it easy for readers to progress through the documentation sequentially.
+
+```typescript
+pagination: true,
+```
+
+Set to `false` if your documentation is primarily a reference that readers access non-sequentially.
+
+### `docsRoute`
+
+| Property | Value |
+|---|---|
+| Type | `string` |
+| Default | `"/docs"` |
+
+The base URL path for the documentation section. All documentation pages are served under this route.
+
+```typescript
+docsRoute: "/docs",
+```
+
+For example, with the default value, a page at `data/docs/en/getting-started/index.mdx` would be accessible at `/docs/getting-started`.
+
+If you change this value, you also need to update the route file location in `src/pages/`.
+
+## Complete Example
+
+Here is a complete site settings configuration with all options:
+
+```typescript
+// src/docs/config/siteSettings.ts
+export const siteSettings = {
+  // Display anchor link buttons on headings
+  copyLinkButtons: true,
+
+  // Enable smooth page transitions
+  useViewTransitions: true,
+
+  // Show prev/next navigation at page bottom
+  pagination: true,
+
+  // Base route for documentation pages
+  docsRoute: "/docs",
+};
+```
+
+## Common Configurations
+
+### Minimal Documentation Site
+
+For a simple documentation site without extra features:
+
+```typescript
+export const siteSettings = {
+  copyLinkButtons: false,
+  useViewTransitions: false,
+  pagination: true,
+  docsRoute: "/docs",
+};
+```
+
+### Full-Featured Documentation Site
+
+For a documentation site with all features enabled:
+
+```typescript
+export const siteSettings = {
+  copyLinkButtons: true,
+  useViewTransitions: true,
+  pagination: true,
+  docsRoute: "/docs",
+};
+```
+
+### Documentation as Subdirectory
+
+For documentation that lives under a subdirectory of a larger site:
+
+```typescript
+export const siteSettings = {
+  copyLinkButtons: true,
+  useViewTransitions: true,
+  pagination: true,
+  docsRoute: "/products/my-product/docs",
+};
+```
+
+## How Settings Affect the Layout
+
+| Setting | Affected Area | Visual Change |
+|---|---|---|
+| `copyLinkButtons` | Content headings | Link icon appears on hover |
+| `useViewTransitions` | Page navigation | Smooth crossfade between pages |
+| `pagination` | Page bottom | Previous/Next links shown or hidden |
+| `docsRoute` | URL structure | Changes the base path for all docs pages |
+
+## Environment-Specific Settings
+
+The site settings file is loaded at build time. If you need different settings for different environments, you can use environment variables:
+
+```typescript
+export const siteSettings = {
+  copyLinkButtons: true,
+  useViewTransitions: import.meta.env.PROD,
+  pagination: true,
+  docsRoute: import.meta.env.PUBLIC_DOCS_ROUTE || "/docs",
+};
+```
+
+This example disables view transitions during development (where they can interfere with hot module replacement) and allows the docs route to be configured via environment variable.
+
+## Best Practices
+
+- **Enable pagination for guides** — Sequential documentation like tutorials and getting-started guides benefit from previous/next navigation.
+- **Disable pagination for references** — Reference pages are accessed randomly, so pagination links may be confusing.
+- **Test view transitions** — View transitions can occasionally conflict with client-side JavaScript. Test thoroughly before enabling in production.
+- **Keep the docs route simple** — Short, memorable routes like `/docs` are easier for users to remember and share.

@@ -39,6 +39,14 @@ export default defineConfig({
       imports: [
         // https://github.com/delucis/astro-auto-import
         "@/components/admonition/Admonition.astro",
+        // docs MDX components
+        "@/docs/components/mdx-components/Aside.astro",
+        "@/docs/components/mdx-components/Badge.astro",
+        "@/docs/components/mdx-components/Steps.astro",
+        "@/docs/components/mdx-components/Tabs.astro",
+        "@/docs/components/mdx-components/TabsContent.astro",
+        "@/docs/components/mdx-components/TabsList.astro",
+        "@/docs/components/mdx-components/TabsTrigger.astro",
       ],
     }),
     mdx(),
@@ -60,6 +68,9 @@ export default defineConfig({
     // stop inlining short scripts to fix issues with ClientRouter
     build: {
       assetsInlineLimit: 0,
+    },
+    optimizeDeps: {
+      include: ["motion-on-scroll"],
     },
   },
 });

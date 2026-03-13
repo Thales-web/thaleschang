@@ -151,6 +151,14 @@ const navConfig: navItem[] = [
         link: "/resume",
       },
       {
+        text: "Candidates",
+        link: "/candidates",
+      },
+      {
+        text: "Companies",
+        link: "/companies",
+      },
+      {
         text: "Careers",
         link: "/careers",
       },

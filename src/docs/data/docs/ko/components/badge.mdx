@@ -1,0 +1,164 @@
+---
+title: "Badge Component"
+section: "main"
+description: "An inline badge component with multiple color variants and sizes for displaying status indicators, labels, and tags."
+sidebar:
+  label: "Badge"
+  order: 3
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "comp-badge"
+---
+
+## Overview
+
+The Badge component displays small inline labels for categorization, status indicators, or version tags. Badges are useful for drawing attention to metadata without interrupting the flow of content.
+
+Badge is auto-imported in all MDX files, so you can use it without an import statement.
+
+## Basic Usage
+
+```mdx
+<Badge text="New" />
+```
+
+You can also use Badge inline within a paragraph:
+
+```mdx
+This feature is currently <Badge text="Beta" variant="caution" /> and may change in future releases.
+```
+
+## Variants
+
+The Badge component supports five color variants:
+
+### Default
+
+```mdx
+<Badge text="Default" variant="default" />
+```
+
+A neutral gray badge suitable for general-purpose labels.
+
+### Info
+
+```mdx
+<Badge text="Info" variant="info" />
+```
+
+A blue badge for informational labels such as version numbers or categories.
+
+### Tip
+
+```mdx
+<Badge text="Tip" variant="tip" />
+```
+
+A green badge for positive indicators like "Stable", "Recommended", or "New".
+
+### Caution
+
+```mdx
+<Badge text="Caution" variant="caution" />
+```
+
+An amber badge for warning indicators like "Beta", "Experimental", or "Deprecated".
+
+### Danger
+
+```mdx
+<Badge text="Danger" variant="danger" />
+```
+
+A red badge for critical indicators like "Breaking Change", "Removed", or "Security".
+
+## Sizes
+
+Badges come in three sizes to accommodate different contexts:
+
+### Small
+
+```mdx
+<Badge text="Small" size="sm" />
+```
+
+Best for inline use within body text or table cells.
+
+### Medium (Default)
+
+```mdx
+<Badge text="Medium" size="md" />
+```
+
+The default size, suitable for most contexts including headings and labels.
+
+### Large
+
+```mdx
+<Badge text="Large" size="lg" />
+```
+
+Best for standalone use or when extra emphasis is needed.
+
+## Props Reference
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `text` | `string` | — | **Required.** The text content displayed in the badge |
+| `variant` | `"default" \| "info" \| "tip" \| "caution" \| "danger"` | `"default"` | The color variant of the badge |
+| `size` | `"sm" \| "md" \| "lg"` | `"md"` | The size of the badge |
+
+## Styling Details
+
+### Color Mapping
+
+| Variant | Background (Light) | Text (Light) | Background (Dark) | Text (Dark) |
+|---|---|---|---|---|
+| default | Gray 100 | Gray 800 | Gray 800 | Gray 200 |
+| info | Blue 100 | Blue 800 | Blue 900 | Blue 200 |
+| tip | Green 100 | Green 800 | Green 900 | Green 200 |
+| caution | Amber 100 | Amber 800 | Amber 900 | Amber 200 |
+| danger | Red 100 | Red 800 | Red 900 | Red 200 |
+
+### Size Mapping
+
+| Size | Font Size | Padding (x) | Padding (y) | Border Radius |
+|---|---|---|---|---|
+| sm | 0.7rem | 0.375rem | 0.125rem | 0.25rem |
+| md | 0.75rem | 0.5rem | 0.125rem | 0.375rem |
+| lg | 0.875rem | 0.625rem | 0.25rem | 0.375rem |
+
+## Usage in Frontmatter
+
+Badges can also be applied to sidebar labels through the page frontmatter:
+
+```yaml
+---
+title: "My Page"
+section: "main"
+sidebar:
+  label: "My Page"
+  badge:
+    text: "New"
+    variant: "tip"
+---
+```
+
+This displays a badge next to the page title in the sidebar navigation.
+
+## Accessibility
+
+- Badges use `display: inline-flex` to align properly with surrounding text
+- Font weight is set to semi-bold for readability at small sizes
+- Color contrast ratios meet WCAG 2.1 AA requirements for all variant and mode combinations
+- Badges are purely decorative and do not convey information that is not also available in context
+
+## Best Practices
+
+- **Use consistent variants** — Establish a convention for which variant maps to which meaning (e.g., tip for "New", caution for "Beta") and apply it consistently across your documentation.
+- **Keep text short** — Badge text should be one or two words. Longer text should use an Aside or inline text instead.
+- **Avoid overuse** — A page with too many badges creates visual clutter. Reserve badges for genuinely useful status indicators.
+- **Combine with context** — Always ensure the badge meaning is clear from context. Do not rely on the badge color alone to convey meaning.

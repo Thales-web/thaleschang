@@ -1,0 +1,240 @@
+---
+title: "Authentication Overview"
+section: "api"
+description: "A comprehensive guide to authentication methods supported by the API, including API keys, OAuth 2.0, JWT, and session-based authentication."
+sidebar:
+  label: "Authentication Overview"
+  order: 1
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "auth-overview"
+---
+
+## Overview
+
+The API supports multiple authentication methods to accommodate different use cases. Choose the method that best fits your application architecture and security requirements.
+
+| Method | Best For | Complexity |
+|---|---|---|
+| API Keys | Server-to-server communication | Low |
+| OAuth 2.0 | Third-party integrations | High |
+| JWT | Stateless authentication | Medium |
+| Sessions | Traditional web applications | Medium |
+
+## API Keys
+
+API keys are the simplest authentication method. They are ideal for server-side applications, CLI tools, and automated scripts.
+
+### Generating an API Key
+
+1. Navigate to your account dashboard
+2. Open the **Settings** section
+3. Click **API Keys** in the sidebar
+4. Click **Generate New Key**
+5. Copy the key immediately — it will not be shown again
+
+### Using an API Key
+
+Include the API key in the `Authorization` header of every request:
+
+```bash
+curl -H "Authorization: Bearer sk_live_abc123def456" \
+  https://api.example.com/v1/users
+```
+
+### Key Types
+
+| Type | Prefix | Permissions | Use Case |
+|---|---|---|---|
+| Live | `sk_live_` | Full production access | Production applications |
+| Test | `sk_test_` | Sandbox access only | Development and testing |
+| Read-only | `sk_read_` | GET requests only | Analytics and reporting |
+
+### Key Rotation
+
+For security, rotate your API keys regularly:
+
+```bash
+# Generate a new key via the API
+curl -X POST \
+  -H "Authorization: Bearer sk_live_current_key" \
+  https://api.example.com/v1/api-keys/rotate
+```
+
+The old key remains valid for 24 hours after rotation, giving you time to update your applications.
+
+## OAuth 2.0
+
+OAuth 2.0 is recommended for applications that access the API on behalf of other users. It provides granular permission scopes and token expiration.
+
+### Authorization Flow
+
+The API supports the Authorization Code flow:
+
+1. **Redirect the user** to the authorization endpoint:
+
+```
+https://auth.example.com/authorize?
+  response_type=code&
+  client_id=YOUR_CLIENT_ID&
+  redirect_uri=https://yourapp.com/callback&
+  scope=read:users write:users&
+  state=random_state_value
+```
+
+2. **Receive the authorization code** at your callback URL:
+
+```
+https://yourapp.com/callback?code=AUTH_CODE&state=random_state_value
+```
+
+3. **Exchange the code for tokens**:
+
+```bash
+curl -X POST https://auth.example.com/token \
+  -H "Content-Type: application/json" \
+  -d '{
+    "grant_type": "authorization_code",
+    "code": "AUTH_CODE",
+    "client_id": "YOUR_CLIENT_ID",
+    "client_secret": "YOUR_CLIENT_SECRET",
+    "redirect_uri": "https://yourapp.com/callback"
+  }'
+```
+
+4. **Use the access token**:
+
+```bash
+curl -H "Authorization: Bearer ACCESS_TOKEN" \
+  https://api.example.com/v1/users
+```
+
+### Available Scopes
+
+| Scope | Description |
+|---|---|
+| `read:users` | Read user data |
+| `write:users` | Create and update users |
+| `read:products` | Read product data |
+| `write:products` | Create and update products |
+| `admin` | Full administrative access |
+
+## JWT (JSON Web Tokens)
+
+JWT authentication is suitable for stateless applications that need to verify identity without server-side session storage.
+
+### Token Structure
+
+A JWT consists of three parts separated by dots:
+
+```
+header.payload.signature
+```
+
+### Obtaining a JWT
+
+Authenticate with your credentials to receive a token:
+
+```bash
+curl -X POST https://auth.example.com/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "secure_password"
+  }'
+```
+
+Response:
+
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expires_in": 3600,
+  "token_type": "Bearer"
+}
+```
+
+### Token Refresh
+
+Access tokens expire after one hour. Use the refresh token to obtain a new access token:
+
+```bash
+curl -X POST https://auth.example.com/refresh \
+  -H "Content-Type: application/json" \
+  -d '{
+    "refresh_token": "YOUR_REFRESH_TOKEN"
+  }'
+```
+
+## Session-Based Authentication
+
+Session authentication is appropriate for traditional web applications where the server maintains session state.
+
+### Login
+
+```bash
+curl -X POST https://api.example.com/v1/sessions \
+  -H "Content-Type: application/json" \
+  -c cookies.txt \
+  -d '{
+    "email": "user@example.com",
+    "password": "secure_password"
+  }'
+```
+
+### Using Sessions
+
+Include the session cookie in subsequent requests:
+
+```bash
+curl -b cookies.txt \
+  https://api.example.com/v1/users
+```
+
+### Logout
+
+```bash
+curl -X DELETE https://api.example.com/v1/sessions \
+  -b cookies.txt
+```
+
+## Security Best Practices
+
+### General
+
+- **Use HTTPS** — Always make API requests over HTTPS. HTTP requests are rejected.
+- **Store secrets securely** — Never hardcode API keys or secrets in client-side code or version control.
+- **Use environment variables** — Store credentials in environment variables or a secrets manager.
+
+### API Keys
+
+- **Rotate regularly** — Rotate keys at least every 90 days.
+- **Use minimum permissions** — Choose the key type with the least permissions necessary.
+- **Monitor usage** — Review API key usage logs for unusual activity.
+
+### OAuth
+
+- **Validate the state parameter** — Always verify the `state` parameter in the callback to prevent CSRF attacks.
+- **Request minimal scopes** — Only request the OAuth scopes your application actually needs.
+- **Store tokens securely** — Use encrypted storage for refresh tokens.
+
+### JWT
+
+- **Short expiration** — Keep access token expiration short (1 hour or less).
+- **Verify signatures** — Always verify the JWT signature server-side before trusting the payload.
+- **Use refresh tokens** — Implement refresh token rotation for long-lived sessions.
+
+## Choosing an Authentication Method
+
+| Requirement | Recommended Method |
+|---|---|
+| Simple server-to-server calls | API Keys |
+| Third-party app integration | OAuth 2.0 |
+| Mobile or SPA applications | JWT |
+| Traditional web application | Sessions |
+| Automated scripts and CI/CD | API Keys |
+| Microservice communication | JWT or API Keys |

@@ -1,0 +1,38 @@
+---
+/**
+ * English docs index redirects to the first document page.
+ */
+import { docsRoute, getAllDocs, getTabSections } from "@/js/docsUtils";
+import { getLocalizedRoute } from "@/js/translationUtils";
+
+const allDocs = await getAllDocs("en");
+const tabSections = getTabSections("main", "en");
+
+if (tabSections.length > 0 && allDocs.length > 0) {
+  const mainDocs = allDocs.filter((doc) => doc.data.section === "main");
+  const firstSection = tabSections[0];
+  const indexDoc = mainDocs.find(
+    (doc) => doc.id === firstSection.id || doc.id === `${firstSection.id}/index`,
+  );
+
+  if (indexDoc) {
+    return Astro.redirect(getLocalizedRoute("en", `/${docsRoute}/${indexDoc.id}`));
+  }
+
+  const sortedDocs = mainDocs
+    .filter((doc) => doc.id.startsWith(firstSection.id + "/"))
+    .sort((a, b) => {
+      const orderA = a.data.sidebar?.order ?? 999;
+      const orderB = b.data.sidebar?.order ?? 999;
+      return orderA - orderB;
+    });
+
+  if (sortedDocs.length > 0) {
+    return Astro.redirect(getLocalizedRoute("en", `/${docsRoute}/${sortedDocs[0].id}`));
+  }
+}
+
+if (allDocs.length > 0) {
+  return Astro.redirect(getLocalizedRoute("en", `/${docsRoute}/${allDocs[0].id}`));
+}
+---

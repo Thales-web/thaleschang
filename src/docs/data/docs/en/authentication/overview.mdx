@@ -1,0 +1,326 @@
+---
+title: "Authentication Overview"
+section: "api"
+description: "Comprehensive guide to authentication methods including API keys, OAuth 2.0, JWT tokens, and session management."
+sidebar:
+  label: "Authentication Overview"
+  order: 1
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "auth-overview"
+---
+
+## Overview
+
+The platform supports multiple authentication methods to accommodate different integration patterns. Whether you are building a server-side integration, a single-page application, or a mobile app, there is an authentication method suited to your use case.
+
+All API requests must be authenticated. Unauthenticated requests will receive a `401 Unauthorized` response.
+
+## Authentication Methods
+
+| Method | Best For | Security Level |
+|---|---|---|
+| API Keys | Server-to-server integrations | Medium |
+| OAuth 2.0 | Third-party applications and user-facing integrations | High |
+| JWT Tokens | Stateless authentication for microservices | High |
+| Session Tokens | Traditional web applications | Medium |
+
+## API Keys
+
+API keys are the simplest authentication method. They are ideal for server-side integrations where the key can be stored securely and never exposed to end users.
+
+### Generating an API Key
+
+<Steps>
+
+1. **Log in to your account dashboard**
+
+   Navigate to `https://dashboard.example.com` and sign in with your credentials.
+
+2. **Open Developer Settings**
+
+   Click on your profile menu in the top-right corner and select **Developer Settings**.
+
+3. **Create a new API key**
+
+   Click **Generate New Key**. Provide a descriptive name for the key (e.g., "Production Server" or "CI Pipeline").
+
+4. **Copy and store the key securely**
+
+   The key is displayed only once. Copy it immediately and store it in a secure location such as a password manager or environment variable.
+
+</Steps>
+
+### Using API Keys
+
+Include the API key in the `Authorization` header of every request:
+
+```bash
+curl -X GET "https://api.example.com/v1/users" \
+  -H "Authorization: Bearer pk_live_abc123def456ghi789"
+```
+
+In a TypeScript application:
+
+```typescript
+const API_KEY = process.env.API_KEY;
+
+const response = await fetch("https://api.example.com/v1/users", {
+  headers: {
+    Authorization: `Bearer ${API_KEY}`,
+    "Content-Type": "application/json",
+  },
+});
+
+const data = await response.json();
+```
+
+<Aside variant="danger" title="Security warning">
+Never expose API keys in client-side code, public repositories, or browser network requests. API keys should only be used in server-side environments where they cannot be intercepted.
+</Aside>
+
+### API Key Permissions
+
+Each API key can be scoped to specific permissions:
+
+| Permission | Description |
+|---|---|
+| `read` | Read-only access to all resources |
+| `write` | Create and update resources |
+| `delete` | Delete resources |
+| `admin` | Full access including account management |
+
+To create a read-only key, select only the `read` permission when generating the key.
+
+## OAuth 2.0
+
+OAuth 2.0 is the recommended authentication method for applications that act on behalf of users. It provides a secure authorization flow without exposing user credentials to your application.
+
+### Authorization Code Flow
+
+The Authorization Code flow is a five-step process for obtaining an access token:
+
+<Steps>
+
+1. **Redirect the user to the authorization endpoint**
+
+   Construct an authorization URL and redirect the user's browser:
+
+   ```
+   https://auth.example.com/authorize
+     ?client_id=YOUR_CLIENT_ID
+     &redirect_uri=https://yourapp.com/callback
+     &response_type=code
+     &scope=read write
+     &state=random_csrf_token
+   ```
+
+2. **User grants permission**
+
+   The user reviews the requested permissions and clicks **Authorize**. The authorization server validates the request and prepares an authorization code.
+
+3. **Receive the authorization code**
+
+   After the user grants permission, they are redirected back to your `redirect_uri` with an authorization code:
+
+   ```
+   https://yourapp.com/callback?code=AUTH_CODE_HERE&state=random_csrf_token
+   ```
+
+   <Aside variant="caution" title="Verify the state parameter">
+   Always compare the returned `state` parameter with the value you sent in step 1. If they do not match, the request may have been tampered with. Reject the callback and do not exchange the code.
+   </Aside>
+
+4. **Exchange the code for an access token**
+
+   Make a server-side POST request to exchange the authorization code for an access token:
+
+   ```bash
+   curl -X POST "https://auth.example.com/token" \
+     -H "Content-Type: application/x-www-form-urlencoded" \
+     -d "grant_type=authorization_code" \
+     -d "code=AUTH_CODE_HERE" \
+     -d "client_id=YOUR_CLIENT_ID" \
+     -d "client_secret=YOUR_CLIENT_SECRET" \
+     -d "redirect_uri=https://yourapp.com/callback"
+   ```
+
+5. **Use the access token**
+
+   Include the access token in API requests:
+
+   ```bash
+   curl -X GET "https://api.example.com/v1/users/me" \
+     -H "Authorization: Bearer ACCESS_TOKEN_HERE"
+   ```
+
+</Steps>
+
+### Token Response
+
+A successful token exchange returns the following JSON:
+
+```json
+{
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "rt_abc123def456",
+  "scope": "read write"
+}
+```
+
+### Refreshing Tokens
+
+Access tokens expire after the duration specified by `expires_in` (in seconds). Use the refresh token to obtain a new access token without requiring user interaction:
+
+```bash
+curl -X POST "https://auth.example.com/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=refresh_token" \
+  -d "refresh_token=rt_abc123def456" \
+  -d "client_id=YOUR_CLIENT_ID" \
+  -d "client_secret=YOUR_CLIENT_SECRET"
+```
+
+## JWT Tokens
+
+JSON Web Tokens (JWT) provide a compact, self-contained method for transmitting authentication claims between services. JWTs are commonly used in microservice architectures where each service needs to verify the caller's identity without making a database lookup.
+
+### Token Structure
+
+A JWT consists of three parts separated by dots:
+
+```
+header.payload.signature
+```
+
+| Part | Purpose | Content |
+|---|---|---|
+| Header | Token metadata | Algorithm (`alg`) and token type (`typ`) |
+| Payload | Claims and user data | User ID, roles, expiration time |
+| Signature | Integrity verification | Cryptographic signature of header and payload |
+
+### Decoding a JWT
+
+The payload of a typical JWT contains:
+
+```json
+{
+  "sub": "user_123",
+  "name": "Alice Johnson",
+  "role": "admin",
+  "iat": 1720000000,
+  "exp": 1720003600,
+  "iss": "https://auth.example.com"
+}
+```
+
+| Claim | Description |
+|---|---|
+| `sub` | Subject — the user's unique identifier |
+| `name` | User's display name |
+| `role` | User's authorization role |
+| `iat` | Issued At — timestamp when the token was created |
+| `exp` | Expiration — timestamp when the token expires |
+| `iss` | Issuer — the service that created the token |
+
+### Validating JWTs
+
+When receiving a JWT, always validate the following:
+
+1. **Signature** — Verify the signature using the issuer's public key
+2. **Expiration** — Reject tokens where `exp` is in the past
+3. **Issuer** — Confirm `iss` matches your expected authentication server
+4. **Audience** — If present, verify `aud` matches your service identifier
+
+```typescript
+import jwt from "jsonwebtoken";
+
+const PUBLIC_KEY = process.env.JWT_PUBLIC_KEY;
+
+function validateToken(token: string) {
+  try {
+    const decoded = jwt.verify(token, PUBLIC_KEY, {
+      algorithms: ["RS256"],
+      issuer: "https://auth.example.com",
+    });
+    return decoded;
+  } catch (error) {
+    throw new Error(`Token validation failed: ${error.message}`);
+  }
+}
+```
+
+## Session Management
+
+Session-based authentication is suitable for traditional web applications where the server maintains session state. After a successful login, the server creates a session and returns a session token as an HTTP cookie.
+
+### Session Lifecycle
+
+| Event | Duration | Action |
+|---|---|---|
+| Login | — | Server creates session, sets cookie |
+| Active use | 24 hours | Session timer resets on each request |
+| Idle timeout | 30 minutes | Session expires if no requests are made |
+| Maximum lifetime | 24 hours | Session expires regardless of activity |
+| Logout | — | Server destroys session, clears cookie |
+
+### Session Configuration
+
+Sessions are configured with the following defaults:
+
+```typescript
+const sessionConfig = {
+  maxAge: 86400,         // 24 hours in seconds
+  idleTimeout: 1800,     // 30 minutes in seconds
+  secure: true,          // HTTPS only
+  httpOnly: true,        // Not accessible via JavaScript
+  sameSite: "strict",    // CSRF protection
+  domain: ".example.com" // Shared across subdomains
+};
+```
+
+<Aside variant="info" title="Session validity">
+Sessions have a maximum validity of 24 hours from creation. After 24 hours, the user must re-authenticate regardless of activity. This limits the exposure window if a session token is compromised.
+</Aside>
+
+## Best Practices
+
+Follow these security best practices for all authentication methods:
+
+### Token Storage
+
+- **Server-side applications** — Store tokens in environment variables or a secrets manager. Never hard-code tokens in source files.
+- **Browser applications** — Store tokens in `httpOnly` cookies. Avoid `localStorage` and `sessionStorage`, which are vulnerable to XSS attacks.
+- **Mobile applications** — Use the platform's secure keychain (iOS Keychain, Android Keystore).
+
+### Token Rotation
+
+- Rotate API keys periodically (every 90 days is recommended)
+- Implement refresh token rotation where a new refresh token is issued with each access token refresh
+- Revoke old tokens promptly when rotating
+
+### Monitoring
+
+- Log all authentication events (login, logout, token refresh, failed attempts)
+- Set up alerts for unusual patterns (multiple failed logins, logins from new locations)
+- Monitor for leaked credentials in public repositories using automated scanning tools
+
+### Secure Communication
+
+- Always use HTTPS for all API communication
+- Implement certificate pinning in mobile applications
+- Use TLS 1.2 or higher; reject connections on older protocols
+
+### Least Privilege
+
+- Grant the minimum permissions necessary for each API key or OAuth scope
+- Create separate keys for different environments (development, staging, production)
+- Audit permissions regularly and revoke unused access

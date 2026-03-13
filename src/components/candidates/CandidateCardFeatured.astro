@@ -1,0 +1,62 @@
+---
+import { Image } from "astro:assets";
+import { type CollectionEntry } from "astro:content";
+
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { getLocalizedRoute } from "@/js/translationUtils";
+
+interface Props {
+  candidate: CollectionEntry<"candidates">;
+}
+
+const { candidate } = Astro.props;
+const { firstName, lastName, location, experienceLevel, jobPreferences, avatar, coverLetter } =
+  candidate.data;
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const url = getLocalizedRoute(currLocale, `/candidates/${candidate.id}/`);
+const name = `${firstName} ${lastName}`;
+---
+
+<a href={url} class="bg-card group relative flex flex-col rounded-xl border p-6 shadow-sm transition hover:shadow-md">
+  <div class="flex items-center gap-3">
+    {
+      avatar?.url && (
+        <div class="bg-muted shrink-0 rounded-full p-0.5">
+          <Image
+            width={64}
+            height={64}
+            src={avatar.url}
+            alt={avatar.alt || name}
+            class="size-14 rounded-full object-cover"
+          />
+        </div>
+      )
+    }
+    <div>
+      <h3 class="text-foreground text-lg font-semibold capitalize group-hover:underline">{name}</h3>
+      <p class="text-muted-foreground text-sm">
+        {location}
+        {experienceLevel && <><span aria-hidden="true"> · </span>{experienceLevel}</>}
+      </p>
+    </div>
+  </div>
+
+  {
+    coverLetter && (
+      <p class="text-muted-foreground mt-4 line-clamp-2 text-sm">{coverLetter}</p>
+    )
+  }
+
+  {
+    jobPreferences && jobPreferences.length > 0 && (
+      <div class="mt-4 flex flex-wrap gap-1.5">
+        {jobPreferences.map((pref) => (
+          <span class="bg-muted text-muted-foreground rounded-full px-2.5 py-0.5 text-xs">
+            {pref}
+          </span>
+        ))}
+      </div>
+    )
+  }
+</a>

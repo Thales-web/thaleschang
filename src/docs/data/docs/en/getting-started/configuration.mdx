@@ -1,0 +1,185 @@
+---
+title: "Initial Theme Setup"
+section: "main"
+description: "Step-by-step installation and configuration guide for the Pathfinder documentation theme, including project structure and build commands."
+sidebar:
+  label: "Initial Setup"
+  order: 2
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "gs-config"
+---
+
+## Prerequisites
+
+Before you begin, make sure you have the following installed on your system:
+
+- **Node.js** version 18.14.1 or higher
+- **npm** version 9.0 or higher (or an equivalent package manager such as pnpm or yarn)
+- A code editor with MDX support (VS Code with the MDX extension is recommended)
+
+You can verify your Node.js and npm versions by running:
+
+```bash
+node --version
+npm --version
+```
+
+## Installation
+
+### Step 1: Clone the Repository
+
+Start by cloning the Pathfinder starter repository to your local machine:
+
+```bash
+git clone https://github.com/your-org/pathfinder-docs.git my-docs
+cd my-docs
+```
+
+### Step 2: Install Dependencies
+
+Install all required dependencies using npm:
+
+```bash
+npm install
+```
+
+This will install Astro, Tailwind CSS v4, MDX integrations, Pagefind, and all other dependencies defined in `package.json`.
+
+### Step 3: Start the Development Server
+
+Launch the local development server:
+
+```bash
+npm run dev
+```
+
+The server starts on `http://localhost:4321` by default. The development server supports hot module replacement, so any changes you make to MDX files, components, or configuration will appear immediately without a manual refresh.
+
+### Step 4: Build for Production
+
+When you are ready to deploy, generate a production build:
+
+```bash
+npm run build
+```
+
+This command performs the following:
+
+1. Compiles all Astro pages and MDX content into static HTML
+2. Processes and bundles Tailwind CSS
+3. Generates the Pagefind search index
+4. Outputs the final site to the `dist/` directory
+
+### Step 5: Preview the Production Build
+
+To preview the production build locally before deploying:
+
+```bash
+npm run preview
+```
+
+This serves the contents of `dist/` on a local server so you can verify that everything works as expected.
+
+## Available Scripts
+
+The following npm scripts are available in the project:
+
+| Script | Command | Description |
+|---|---|---|
+| `dev` | `npm run dev` | Start the development server with HMR |
+| `build` | `npm run build` | Generate a production build |
+| `preview` | `npm run preview` | Preview the production build locally |
+| `astro` | `npm run astro` | Run Astro CLI commands directly |
+
+## Project Structure
+
+Understanding the project structure is essential for working effectively with Pathfinder. Here is an overview of the `src/docs/` directory:
+
+```
+src/docs/
+├── components/          # Custom MDX components (Aside, Badge, Tabs, etc.)
+│   ├── Aside.astro
+│   ├── Badge.astro
+│   ├── Button.astro
+│   ├── Steps.astro
+│   └── Tabs/
+│       ├── Tabs.astro
+│       ├── TabsList.astro
+│       ├── TabsTrigger.astro
+│       └── TabsContent.astro
+├── config/              # Theme configuration files
+│   ├── navConfig.ts     # Top navigation bar links
+│   ├── sidebarConfig.ts # Sidebar tabs and sections
+│   └── siteSettings.ts  # Global site settings
+├── data/
+│   └── docs/
+│       ├── en/          # English documentation content
+│       │   ├── getting-started/
+│       │   ├── components/
+│       │   ├── reference/
+│       │   └── ...
+│       └── es/          # Spanish documentation content (example)
+├── layouts/             # Page layouts for documentation
+│   └── DocsLayout.astro
+└── styles/              # Theme stylesheets
+    └── docs.css
+```
+
+### Key Directories
+
+#### `src/docs/components/`
+
+Contains all pre-built MDX components. These components are auto-imported through the MDX integration configuration, so you do not need to add import statements in your MDX files.
+
+#### `src/docs/config/`
+
+Houses the three main configuration files:
+
+- **`navConfig.ts`** — Defines the links displayed in the top navigation bar.
+- **`sidebarConfig.ts`** — Controls the sidebar tabs, sections, and their ordering.
+- **`siteSettings.ts`** — Sets global options like pagination, view transitions, and the docs base route.
+
+#### `src/docs/data/docs/`
+
+This is where your documentation content lives. Each locale has its own subdirectory (e.g., `en/`, `es/`, `fr/`). Within each locale, content is organized into folders that correspond to sidebar sections.
+
+### Content Organization
+
+Each folder inside a locale directory maps to a sidebar section. The folder name must match the `id` property defined in your sidebar configuration. For example, if your sidebar config defines a section with `id: "getting-started"`, the corresponding content must live in `data/docs/en/getting-started/`.
+
+## Configuration Files
+
+### Navigation Configuration
+
+The top navigation bar is configured in `src/docs/config/navConfig.ts`. See the [Navigation Config](/docs/reference/nav-config) reference for details.
+
+### Sidebar Configuration
+
+The sidebar structure is configured in `src/docs/config/sidebarConfig.ts`. See the [Sidebar Config](/docs/reference/sidebar-navigation) reference for details.
+
+### Site Settings
+
+Global site settings are configured in `src/docs/config/siteSettings.ts`. See the [Site Settings](/docs/reference/site-settings) reference for details.
+
+## Environment Variables
+
+Pathfinder does not require any environment variables for basic operation. However, if you integrate with external services, you can add a `.env` file to the project root:
+
+```bash
+# .env
+PUBLIC_SITE_URL=https://docs.example.com
+PUBLIC_GA_ID=G-XXXXXXXXXX
+```
+
+Variables prefixed with `PUBLIC_` are available in client-side code. All other variables are only available during the build process.
+
+## Next Steps
+
+Now that your development environment is set up, proceed to [Theme Integration](/docs/getting-started/integrating) to learn how to add Pathfinder to an existing Astro project, or jump straight into the [Components](/docs/components) section to explore the available MDX components.

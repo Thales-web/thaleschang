@@ -1,0 +1,227 @@
+---
+title: "Tabs Component"
+section: "main"
+description: "A tabbed interface component for organizing content into switchable panels, with support for synchronized tab groups."
+sidebar:
+  label: "Tabs"
+  order: 6
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: true
+mappingKey: "comp-tabs"
+---
+
+## Overview
+
+The Tabs component provides a tabbed interface for organizing related content into switchable panels. It is composed of four sub-components that work together to create accessible, keyboard-navigable tab groups.
+
+All Tabs sub-components are auto-imported in MDX files, so you can use them without import statements.
+
+## Component Structure
+
+The Tabs system consists of four components:
+
+| Component | Purpose |
+|---|---|
+| `Tabs` | The root container that manages tab state |
+| `TabsList` | The container for tab trigger buttons |
+| `TabsTrigger` | An individual tab button |
+| `TabsContent` | The content panel associated with a tab |
+
+## Basic Usage
+
+```mdx
+<Tabs>
+  <TabsList>
+    <TabsTrigger value="npm">npm</TabsTrigger>
+    <TabsTrigger value="pnpm">pnpm</TabsTrigger>
+    <TabsTrigger value="yarn">yarn</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="npm">
+    ```bash
+    npm install pathfinder-docs
+    ```
+  </TabsContent>
+
+  <TabsContent value="pnpm">
+    ```bash
+    pnpm add pathfinder-docs
+    ```
+  </TabsContent>
+
+  <TabsContent value="yarn">
+    ```bash
+    yarn add pathfinder-docs
+    ```
+  </TabsContent>
+</Tabs>
+```
+
+Each `TabsTrigger` has a `value` prop that must match the `value` prop of its corresponding `TabsContent`. The first tab is active by default.
+
+## Synchronized Tabs
+
+Use the `syncKey` prop on the `Tabs` component to synchronize tab selection across multiple tab groups on the same page. When a user selects a tab in one group, all other groups with the same `syncKey` will switch to the matching tab.
+
+```mdx
+<Tabs syncKey="package-manager">
+  <TabsList>
+    <TabsTrigger value="npm">npm</TabsTrigger>
+    <TabsTrigger value="pnpm">pnpm</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="npm">
+    ```bash
+    npm install
+    ```
+  </TabsContent>
+
+  <TabsContent value="pnpm">
+    ```bash
+    pnpm install
+    ```
+  </TabsContent>
+</Tabs>
+
+<!-- Later on the same page -->
+
+<Tabs syncKey="package-manager">
+  <TabsList>
+    <TabsTrigger value="npm">npm</TabsTrigger>
+    <TabsTrigger value="pnpm">pnpm</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="npm">
+    ```bash
+    npm run build
+    ```
+  </TabsContent>
+
+  <TabsContent value="pnpm">
+    ```bash
+    pnpm build
+    ```
+  </TabsContent>
+</Tabs>
+```
+
+Both tab groups will stay in sync. If the user selects "pnpm" in the first group, the second group will also switch to "pnpm".
+
+## Default Tab
+
+By default, the first tab is active. You can specify a different default tab using the `defaultValue` prop:
+
+```mdx
+<Tabs defaultValue="pnpm">
+  <TabsList>
+    <TabsTrigger value="npm">npm</TabsTrigger>
+    <TabsTrigger value="pnpm">pnpm</TabsTrigger>
+    <TabsTrigger value="yarn">yarn</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="npm">npm content</TabsContent>
+  <TabsContent value="pnpm">pnpm content (shown by default)</TabsContent>
+  <TabsContent value="yarn">yarn content</TabsContent>
+</Tabs>
+```
+
+## Props Reference
+
+### Tabs
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `syncKey` | `string` | — | Key to synchronize tab selection across multiple tab groups |
+| `defaultValue` | `string` | First tab's value | The value of the tab to show by default |
+
+### TabsList
+
+The TabsList component does not accept any custom props. It serves as a semantic container for the tab triggers.
+
+### TabsTrigger
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `value` | `string` | — | **Required.** Unique identifier that links this trigger to its content panel |
+
+### TabsContent
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `value` | `string` | — | **Required.** Unique identifier that links this content panel to its trigger |
+
+## Styling
+
+The Tabs component uses the following visual styles:
+
+| Element | Style |
+|---|---|
+| Tab list | Bottom border with rounded tab triggers |
+| Active tab | Primary color text with bottom border indicator |
+| Inactive tab | Muted text color, no border |
+| Tab panel | Standard padding with smooth show/hide transitions |
+
+## Accessibility
+
+The Tabs component follows the WAI-ARIA Tabs pattern:
+
+- The `TabsList` has `role="tablist"`
+- Each `TabsTrigger` has `role="tab"` with `aria-selected` and `aria-controls` attributes
+- Each `TabsContent` has `role="tabpanel"` with `aria-labelledby` pointing to its trigger
+- Keyboard navigation supports Arrow Left/Right to move between tabs, Enter/Space to activate
+- Tab order follows a roving tabindex pattern — only the active tab is in the tab order
+
+## Best Practices
+
+- **Use meaningful labels** — Tab trigger text should clearly describe the content in the panel. Avoid single-character labels or abbreviations.
+- **Limit the number of tabs** — More than five tabs can be difficult to navigate on mobile devices. Consider grouping related content differently if you need more.
+- **Consistent content types** — All panels in a tab group should contain the same type of content (e.g., all code examples, all configuration files). Do not mix unrelated content types.
+- **Use syncKey thoughtfully** — Only synchronize tab groups that are semantically related (e.g., package manager selection). Avoid synchronizing unrelated tab groups.
+- **Provide fallback context** — Ensure that the surrounding text makes sense regardless of which tab is selected. Do not reference a specific tab's content in the prose.
+
+## Example: Multi-Language Code Samples
+
+```mdx
+<Tabs syncKey="language">
+  <TabsList>
+    <TabsTrigger value="js">JavaScript</TabsTrigger>
+    <TabsTrigger value="ts">TypeScript</TabsTrigger>
+    <TabsTrigger value="py">Python</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="js">
+    ```javascript
+    const response = await fetch("/api/users");
+    const users = await response.json();
+    console.log(users);
+    ```
+  </TabsContent>
+
+  <TabsContent value="ts">
+    ```typescript
+    interface User {
+      id: number;
+      name: string;
+      email: string;
+    }
+
+    const response = await fetch("/api/users");
+    const users: User[] = await response.json();
+    console.log(users);
+    ```
+  </TabsContent>
+
+  <TabsContent value="py">
+    ```python
+    import requests
+
+    response = requests.get("/api/users")
+    users = response.json()
+    print(users)
+    ```
+  </TabsContent>
+</Tabs>
+```

@@ -1,0 +1,281 @@
+---
+title: "Integrating with an Existing Theme"
+section: "main"
+description: "A five-step guide to adding Pathfinder documentation to an existing Astro project, including folder structure, styles, content collections, and routing."
+sidebar:
+  label: "Theme Integration"
+  order: 3
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "gs-integrate"
+---
+
+## Overview
+
+Pathfinder is designed to be added to an existing Astro project without disrupting your current setup. The documentation system is self-contained within the `src/docs/` directory, so it coexists cleanly alongside your existing pages, layouts, and components.
+
+This guide walks you through the five steps required to integrate Pathfinder into your project. By the end, you will have a fully functional documentation section available at `/docs` within your existing site.
+
+## Prerequisites
+
+Before you begin, ensure your existing Astro project meets these requirements:
+
+- Astro version 4.0 or higher
+- MDX integration installed (`@astrojs/mdx`)
+- Tailwind CSS v4 configured
+- Node.js 18.14.1 or higher
+
+## Step 1: Copy the `src/docs` Folder
+
+Copy the entire `src/docs/` directory from the Pathfinder starter into your existing project. This folder contains all components, configuration files, layouts, and styles needed by the documentation theme.
+
+```bash
+# From the Pathfinder starter project
+cp -r src/docs /path/to/your-project/src/docs
+```
+
+Your project structure should now look like this:
+
+```
+your-project/
+├── src/
+│   ├── components/      # Your existing components
+│   ├── pages/           # Your existing pages
+│   ├── layouts/         # Your existing layouts
+│   └── docs/            # Pathfinder documentation (newly added)
+│       ├── components/
+│       ├── config/
+│       ├── data/
+│       ├── layouts/
+│       └── styles/
+├── astro.config.mjs
+└── package.json
+```
+
+<Aside variant="tip" title="Keep it isolated">
+The `src/docs/` directory is intentionally self-contained. Avoid moving its internal files to other directories, as the internal imports rely on the expected folder structure.
+</Aside>
+
+## Step 2: Import Documentation Styles
+
+Add the Pathfinder documentation styles to your project. Open your main CSS file (or create a new one) and import the docs stylesheet:
+
+```css
+/* src/styles/global.css */
+
+/* Your existing styles */
+@import "tailwindcss";
+
+/* Pathfinder documentation styles */
+@import "../docs/styles/docs.css";
+```
+
+Alternatively, you can import the styles directly in your Astro layout:
+
+```astro
+---
+// src/layouts/Layout.astro
+import "../docs/styles/docs.css";
+---
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+```
+
+<Aside variant="caution" title="CSS order matters">
+Make sure the Pathfinder styles are imported after your Tailwind base styles. This ensures that documentation-specific utility classes and component styles take proper precedence.
+</Aside>
+
+## Step 3: Add the Documentation Content Collection
+
+Register the documentation content as a content collection in your Astro configuration. Open or create `src/content/config.ts` and add the docs collection:
+
+```typescript
+// src/content/config.ts
+import { defineCollection, z } from "astro:content";
+
+const docsCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    sidebar: z
+      .object({
+        label: z.string().optional(),
+        order: z.number().optional(),
+        badge: z
+          .object({
+            text: z.string(),
+            variant: z.enum(["tip", "caution", "danger", "note"]).optional(),
+          })
+          .optional(),
+      })
+      .optional(),
+    tableOfContents: z
+      .object({
+        minHeadingLevel: z.number().optional(),
+        maxHeadingLevel: z.number().optional(),
+      })
+      .optional(),
+    pagefind: z.boolean().optional(),
+    draft: z.boolean().optional(),
+    mappingKey: z.string().optional(),
+  }),
+});
+
+export const collections = {
+  docs: docsCollection,
+  // ...your other collections
+};
+```
+
+<Aside variant="info" title="Content directory">
+By default, Astro looks for content in `src/content/`. Pathfinder stores its documentation files in `src/docs/data/docs/`. You may need to configure a custom content directory or create symbolic links depending on your project setup.
+</Aside>
+
+## Step 4: Configure MDX Auto-Imports
+
+Pathfinder components are designed to be auto-imported, so you do not need to write import statements in every MDX file. Configure the MDX integration in your `astro.config.mjs` to include the auto-import mappings:
+
+```typescript
+// astro.config.mjs
+import { defineConfig } from "astro/config";
+import mdx from "@astrojs/mdx";
+import AutoImport from "astro-auto-import";
+
+export default defineConfig({
+  integrations: [
+    AutoImport({
+      imports: [
+        // Pathfinder documentation components
+        "@/docs/components/Aside.astro",
+        "@/docs/components/Badge.astro",
+        "@/docs/components/Button.astro",
+        "@/docs/components/Steps.astro",
+        "@/docs/components/Tabs/Tabs.astro",
+        "@/docs/components/Tabs/TabsList.astro",
+        "@/docs/components/Tabs/TabsTrigger.astro",
+        "@/docs/components/Tabs/TabsContent.astro",
+      ],
+    }),
+    mdx(),
+  ],
+});
+```
+
+### Verifying Auto-Imports
+
+After configuring auto-imports, verify that components are available by creating a test MDX file:
+
+```mdx
+---
+title: "Test Page"
+section: "main"
+---
+
+## Testing Auto-Imports
+
+<Aside variant="tip" title="It works!">
+If you can see this callout, auto-imports are configured correctly.
+</Aside>
+```
+
+If the component renders correctly, auto-imports are working. If you see raw HTML tags instead, double-check the import paths in your Astro configuration.
+
+## Step 5: Copy Page Routes
+
+Copy the documentation page routes into your project's `src/pages/` directory. These routes handle the URL structure and rendering of documentation pages:
+
+```bash
+# From the Pathfinder starter project
+cp -r src/pages/docs /path/to/your-project/src/pages/docs
+```
+
+The page routes use dynamic routing to map URLs to content files. The typical structure is:
+
+```
+src/pages/
+└── docs/
+    ├── [...slug].astro        # Catches all documentation routes
+    └── index.astro            # Documentation landing page
+```
+
+The dynamic route file (`[...slug].astro`) handles the following:
+
+- Resolving the correct locale from the URL
+- Loading the corresponding MDX content
+- Applying the documentation layout
+- Generating the sidebar navigation
+- Injecting the table of contents
+
+### Customizing the Base Route
+
+By default, documentation pages are served under `/docs`. If you need a different base path, update the `docsRoute` setting in `src/docs/config/siteSettings.ts`:
+
+```typescript
+// src/docs/config/siteSettings.ts
+export const siteSettings = {
+  docsRoute: "documentation", // Now served at /documentation/*
+};
+```
+
+Remember to also rename the `src/pages/docs/` directory to match the new route:
+
+```bash
+mv src/pages/docs src/pages/documentation
+```
+
+## Verification Checklist
+
+After completing all five steps, verify your integration:
+
+- [ ] The `src/docs/` directory is present in your project
+- [ ] Documentation styles are imported and rendering correctly
+- [ ] The content collection schema is registered without errors
+- [ ] MDX components auto-import and render in documentation pages
+- [ ] The `/docs` route loads the documentation landing page
+- [ ] Sidebar navigation displays all sections and pages
+- [ ] Pagefind search returns results after a production build
+
+## Troubleshooting
+
+### Components not rendering
+
+If MDX components appear as raw HTML, ensure that:
+
+1. The `astro-auto-import` package is installed
+2. The `AutoImport` integration is listed **before** the `mdx()` integration in `astro.config.mjs`
+3. Component import paths are correct and use the `@/` alias
+
+### Styles not applying
+
+If documentation pages appear unstyled:
+
+1. Confirm that `docs.css` is imported after your Tailwind base styles
+2. Run `npm run build` and check for CSS compilation errors
+3. Clear your browser cache and disable any CSS caching extensions
+
+### Sidebar not showing sections
+
+If the sidebar is empty or missing sections:
+
+1. Verify that folder names in `src/docs/data/docs/en/` match the `id` values in `sidebarConfig.ts`
+2. Ensure each folder contains at least one non-draft MDX file
+3. Check that the `order` values in frontmatter are valid numbers
+
+## Next Steps
+
+With the integration complete, explore the [Components](/docs/components) section to learn about the pre-built MDX components, or visit the [Reference](/docs/reference/frontmatter-reference) section for a complete list of frontmatter fields and configuration options.

@@ -1,0 +1,180 @@
+---
+title: "Steps Component"
+section: "main"
+description: "A wrapper component that transforms ordered lists into visually styled step-by-step instructions."
+sidebar:
+  label: "Steps"
+  order: 5
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: true
+mappingKey: "comp-steps"
+---
+
+## Overview
+
+The Steps component wraps an ordered list and transforms it into a visually styled, numbered step-by-step guide. Each list item becomes a clearly delineated step with a numbered indicator, a connecting line, and consistent spacing.
+
+Steps is auto-imported in all MDX files, so you can use it without an import statement.
+
+## Basic Usage
+
+Wrap a standard markdown ordered list with the Steps component:
+
+```mdx
+<Steps>
+
+1. Clone the repository to your local machine.
+
+2. Install the project dependencies using npm.
+
+3. Start the development server.
+
+4. Open your browser and navigate to the local URL.
+
+</Steps>
+```
+
+The numbered list items are automatically styled with circular step indicators and vertical connecting lines.
+
+## Rich Content Steps
+
+Each step can contain any valid markdown or MDX content, including code blocks, images, and nested components:
+
+```mdx
+<Steps>
+
+1. **Install the CLI tool**
+
+   Download and install the command-line tool globally:
+
+   ```bash
+   npm install -g pathfinder-cli
+   ```
+
+2. **Initialize a new project**
+
+   Run the init command and follow the prompts:
+
+   ```bash
+   pathfinder init my-docs
+   ```
+
+   This creates a new directory with the starter template.
+
+3. **Configure your site**
+
+   Open `src/docs/config/siteSettings.ts` and update the site title and description:
+
+   ```typescript
+   export const siteSettings = {
+     title: "My Documentation",
+     description: "Documentation for my project",
+   };
+   ```
+
+4. **Start writing documentation**
+
+   Create your first MDX file in `src/docs/data/docs/en/getting-started/`:
+
+   ```mdx
+   ---
+   title: "My First Page"
+   sidebar:
+     label: "First Page"
+     order: 1
+   ---
+
+   ## Welcome
+
+   This is your first documentation page.
+   ```
+
+</Steps>
+```
+
+## Important Formatting Notes
+
+For the Steps component to work correctly, follow these formatting rules:
+
+- **Blank lines required** — Leave a blank line after the opening `<Steps>` tag and before the closing `</Steps>` tag.
+- **Standard ordered list** — Use standard markdown numbered list syntax (`1.`, `2.`, `3.`, etc.).
+- **Indent nested content** — Content within a step (such as code blocks) must be indented with three spaces to be recognized as part of that list item.
+
+## Styling
+
+The Steps component applies the following visual treatment:
+
+| Element | Style |
+|---|---|
+| Step number | Circular indicator with theme primary color |
+| Connecting line | Vertical line in gray, connecting step indicators |
+| Step content | Standard body text with consistent left padding |
+| Step spacing | 1.5rem vertical gap between steps |
+
+## Accessibility
+
+- The underlying HTML structure is a standard `<ol>` element, preserving semantic meaning for screen readers
+- Step numbers are generated via CSS counters and are included in the accessible name
+- The visual connecting lines are decorative and implemented with CSS pseudo-elements, which are ignored by assistive technology
+
+## Comparison with Regular Lists
+
+Use the Steps component when documenting sequential procedures where order matters. For non-sequential information, use standard markdown lists:
+
+| Use Case | Component |
+|---|---|
+| Installation procedures | Steps |
+| Configuration workflows | Steps |
+| Feature lists | Standard unordered list |
+| Requirement lists | Standard unordered list |
+| Troubleshooting checklists | Standard ordered list |
+
+## Best Practices
+
+- **Use for sequential tasks** — Steps are designed for procedures that must be followed in order. For unordered lists of items, use standard markdown lists.
+- **One action per step** — Each step should describe a single, clear action. If a step requires multiple sub-actions, consider breaking it into separate steps.
+- **Include verification** — When possible, include a way for the reader to verify that the step was completed successfully (e.g., expected output or a screenshot).
+- **Keep steps focused** — Each step should be concise. If a step requires extensive explanation, consider linking to a separate page for details.
+
+## Example: Complete Workflow
+
+Here is a real-world example of the Steps component used for a deployment workflow:
+
+```mdx
+<Steps>
+
+1. **Run the test suite**
+
+   Ensure all tests pass before deploying:
+
+   ```bash
+   npm run test
+   ```
+
+2. **Generate a production build**
+
+   ```bash
+   npm run build
+   ```
+
+3. **Verify the build locally**
+
+   ```bash
+   npm run preview
+   ```
+
+   Open `http://localhost:4321` and check that all pages render correctly.
+
+4. **Deploy to production**
+
+   Push the contents of `dist/` to your hosting provider:
+
+   ```bash
+   npx netlify deploy --prod --dir=dist
+   ```
+
+</Steps>
+```

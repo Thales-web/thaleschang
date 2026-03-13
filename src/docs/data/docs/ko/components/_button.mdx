@@ -1,0 +1,184 @@
+---
+title: "Button Component"
+section: "main"
+description: "A versatile button component with eight style variants, four sizes, and full accessibility support."
+sidebar:
+  label: "Button"
+  order: 4
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "comp-button"
+---
+
+## Overview
+
+The Button component provides styled, accessible buttons for your documentation pages. Use buttons for call-to-action links, external resource links, download prompts, or any interactive element that benefits from visual prominence.
+
+Button is auto-imported in all MDX files, so you can use it without an import statement.
+
+## Basic Usage
+
+```mdx
+<Button href="/docs/getting-started/configuration">Get Started</Button>
+```
+
+For external links:
+
+```mdx
+<Button href="https://github.com/your-org/pathfinder" target="_blank">
+  View on GitHub
+</Button>
+```
+
+## Variants
+
+The Button component supports eight style variants to cover different use cases:
+
+### Primary
+
+```mdx
+<Button variant="primary" href="/docs">Primary Action</Button>
+```
+
+A solid background button for the main call to action on a page. Use sparingly — typically one per section.
+
+### Secondary
+
+```mdx
+<Button variant="secondary" href="/docs">Secondary Action</Button>
+```
+
+A softer style for secondary actions that complement the primary button.
+
+### Outline
+
+```mdx
+<Button variant="outline" href="/docs">Outline Button</Button>
+```
+
+A bordered button with transparent background. Good for less prominent actions.
+
+### Ghost
+
+```mdx
+<Button variant="ghost" href="/docs">Ghost Button</Button>
+```
+
+A minimal button with no border or background. Appears as styled text until hovered.
+
+### Info
+
+```mdx
+<Button variant="info" href="/docs">Learn More</Button>
+```
+
+A blue button for informational links such as documentation references or tutorials.
+
+### Success
+
+```mdx
+<Button variant="success" href="/docs">Download</Button>
+```
+
+A green button for positive actions like downloads, confirmations, or completion states.
+
+### Warning
+
+```mdx
+<Button variant="warning" href="/docs">Proceed with Caution</Button>
+```
+
+An amber button for actions that require user attention or confirmation.
+
+### Danger
+
+```mdx
+<Button variant="danger" href="/docs">Delete Project</Button>
+```
+
+A red button for destructive or irreversible actions.
+
+## Sizes
+
+Buttons are available in four sizes:
+
+### Extra Small
+
+```mdx
+<Button size="xs" href="/docs">Extra Small</Button>
+```
+
+### Small
+
+```mdx
+<Button size="sm" href="/docs">Small</Button>
+```
+
+### Medium (Default)
+
+```mdx
+<Button size="md" href="/docs">Medium</Button>
+```
+
+### Large
+
+```mdx
+<Button size="lg" href="/docs">Large</Button>
+```
+
+## Props Reference
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `href` | `string` | — | **Required.** The URL the button links to |
+| `variant` | `"primary" \| "secondary" \| "outline" \| "ghost" \| "info" \| "success" \| "warning" \| "danger"` | `"primary"` | The visual style of the button |
+| `size` | `"xs" \| "sm" \| "md" \| "lg"` | `"md"` | The size of the button |
+| `target` | `string` | — | Link target attribute (e.g., `"_blank"` for new tab) |
+| `rel` | `string` | — | Link rel attribute (auto-set to `"noopener noreferrer"` when target is `"_blank"`) |
+| `disabled` | `boolean` | `false` | Visually disables the button and prevents interaction |
+
+## Size Details
+
+| Size | Font Size | Padding (x) | Padding (y) | Min Width |
+|---|---|---|---|---|
+| xs | 0.75rem | 0.75rem | 0.25rem | 4rem |
+| sm | 0.8rem | 1rem | 0.375rem | 5rem |
+| md | 0.875rem | 1.25rem | 0.5rem | 6rem |
+| lg | 1rem | 1.5rem | 0.625rem | 8rem |
+
+## Button Groups
+
+You can place multiple buttons together using a flex container in your MDX:
+
+```mdx
+<div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+  <Button variant="primary" href="/docs/getting-started/configuration">
+    Get Started
+  </Button>
+  <Button variant="outline" href="https://github.com/your-org/pathfinder" target="_blank">
+    View Source
+  </Button>
+</div>
+```
+
+## Accessibility
+
+The Button component includes comprehensive accessibility support:
+
+- Renders as an `<a>` element with appropriate `role` attributes when used as a link
+- Focus states are clearly visible with a consistent focus ring in both light and dark modes
+- The `disabled` state sets `aria-disabled="true"` and removes the element from the tab order
+- External links (with `target="_blank"`) automatically include `rel="noopener noreferrer"` for security
+- Color contrast ratios meet WCAG 2.1 AA requirements for all variants in both themes
+- Hover and active states provide clear visual feedback
+
+## Best Practices
+
+- **Limit primary buttons** — Use only one primary button per content section to maintain clear visual hierarchy.
+- **Use descriptive labels** — Button text should clearly describe the action. Avoid generic labels like "Click here" or "Learn more" without context.
+- **Pair with context** — Always provide surrounding text that explains why the user should click the button.
+- **External link indicators** — When linking to external sites, consider adding text like "(opens in new tab)" for clarity.
+- **Avoid overuse** — Buttons add visual weight to a page. For simple navigation between docs pages, regular markdown links are often more appropriate.

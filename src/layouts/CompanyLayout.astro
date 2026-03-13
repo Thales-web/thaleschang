@@ -1,0 +1,218 @@
+---
+import { Image } from "astro:assets";
+import { type CollectionEntry } from "astro:content";
+
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  company: CollectionEntry<"companies">;
+}
+
+const { company } = Astro.props;
+const {
+  name,
+  description,
+  logo,
+  about,
+  culture,
+  mission,
+  milestones,
+  values,
+  benefits,
+  headquarters,
+  location,
+  website,
+  size,
+  founded,
+  companyType,
+  remotePolicy,
+  industry,
+  socials,
+} = company.data;
+---
+
+<BaseLayout title={name} description={description}>
+  <div class="site-container max-w-7xl py-20 md:pt-32">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+      {
+        logo ? (
+          <Image
+            src={logo}
+            alt={`${name} logo`}
+            width={80}
+            height={80}
+            class="size-16 object-contain lg:size-20"
+          />
+        ) : (
+          <div class="flex size-16 items-center justify-center rounded-full bg-gray-100 text-2xl font-bold lg:size-20">
+            {name.slice(0, 1).toUpperCase()}
+          </div>
+        )
+      }
+      <h1 class="h1">{name}</h1>
+    </div>
+
+    <!-- Content + Sidebar -->
+    <div class="mt-12 grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_320px] lg:gap-12">
+      <!-- Main Content -->
+      <div class="space-y-10">
+        {about && <p class="text-muted-foreground text-balance">{about}</p>}
+
+        {
+          culture && (
+            <div class="border-t pt-8">
+              <h3 class="mb-2 text-lg font-medium">Culture</h3>
+              <p class="text-muted-foreground text-balance">{culture}</p>
+            </div>
+          )
+        }
+
+        {
+          mission && (
+            <div>
+              <h3 class="mb-2 text-lg font-medium">Mission</h3>
+              <p class="text-muted-foreground text-balance">"{mission}"</p>
+            </div>
+          )
+        }
+
+        {
+          milestones && milestones.length > 0 && (
+            <div>
+              <h3 class="mb-2 text-lg font-medium">Milestones</h3>
+              <ul class="text-muted-foreground list-disc space-y-1 pl-5">
+                {milestones.map((m) => (
+                  <li>{m}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          values && values.length > 0 && (
+            <div>
+              <h3 class="mb-2 text-lg font-medium">Values</h3>
+              <ul class="text-muted-foreground list-disc space-y-1 pl-5">
+                {values.map((v) => (
+                  <li>{v}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          benefits && benefits.length > 0 && (
+            <div>
+              <h3 class="mb-2 text-lg font-medium">Benefits</h3>
+              <ul class="text-muted-foreground list-disc space-y-1 pl-5">
+                {benefits.map((b) => (
+                  <li>{b}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="order-first lg:sticky lg:top-24 lg:order-none">
+        <div class="space-y-1 rounded-xl border shadow-md">
+          <div class="border-b px-5 py-4">
+            <p class="text-muted-foreground text-sm">{description}</p>
+          </div>
+          {
+            headquarters && (
+              <div class="flex items-center justify-between border-b px-5 py-3">
+                <span class="text-sm font-medium">Headquarters</span>
+                <span class="text-muted-foreground text-sm">{headquarters}</span>
+              </div>
+            )
+          }
+          {
+            location && (
+              <div class="flex items-center justify-between border-b px-5 py-3">
+                <span class="text-sm font-medium">Location</span>
+                <span class="text-muted-foreground text-sm">{location}</span>
+              </div>
+            )
+          }
+          {
+            website && (
+              <div class="flex items-center justify-between border-b px-5 py-3">
+                <span class="text-sm font-medium">Website</span>
+                <span class="text-muted-foreground text-sm">{website}</span>
+              </div>
+            )
+          }
+          {
+            size && (
+              <div class="flex items-center justify-between border-b px-5 py-3">
+                <span class="text-sm font-medium">Size</span>
+                <span class="text-muted-foreground text-sm">{size}</span>
+              </div>
+            )
+          }
+          {
+            founded && (
+              <div class="flex items-center justify-between border-b px-5 py-3">
+                <span class="text-sm font-medium">Founded</span>
+                <span class="text-muted-foreground text-sm">{founded}</span>
+              </div>
+            )
+          }
+          {
+            companyType && (
+              <div class="flex items-center justify-between border-b px-5 py-3">
+                <span class="text-sm font-medium">Company type</span>
+                <span class="text-muted-foreground text-sm">{companyType}</span>
+              </div>
+            )
+          }
+          {
+            remotePolicy && (
+              <div class="flex items-center justify-between border-b px-5 py-3">
+                <span class="text-sm font-medium">Work policy</span>
+                <span class="text-muted-foreground text-sm">{remotePolicy}</span>
+              </div>
+            )
+          }
+          {
+            industry && (
+              <div class="flex items-center justify-between border-b px-5 py-3">
+                <span class="text-sm font-medium">Industry</span>
+                <span class="text-muted-foreground text-sm">{industry}</span>
+              </div>
+            )
+          }
+          {
+            socials && (
+              <div class="flex items-center gap-3 px-5 py-3 text-xs">
+                {socials.twitter && (
+                  <a href={socials.twitter} class="text-primary-accent font-medium hover:underline">
+                    Twitter
+                  </a>
+                )}
+                {socials.linkedin && (
+                  <a
+                    href={socials.linkedin}
+                    class="text-primary-accent font-medium hover:underline"
+                  >
+                    LinkedIn
+                  </a>
+                )}
+                {socials.github && (
+                  <a href={socials.github} class="text-primary-accent font-medium hover:underline">
+                    GitHub
+                  </a>
+                )}
+              </div>
+            )
+          }
+        </div>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

@@ -16,8 +16,8 @@ import navDataEn from "./en/navData.json";
 import siteDataEn from "./en/siteData.json";
 import testimonialDataEn from "./en/testimonialData.json";
 
-
-
+import sidebarNavDataKo from "@/docs/config/ko/sidebarNavData.json";
+import sidebarNavDataEn from "@/docs/config/en/sidebarNavData.json";
 
 
 export const dataTranslations = {
@@ -26,14 +26,16 @@ export const dataTranslations = {
     navData: navDataKo,
     siteData: siteDataKo,
     testimonialData: testimonialDataKo,
+    sidebarNavData: sidebarNavDataKo,
   },
   en: {
     siteData: siteDataEn,
     navData: navDataEn,
     testimonialData: testimonialDataEn,
     faqData: faqDataEn,
+    sidebarNavData: sidebarNavDataEn,
   },
-  
+
 } as const;
 
 /**
@@ -67,6 +69,13 @@ export const textTranslations = {
     table_of_contents: "Table of Contents",
     tags: "Tags",
     related_posts: "Related Posts",
+
+    // docs
+    docs_title: "문서",
+    docs_previous: "이전",
+    docs_next: "다음",
+    docs_on_this_page: "이 페이지에서",
+    docs_search_placeholder: "문서 검색...",
   },
   en: {
     hero_text: "Everything you need for an amazing website.",
@@ -79,6 +88,13 @@ export const textTranslations = {
     table_of_contents: "Table of Contents",
     tags: "Tags",
     related_posts: "Related Posts",
+
+    // docs
+    docs_title: "Documentation",
+    docs_previous: "Previous",
+    docs_next: "Next",
+    docs_on_this_page: "On this page",
+    docs_search_placeholder: "Search docs...",
   },
   
 } as const;
@@ -106,6 +122,8 @@ export const routeTranslations = {
     blogKey: "blog",
     servicesKey: "services",
     projectsKey: "projects",
+    docsKey: "docs",
+    docsKey2: "docs/*",
   },
   en: {
     aboutKey: "about",
@@ -118,6 +136,8 @@ export const routeTranslations = {
     blogKey: "blog",
     servicesKey: "services",
     projectsKey: "projects",
+    docsKey: "docs",
+    docsKey2: "docs/*",
   },
   
 } as const;
@@ -145,5 +165,8 @@ export const localizedCollections = {
 		en: "projects",
 		ko: "projects"
 	},
-  // Add more collections/locales as needed
+  docs: {
+		en: "docs",
+		ko: "docs"
+	},
 } as const;
