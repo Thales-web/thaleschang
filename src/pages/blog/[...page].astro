@@ -23,6 +23,8 @@ const { page } = Astro.props as { page: Page };
 <BaseLayout
   title="Our Blog Posts"
   description="Learn from our blog posts about web development, design, and more."
+  prevUrl={page.url.prev}
+  nextUrl={page.url.next}
 >
   <section class="site-container py-24 md:pt-40">
     <div class="overflow-x-clip">

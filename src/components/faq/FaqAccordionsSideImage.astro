@@ -1,18 +1,25 @@
 ---
 /**
  * * FAQ section with side image and accordions
+ * Auto-generates FAQPage JSON-LD schema (AEO)
  */
 
 import doctorImage from "@images/faq/woman.png";
 import { Image } from "astro:assets";
 
+import { clientConfig } from "@/config/clientConfig";
 import { getLocaleFromUrl } from "@/js/localeUtils";
+import { generateFaqPageSchema } from "@/js/jsonLD";
 import { getTranslatedData } from "@/js/translationUtils";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./accordion-small";
 
 const currLocale = getLocaleFromUrl(Astro.url);
 const faqData = getTranslatedData("faqData", currLocale);
+
+const faqSchema = clientConfig.seo.enableFaqSchema
+  ? generateFaqPageSchema(faqData)
+  : null;
 ---
 
 <section class="overflow-hidden py-16 md:py-24">
@@ -64,4 +71,10 @@ const faqData = getTranslatedData("faqData", currLocale);
       </div>
     </div>
   </div>
+
+  {faqSchema && (
+    <Fragment
+      set:html={`<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>`}
+    />
+  )}
 </section>

@@ -7,19 +7,28 @@ import { type CollectionEntry } from "astro:content";
 import CookieConsent from "@/components/cookie-consent/CookieConsent.astro";
 import Footer from "@/components/footer/Footer.astro";
 import Nav from "@/components/nav/Nav.astro";
+import GoogleTagManager from "@/components/analytics/GoogleTagManager.astro";
+import Breadcrumbs from "@/components/seo/Breadcrumbs.astro";
 import siteSettings from "@/config/siteSettings.json";
 import { getLocaleFromUrl } from "@/js/localeUtils";
 import BaseHead from "@/layouts/BaseHead.astro";
 
+import { type FaqItem } from "@/config/types/configDataTypes";
+
 // heroImage and authorData are defined on blog posts
 // authorData could also be defined on the about author page
 interface Props extends ComponentProps<typeof Nav> {
-  type?: "blog" | "general";
+  type?: "blog" | "general" | "service" | "person" | "faq";
   title: string;
   description: string;
   image?: ImageMetadata;
   authorsData?: CollectionEntry<"authors">[];
   postFrontmatter?: CollectionEntry<"blog">["data"];
+  service?: CollectionEntry<"services">;
+  person?: CollectionEntry<"authors">;
+  faqItems?: FaqItem[];
+  prevUrl?: string;
+  nextUrl?: string;
   noindex?: boolean; // you need to opt-in to no indexing, as it hides the page from search engines
 }
 
@@ -30,6 +39,11 @@ const {
   image,
   authorsData,
   postFrontmatter,
+  service,
+  person,
+  faqItems,
+  prevUrl,
+  nextUrl,
   noindex = false,
   ...navProps
 } = Astro.props as Props;
@@ -47,16 +61,23 @@ const currLocale = getLocaleFromUrl(Astro.url);
       image={image ? image : undefined}
       authors={authorsData ? authorsData : undefined}
       postFrontmatter={postFrontmatter ? postFrontmatter : undefined}
+      service={service}
+      person={person}
+      faqItems={faqItems}
+      prevUrl={prevUrl}
+      nextUrl={nextUrl}
       noindex={noindex}
     />
   </head>
   <body id="body" class={` ${siteSettings.useAnimations === true ? "use-animations" : ""}`}>
+    <GoogleTagManager position="body" />
     <div id="page" class="">
-      <!-- put cookie consent at the top of the page so it is seen first by screen readers -->
-      <!-- <CookieConsent /> -->
+      <!-- Cookie consent banner (GDPR) -->
+      <CookieConsent />
 
       <Nav {...navProps} />
       <main class="relative min-h-[100lvh] overflow-x-clip">
+        <Breadcrumbs />
         <slot />
       </main>
       <Footer />

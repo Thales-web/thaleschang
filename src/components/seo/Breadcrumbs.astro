@@ -1,0 +1,86 @@
+---
+/**
+ * SEO Breadcrumbs Component
+ * Auto-generates breadcrumbs from URL path + emits BreadcrumbList JSON-LD
+ */
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/starwind/breadcrumb";
+import { clientConfig } from "@/config/clientConfig";
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { generateBreadcrumbSchema } from "@/js/jsonLD";
+import { humanize } from "@/js/textUtils";
+import { defaultLocale } from "@/config/siteSettings.json";
+
+interface BreadcrumbEntry {
+  name: string;
+  url: string;
+}
+
+interface Props {
+  /** Override auto-generated breadcrumb labels */
+  customLabels?: Record<string, string>;
+}
+
+const { customLabels = {} } = Astro.props;
+
+const locale = getLocaleFromUrl(Astro.url);
+const pathname = Astro.url.pathname.replace(/\/$/, "");
+const segments = pathname.split("/").filter(Boolean);
+
+// Remove locale prefix if present
+const filteredSegments =
+  segments[0] === locale && locale !== defaultLocale ? segments.slice(1) : segments;
+
+// Build breadcrumb entries
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") || clientConfig.business.url;
+
+const breadcrumbs: BreadcrumbEntry[] = [
+  { name: locale === "ko" ? "홈" : "Home", url: siteUrl + "/" },
+];
+
+filteredSegments.forEach((segment, index) => {
+  const path = "/" + (locale !== defaultLocale ? locale + "/" : "") + filteredSegments.slice(0, index + 1).join("/");
+  const label = customLabels[segment] || humanize(segment);
+  breadcrumbs.push({
+    name: label,
+    url: siteUrl + path,
+  });
+});
+
+const isHomePage = filteredSegments.length === 0;
+const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbs);
+---
+
+{
+  !isHomePage && clientConfig.seo.enableBreadcrumbSchema && (
+    <>
+      <nav class="site-container pt-6 md:pt-8" aria-label="breadcrumb">
+        <Breadcrumb>
+          <BreadcrumbList>
+            {breadcrumbs.map((crumb, i) => (
+              <>
+                <BreadcrumbItem>
+                  {i < breadcrumbs.length - 1 ? (
+                    <BreadcrumbLink href={crumb.url}>{crumb.name}</BreadcrumbLink>
+                  ) : (
+                    <BreadcrumbPage>{crumb.name}</BreadcrumbPage>
+                  )}
+                </BreadcrumbItem>
+                {i < breadcrumbs.length - 1 && <BreadcrumbSeparator />}
+              </>
+            ))}
+          </BreadcrumbList>
+        </Breadcrumb>
+      </nav>
+      <Fragment
+        set:html={`<script type="application/ld+json">${JSON.stringify(breadcrumbSchema)}</script>`}
+      />
+    </>
+  )
+}

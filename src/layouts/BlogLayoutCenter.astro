@@ -6,8 +6,11 @@ import { type CollectionEntry, getEntries } from "astro:content";
 import Button from "@/components/button/Button.astro";
 import Category from "@/components/category/Category.astro";
 import RelatedPosts from "@/components/related-posts/RelatedPosts.astro";
+import RelatedContent from "@/components/seo/RelatedContent.astro";
+import ShareButtons from "@/components/share-buttons/ShareButtons.astro";
 import Tag from "@/components/tag/Tag.astro";
 import { getLocaleFromUrl } from "@/js/localeUtils";
+import { getReadingTime } from "@/js/readingTime";
 import { formatDate, humanize, slugify } from "@/js/textUtils";
 import { getLocalizedRoute, useTranslations } from "@/js/translationUtils";
 
@@ -25,6 +28,7 @@ const { title, description, authors, categories, tags, pubDate, updatedDate, her
 const currLocale = getLocaleFromUrl(Astro.url);
 const t = useTranslations(currLocale);
 const authorsData = await getEntries(authors);
+const readingTime = post.body ? getReadingTime(post.body) : 1;
 ---
 
 <BaseLayout
@@ -76,6 +80,11 @@ const authorsData = await getEntries(authors);
             <time class="my-auto h-full" datetime={pubDate.toISOString()}
               >{formatDate(pubDate, currLocale)}
             </time>
+
+            <span>&bull;</span>
+
+            <!-- Reading time -->
+            <span class="my-auto">{readingTime} min read</span>
           </div>
         </div>
       </div>
@@ -113,12 +122,18 @@ const authorsData = await getEntries(authors);
               </div>
             )
           }
-          <section id="blog-post-content" class="markdown-content mx-auto">
+          <section id="blog-post-content" class="markdown-content mx-auto" data-pagefind-body>
             <slot />
           </section>
 
+          <!-- Share buttons -->
+          <div class="mt-12 flex items-center gap-4 border-t pt-6">
+            <span class="text-muted-foreground text-sm font-medium">Share:</span>
+            <ShareButtons title={title} url={Astro.url} />
+          </div>
+
           <!-- button to go back to all posts -->
-          <div class="mt-16 flex items-center justify-between border-t pt-6">
+          <div class="mt-6 flex items-center justify-between border-t pt-6">
             {
               tags && tags.length > 0 && (
                 <div class="flex flex-wrap items-center gap-2">
@@ -140,6 +155,13 @@ const authorsData = await getEntries(authors);
               <RelatedPosts post={post} postLimit={2} />
             </div>
           </div>
+
+          <!-- Cross-collection related content for internal linking -->
+          <RelatedContent
+            keywords={[...categories, ...(tags || [])]}
+            currentPath={Astro.url.pathname}
+            limit={3}
+          />
         </div>
       </div>
     </div>

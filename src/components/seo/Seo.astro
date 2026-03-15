@@ -8,10 +8,13 @@ import { getTranslatedData } from "@/js/translationUtils";
 
 const currLocale = getLocaleFromUrl(Astro.url);
 const siteData = getTranslatedData("siteData", currLocale);
+const navData = getTranslatedData("navData", currLocale);
 
-import jsonLDGenerator from "@/js/jsonLD";
+import jsonLDGenerator, { generateSiteNavigationSchema } from "@/js/jsonLD";
 
 import HrefLang from "./HrefLang.astro";
+
+import { type FaqItem } from "@/config/types/configDataTypes";
 
 interface BaseProps {
   title: string;
@@ -31,7 +34,27 @@ interface BlogProps extends BaseProps {
   postFrontmatter: CollectionEntry<"blog">["data"];
 }
 
-const { type, title, description, image, noindex = false } = Astro.props as GenProps | BlogProps;
+interface ServiceProps extends BaseProps {
+  type: "service";
+  image?: ImageMetadata;
+  service: CollectionEntry<"services">;
+}
+
+interface PersonProps extends BaseProps {
+  type: "person";
+  image?: ImageMetadata;
+  person: CollectionEntry<"authors">;
+}
+
+interface FaqPageProps extends BaseProps {
+  type: "faq";
+  image?: ImageMetadata;
+  faqItems: FaqItem[];
+}
+
+type Props = GenProps | BlogProps | ServiceProps | PersonProps | FaqPageProps;
+
+const { type, title, description, image, noindex = false } = Astro.props as Props;
 
 let optimizedImage;
 let jsonLD;
@@ -46,10 +69,8 @@ if (image) {
   });
 }
 
-// if this is a blog page we do things differently
 if (type === "blog") {
   const { authors, postFrontmatter } = Astro.props as BlogProps;
-
   const jsonldImage = image ? optimizedImage : siteData.defaultImage;
 
   jsonLD = jsonLDGenerator({
@@ -59,12 +80,17 @@ if (type === "blog") {
     authors: authors,
     canonicalUrl: canonicalUrl,
   });
-}
-// for general pages
-else {
-  jsonLD = jsonLDGenerator({
-    type: "general",
-  });
+} else if (type === "service") {
+  const { service } = Astro.props as ServiceProps;
+  jsonLD = jsonLDGenerator({ type: "service", service });
+} else if (type === "person") {
+  const { person } = Astro.props as PersonProps;
+  jsonLD = jsonLDGenerator({ type: "person", person });
+} else if (type === "faq") {
+  const { faqItems } = Astro.props as FaqPageProps;
+  jsonLD = jsonLDGenerator({ type: "faq", faqItems });
+} else {
+  jsonLD = jsonLDGenerator({ type: "general" });
 }
 
 function trimEndSlash(str: string) {
@@ -75,9 +101,12 @@ function trimEndSlash(str: string) {
   }
 }
 
-// put together the image URL
 const imageUrl =
   trimEndSlash(Astro.site?.toString() || "") + (optimizedImage?.src || siteData.defaultImage.src);
+
+// SiteNavigationElement schema
+const navSchema = generateSiteNavigationSchema(navData);
+const navSchemaTag = `<script type="application/ld+json">${JSON.stringify(navSchema)}</script>`;
 ---
 
 <SEO
@@ -117,5 +146,6 @@ const imageUrl =
 <!-- hreflang attributes -->
 <HrefLang />
 
-<!-- JSON LD -->
+<!-- JSON-LD structured data -->
 <Fragment set:html={jsonLD} />
+<Fragment set:html={navSchemaTag} />

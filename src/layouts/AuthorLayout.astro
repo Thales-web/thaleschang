@@ -12,7 +12,7 @@ const { author } = Astro.props as Props;
 const { name, avatar, about, email, authorLink } = author.data;
 ---
 
-<BaseLayout title={name} description={about} image={avatar}>
+<BaseLayout type="person" title={name} description={about} image={avatar} person={author}>
   <article class="site-container py-20 md:py-32">
     <div class="mx-auto flex max-w-3xl flex-col items-center text-center">
       {

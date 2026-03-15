@@ -1,0 +1,42 @@
+---
+/**
+ * Citation Capsule Component (GEO)
+ * Structured Q&A block optimized for AI engine citation.
+ * AI crawlers (GPTBot, ClaudeBot, PerplexityBot) prefer content
+ * formatted as clear Q&A pairs with semantic markup.
+ *
+ * Usage in MDX:
+ * <CitationCapsule question="What is SEO?">
+ *   SEO (Search Engine Optimization) is the practice of optimizing
+ *   web content to rank higher in search engine results.
+ * </CitationCapsule>
+ */
+
+interface Props {
+  question: string;
+}
+
+const { question } = Astro.props;
+---
+
+<div
+  class="citation-capsule border-primary-200 dark:border-primary-800 bg-primary-50/50 dark:bg-primary-950/30 my-6 rounded-lg border-l-4 p-5"
+  itemscope
+  itemtype="https://schema.org/Question"
+>
+  <h3
+    class="text-foreground mb-2 text-lg font-semibold"
+    itemprop="name"
+  >
+    {question}
+  </h3>
+  <div
+    itemscope
+    itemtype="https://schema.org/Answer"
+    itemprop="acceptedAnswer"
+  >
+    <div itemprop="text" class="text-muted-foreground leading-relaxed">
+      <slot />
+    </div>
+  </div>
+</div>

@@ -63,3 +63,78 @@ export interface SiteSettingsProps {
   useViewTransitions?: boolean;
   useAnimations?: boolean;
 }
+
+// --------------------------------------------------------
+// client config types - central configuration for SEO/GEO/AEO
+export interface ClientAddress {
+  streetAddress: string;
+  city: string;
+  region: string;
+  postalCode: string;
+  country: string;
+}
+
+export interface ClientGeo {
+  latitude: number;
+  longitude: number;
+}
+
+export type BusinessType =
+  | "Organization"
+  | "LocalBusiness"
+  | "ProfessionalService"
+  | "MedicalBusiness"
+  | "Restaurant"
+  | "Store"
+  | "EducationalOrganization"
+  | "FinancialService"
+  | "RealEstateAgent"
+  | "LegalService"
+  | "AutoRepair"
+  | "BeautySalon"
+  | "FitnessCenter";
+
+export interface ClientConfigProps {
+  business: {
+    name: string;
+    legalName?: string;
+    type: BusinessType;
+    description: string;
+    foundingDate?: string;
+    address?: ClientAddress;
+    phone?: string;
+    email?: string;
+    url: string;
+    logo: string;
+    image?: string;
+    priceRange?: string;
+    openingHours?: string[];
+    geo?: ClientGeo;
+  };
+  social: {
+    twitter?: string;
+    facebook?: string;
+    instagram?: string;
+    linkedin?: string;
+    youtube?: string;
+    github?: string;
+    naver?: string;
+  };
+  analytics: {
+    googleAnalyticsId?: string;
+    googleTagManagerId?: string;
+    googleSearchConsoleVerification?: string;
+    naverSearchAdvisorVerification?: string;
+  };
+  seo: {
+    enableLocalBusiness: boolean;
+    enableFaqSchema: boolean;
+    enableBreadcrumbSchema: boolean;
+  };
+  aiCrawlers: {
+    allowGPTBot: boolean;
+    allowClaudeBot: boolean;
+    allowPerplexityBot: boolean;
+    allowGoogleExtended: boolean;
+  };
+}

@@ -2,16 +2,26 @@
 import { type CollectionEntry } from "astro:content";
 import { ClientRouter } from "astro:transitions";
 
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics.astro";
+import GoogleTagManager from "@/components/analytics/GoogleTagManager.astro";
+import WebVitals from "@/components/analytics/WebVitals.astro";
 import Seo from "@/components/seo/Seo.astro";
+import { clientConfig } from "@/config/clientConfig";
 import siteSettings from "@/config/siteSettings.json";
+import { type FaqItem } from "@/config/types/configDataTypes";
 
 export interface Props {
-  type?: "blog" | "general" | undefined;
+  type?: "blog" | "general" | "service" | "person" | "faq";
   title: string;
   description: string;
   image?: ImageMetadata;
   postFrontmatter?: CollectionEntry<"blog">["data"];
   authors?: CollectionEntry<"authors">[];
+  service?: CollectionEntry<"services">;
+  person?: CollectionEntry<"authors">;
+  faqItems?: FaqItem[];
+  prevUrl?: string;
+  nextUrl?: string;
   noindex?: boolean;
 }
 
@@ -22,8 +32,15 @@ const {
   image,
   authors,
   postFrontmatter,
+  service,
+  person,
+  faqItems,
+  prevUrl,
+  nextUrl,
   noindex = false,
 } = Astro.props as Props;
+
+const { analytics } = clientConfig;
 
 import InterVariable from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2";
 ---
@@ -80,6 +97,14 @@ import InterVariable from "@fontsource-variable/inter/files/inter-latin-wght-nor
   document.addEventListener("astro:after-swap", initTheme);
 </script>
 
+<!-- Search Console & Naver verification -->
+{analytics.googleSearchConsoleVerification && (
+  <meta name="google-site-verification" content={analytics.googleSearchConsoleVerification} />
+)}
+{analytics.naverSearchAdvisorVerification && (
+  <meta name="naver-site-verification" content={analytics.naverSearchAdvisorVerification} />
+)}
+
 <Seo
   type={type}
   title={title}
@@ -87,8 +112,20 @@ import InterVariable from "@fontsource-variable/inter/files/inter-latin-wght-nor
   image={image}
   authors={authors}
   postFrontmatter={postFrontmatter}
+  service={service}
+  person={person}
+  faqItems={faqItems}
   noindex={noindex}
 />
+
+<!-- Pagination SEO -->
+{prevUrl && <link rel="prev" href={prevUrl} />}
+{nextUrl && <link rel="next" href={nextUrl} />}
+
+<!-- Analytics -->
+<GoogleAnalytics />
+<GoogleTagManager position="head" />
+<WebVitals />
 
 <!-- no fallback as I saw issues with firefox fallback -->
 {siteSettings.useViewTransitions && <ClientRouter fallback="none" />}

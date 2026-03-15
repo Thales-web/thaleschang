@@ -23,6 +23,10 @@ const blogCollection = defineCollection({
       heroImage: image().optional(),
       categories: z.array(z.string()),
       tags: z.array(z.string()),
+      // SEO fields
+      metaDescription: z.string().optional(), // overrides description for meta/OG tags
+      keywords: z.array(z.string()).optional(), // keywords for AEO/GEO optimization
+      noindex: z.boolean().optional().default(false), // exclude from search engine indexing
       // mappingKey allows you to match entries across languages for SEO purposes
       mappingKey: z.string().optional(),
       // blog posts will be excluded from build if draft is "true"
@@ -53,6 +57,8 @@ const servicesCollection = defineCollection({
       description: z.string(),
       icon: z.string(),
       image: image(),
+      metaDescription: z.string().optional(),
+      noindex: z.boolean().optional().default(false),
       mappingKey: z.string().optional(),
       order: z.number().optional(),
       draft: z.boolean().optional(),
@@ -94,6 +100,8 @@ const projectsCollection = defineCollection({
       githubUrl: z.string().url().optional(),
       completionDate: z.date(),
       keyFeatures: z.array(z.string()),
+      metaDescription: z.string().optional(),
+      noindex: z.boolean().optional().default(false),
       order: z.number().optional(),
       mappingKey: z.string().optional(),
       draft: z.boolean().optional(),
