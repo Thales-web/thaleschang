@@ -1,0 +1,204 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+
+import { filterCollectionByLanguage, getLocaleFromUrl } from "@/js/localeUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+
+const allCandidates: CollectionEntry<"candidates">[] = await getCollection(
+  "candidates",
+  ({ data }) => data.draft !== true,
+);
+const candidates = filterCollectionByLanguage(allCandidates, currLocale);
+
+const slugify = (str: string) =>
+  str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+const uniq = <T,>(arr: T[]) => Array.from(new Set(arr));
+
+const experienceValues = uniq(
+  candidates.map((c) => c.data.experienceLevel).filter((v): v is string => Boolean(v)),
+);
+const locationValues = uniq(
+  candidates.map((c) => c.data.location).filter((v): v is string => Boolean(v)),
+);
+const jobPreferenceValues = uniq(candidates.flatMap((c) => c.data.jobPreferences ?? []));
+const statusValues = uniq(
+  candidates.map((c) => c.data.status).filter((v): v is string => Boolean(v)),
+);
+---
+
+<aside class="sticky top-24" data-candidate-filters>
+  <div class="bg-muted rounded-2xl p-1">
+    <div class="px-4 py-3">
+      <h2 class="text-foreground text-lg font-semibold">Filters</h2>
+    </div>
+    <div class="bg-card space-y-4 rounded-xl border p-6 shadow-sm">
+
+  <!-- Experience Level -->
+  <details class="group" open>
+    <summary class="flex cursor-pointer list-none items-center justify-between text-sm font-medium">
+      <span>Experience Level</span>
+      <span class="transition-transform group-open:rotate-45">+</span>
+    </summary>
+    <div class="mt-2 space-y-1">
+      {
+        experienceValues.map((v) => (
+          <label class="text-muted-foreground flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              name="experienceLevel"
+              value={slugify(v)}
+              class="rounded"
+            />
+            {v}
+          </label>
+        ))
+      }
+    </div>
+  </details>
+
+  <!-- Location -->
+  <details class="group">
+    <summary class="flex cursor-pointer list-none items-center justify-between text-sm font-medium">
+      <span>Location</span>
+      <span class="transition-transform group-open:rotate-45">+</span>
+    </summary>
+    <div class="mt-2 space-y-1">
+      {
+        locationValues.map((v) => (
+          <label class="text-muted-foreground flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              name="location"
+              value={slugify(v)}
+              class="rounded"
+            />
+            {v}
+          </label>
+        ))
+      }
+    </div>
+  </details>
+
+  <!-- Job Preferences -->
+  <details class="group">
+    <summary class="flex cursor-pointer list-none items-center justify-between text-sm font-medium">
+      <span>Job Preferences</span>
+      <span class="transition-transform group-open:rotate-45">+</span>
+    </summary>
+    <div class="mt-2 space-y-1">
+      {
+        jobPreferenceValues.map((v) => (
+          <label class="text-muted-foreground flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              name="jobPreference"
+              value={slugify(v)}
+              class="rounded"
+            />
+            {v}
+          </label>
+        ))
+      }
+    </div>
+  </details>
+
+  <!-- Status -->
+  <details class="group">
+    <summary class="flex cursor-pointer list-none items-center justify-between text-sm font-medium">
+      <span>Application Status</span>
+      <span class="transition-transform group-open:rotate-45">+</span>
+    </summary>
+    <div class="mt-2 space-y-1">
+      {
+        statusValues.map((v) => (
+          <label class="text-muted-foreground flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              name="applicationStatus"
+              value={slugify(v)}
+              class="rounded"
+            />
+            {v}
+          </label>
+        ))
+      }
+    </div>
+  </details>
+
+  <button
+    id="clearCandidateFilters"
+    class="text-muted-foreground mt-2 text-xs hover:underline"
+  >
+    Clear Filters
+  </button>
+    </div>
+  </div>
+</aside>
+
+<script is:inline>
+  const root = document.querySelector("[data-candidate-filters]");
+  if (root) {
+    const slugify = (str) =>
+      String(str || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
+    const checkboxes = root.querySelectorAll('input[type="checkbox"]');
+    const clearBtn = root.querySelector("#clearCandidateFilters");
+
+    const getSelected = (name) =>
+      Array.from(root.querySelectorAll(`input[name="${name}"]:checked`)).map((el) =>
+        slugify(el.value),
+      );
+
+    const applyFilters = () => {
+      const selected = {
+        experienceLevel: getSelected("experienceLevel"),
+        location: getSelected("location"),
+        jobPreference: getSelected("jobPreference"),
+        applicationStatus: getSelected("applicationStatus"),
+      };
+
+      const hasAny = Object.values(selected).some((arr) => arr.length > 0);
+      const cards = document.querySelectorAll("[data-candidate-card]");
+
+      cards.forEach((card) => {
+        const values = {
+          experienceLevel: slugify(card.getAttribute("data-experience") || ""),
+          location: slugify(card.getAttribute("data-location") || ""),
+          applicationStatus: slugify(card.getAttribute("data-status") || ""),
+          jobPreference: (card.getAttribute("data-preferences") || "").split("|").map(slugify),
+        };
+
+        const groupMatches = {
+          experienceLevel:
+            selected.experienceLevel.length === 0 ||
+            selected.experienceLevel.includes(values.experienceLevel),
+          location:
+            selected.location.length === 0 || selected.location.includes(values.location),
+          applicationStatus:
+            selected.applicationStatus.length === 0 ||
+            selected.applicationStatus.includes(values.applicationStatus),
+          jobPreference:
+            selected.jobPreference.length === 0 ||
+            values.jobPreference.some((p) => selected.jobPreference.includes(p)),
+        };
+
+        const visible = Object.values(groupMatches).every(Boolean);
+        card.classList.toggle("hidden", hasAny ? !visible : false);
+      });
+    };
+
+    checkboxes.forEach((cb) => cb.addEventListener("change", applyFilters));
+    clearBtn?.addEventListener("click", () => {
+      checkboxes.forEach((cb) => (cb.checked = false));
+      applyFilters();
+    });
+  }
+</script>

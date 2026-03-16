@@ -1,0 +1,69 @@
+---
+import { Image } from "astro:assets";
+import { type CollectionEntry } from "astro:content";
+
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { getLocalizedRoute } from "@/js/translationUtils";
+
+interface Props {
+  candidate: CollectionEntry<"candidates">;
+}
+
+const { candidate } = Astro.props;
+const { firstName, lastName, location, experienceLevel, jobPreferences, avatar, status } =
+  candidate.data;
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const url = getLocalizedRoute(currLocale, `/candidates/${candidate.id}/`);
+const name = `${firstName} ${lastName}`;
+---
+
+<article
+  data-candidate-card
+  data-experience={experienceLevel}
+  data-location={location}
+  data-status={status}
+  data-preferences={(jobPreferences ?? []).join("|")}
+  class="bg-card rounded-xl border p-4 shadow-sm lg:p-6"
+>
+  <div class="flex items-center gap-3">
+    {
+      avatar?.url && (
+        <div class="bg-muted shrink-0 rounded-full p-0.5">
+          <Image
+            width={48}
+            height={48}
+            src={avatar.url}
+            alt={avatar.alt || name}
+            class="size-12 rounded-full object-cover"
+          />
+        </div>
+      )
+    }
+    <div>
+      <h3 class="text-foreground text-base font-medium capitalize">{name}</h3>
+      <p class="text-muted-foreground flex items-center gap-1 text-sm">
+        {location}
+        {experienceLevel && <><span aria-hidden="true">·</span>{experienceLevel}</>}
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-6 flex flex-wrap items-end justify-between gap-4 border-t pt-4">
+    {
+      jobPreferences && jobPreferences.length > 0 && (
+        <ul class="flex flex-col gap-1">
+          {jobPreferences.map((pref) => (
+            <li class="text-muted-foreground text-xs">{pref}</li>
+          ))}
+        </ul>
+      )
+    }
+    <a
+      href={url}
+      class="bg-muted text-foreground hover:bg-primary hover:text-primary-foreground inline-flex rounded-lg px-3 py-1.5 text-sm font-medium transition"
+    >
+      See profile
+    </a>
+  </div>
+</article>

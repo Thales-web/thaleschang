@@ -1,0 +1,16 @@
+---
+/**
+ * HtmlBlock Component
+ * Renders raw HTML content within MDX blog posts.
+ * Used for pasting HTML from external tools (N8N, MAKE, Zapier, etc.)
+ * or manually via the Keystatic admin editor.
+ */
+
+interface Props {
+  html: string;
+}
+
+const { html } = Astro.props;
+---
+
+{html && <div class="html-block not-content"><Fragment set:html={html} /></div>}

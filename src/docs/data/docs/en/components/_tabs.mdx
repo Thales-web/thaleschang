@@ -1,0 +1,293 @@
+---
+title: "Tabs"
+section: "main"
+description: "Documentation for the Tabs component group, including synchronized tab groups and usage examples."
+sidebar:
+  label: "Tabs"
+  order: 6
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: true
+mappingKey: "comp-tabs"
+---
+
+## Overview
+
+The Tabs component group provides a tabbed interface for organizing related content into switchable panels. Readers can click a tab trigger to reveal the corresponding content panel, keeping the page compact and letting users focus on the information most relevant to them.
+
+Tabs are commonly used in documentation to show code examples in multiple languages, compare different approaches, or organize configuration options by platform.
+
+All Tabs components are auto-imported into every MDX file. No import statements are needed.
+
+## Components
+
+The Tabs system consists of four components that work together:
+
+| Component | Purpose |
+|---|---|
+| `Tabs` | Root container that manages the active tab state |
+| `TabsList` | Wrapper for the tab trigger buttons |
+| `TabsTrigger` | Individual clickable tab button |
+| `TabsContent` | Content panel revealed when its associated tab is active |
+
+## Basic Usage
+
+Create a tabbed interface by composing the four components together. The `defaultValue` prop on the `Tabs` component determines which tab is active on initial render:
+
+```mdx
+<Tabs defaultValue="npm">
+  <TabsList>
+    <TabsTrigger value="npm">npm</TabsTrigger>
+    <TabsTrigger value="pnpm">pnpm</TabsTrigger>
+    <TabsTrigger value="yarn">yarn</TabsTrigger>
+  </TabsList>
+  <TabsContent value="npm">
+    ```bash
+    npm install @pathfinder/docs
+    ```
+  </TabsContent>
+  <TabsContent value="pnpm">
+    ```bash
+    pnpm add @pathfinder/docs
+    ```
+  </TabsContent>
+  <TabsContent value="yarn">
+    ```bash
+    yarn add @pathfinder/docs
+    ```
+  </TabsContent>
+</Tabs>
+```
+
+<Tabs defaultValue="npm">
+  <TabsList>
+    <TabsTrigger value="npm">npm</TabsTrigger>
+    <TabsTrigger value="pnpm">pnpm</TabsTrigger>
+    <TabsTrigger value="yarn">yarn</TabsTrigger>
+  </TabsList>
+  <TabsContent value="npm">
+    ```bash
+    npm install @pathfinder/docs
+    ```
+  </TabsContent>
+  <TabsContent value="pnpm">
+    ```bash
+    pnpm add @pathfinder/docs
+    ```
+  </TabsContent>
+  <TabsContent value="yarn">
+    ```bash
+    yarn add @pathfinder/docs
+    ```
+  </TabsContent>
+</Tabs>
+
+## The `defaultValue` Prop
+
+The `defaultValue` prop is required on the `Tabs` component. It specifies which tab panel is visible when the page first loads. The value must match one of the `TabsTrigger` `value` props:
+
+```mdx
+<Tabs defaultValue="typescript">
+  <TabsList>
+    <TabsTrigger value="typescript">TypeScript</TabsTrigger>
+    <TabsTrigger value="javascript">JavaScript</TabsTrigger>
+  </TabsList>
+  <TabsContent value="typescript">
+    TypeScript content here...
+  </TabsContent>
+  <TabsContent value="javascript">
+    JavaScript content here...
+  </TabsContent>
+</Tabs>
+```
+
+<Aside variant="caution" title="Matching values">
+If the `defaultValue` does not match any `TabsTrigger` value, no tab will be active on load and no content will be visible. Always verify that the `defaultValue` matches one of the trigger values exactly.
+</Aside>
+
+## Synchronized Tabs with `syncKey`
+
+When you have multiple tab groups on the same page that should stay in sync, use the `syncKey` prop. When a user selects a tab in one group, all other groups with the same `syncKey` will switch to the matching tab automatically.
+
+This is particularly useful when showing code examples in multiple languages throughout a page:
+
+```mdx
+<Tabs defaultValue="ts" syncKey="lang">
+  <TabsList>
+    <TabsTrigger value="ts">TypeScript</TabsTrigger>
+    <TabsTrigger value="js">JavaScript</TabsTrigger>
+  </TabsList>
+  <TabsContent value="ts">
+    ```typescript
+    interface User {
+      id: number;
+      name: string;
+      email: string;
+    }
+
+    const getUser = async (id: number): Promise<User> => {
+      const response = await fetch(`/api/users/${id}`);
+      return response.json();
+    };
+    ```
+  </TabsContent>
+  <TabsContent value="js">
+    ```javascript
+    const getUser = async (id) => {
+      const response = await fetch(`/api/users/${id}`);
+      return response.json();
+    };
+    ```
+  </TabsContent>
+</Tabs>
+
+...some content between the tab groups...
+
+<Tabs defaultValue="ts" syncKey="lang">
+  <TabsList>
+    <TabsTrigger value="ts">TypeScript</TabsTrigger>
+    <TabsTrigger value="js">JavaScript</TabsTrigger>
+  </TabsList>
+  <TabsContent value="ts">
+    ```typescript
+    const createUser = async (data: Partial<User>): Promise<User> => {
+      const response = await fetch("/api/users", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      return response.json();
+    };
+    ```
+  </TabsContent>
+  <TabsContent value="js">
+    ```javascript
+    const createUser = async (data) => {
+      const response = await fetch("/api/users", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      return response.json();
+    };
+    ```
+  </TabsContent>
+</Tabs>
+```
+
+When the user selects "JavaScript" in the first tab group, the second tab group also switches to "JavaScript" — and vice versa. This synchronization persists across page navigation within the same session.
+
+## Rich Content in Tabs
+
+Tab content panels support full Markdown formatting, including headings, lists, tables, code blocks, and nested components:
+
+```mdx
+<Tabs defaultValue="basic">
+  <TabsList>
+    <TabsTrigger value="basic">Basic Setup</TabsTrigger>
+    <TabsTrigger value="advanced">Advanced Setup</TabsTrigger>
+  </TabsList>
+  <TabsContent value="basic">
+    ### Basic Configuration
+
+    For most projects, the default settings are sufficient:
+
+    ```typescript
+    export default {
+      title: "My Docs",
+      defaultLocale: "en",
+    };
+    ```
+
+    This gives you a single-language documentation site with all default options.
+  </TabsContent>
+  <TabsContent value="advanced">
+    ### Advanced Configuration
+
+    For multi-language sites with custom settings:
+
+    ```typescript
+    export default {
+      title: "My Docs",
+      defaultLocale: "en",
+      locales: ["en", "es", "fr", "de"],
+      sidebar: {
+        collapsed: true,
+        maxDepth: 3,
+      },
+      search: {
+        enabled: true,
+        placeholder: "Search documentation...",
+      },
+    };
+    ```
+
+    See the [Site Settings](/docs/reference/site-settings) reference for all options.
+  </TabsContent>
+</Tabs>
+```
+
+## Props Reference
+
+### Tabs
+
+| Prop | Type | Default | Required | Description |
+|---|---|---|---|---|
+| `defaultValue` | `string` | — | Yes | The `value` of the tab that is active on initial render |
+| `syncKey` | `string` | — | No | Synchronization key to link multiple tab groups together |
+
+### TabsList
+
+The `TabsList` component does not accept any custom props. It serves as a semantic container for `TabsTrigger` elements and applies the appropriate flexbox layout.
+
+### TabsTrigger
+
+| Prop | Type | Default | Required | Description |
+|---|---|---|---|---|
+| `value` | `string` | — | Yes | Unique identifier that links this trigger to its `TabsContent` panel |
+
+### TabsContent
+
+| Prop | Type | Default | Required | Description |
+|---|---|---|---|---|
+| `value` | `string` | — | Yes | Unique identifier that links this panel to its `TabsTrigger` button |
+
+## Usage Guidelines
+
+### When to Use Tabs
+
+- Showing the same concept in multiple programming languages
+- Comparing different approaches or configuration options
+- Organizing platform-specific instructions (macOS, Windows, Linux)
+- Separating beginner and advanced content on the same topic
+
+### When Not to Use Tabs
+
+- When all content should be visible simultaneously (use headings or sections)
+- For sequential steps that must be followed in order (use the Steps component)
+- When there are more than five or six tabs (consider separate pages instead)
+- For unrelated content that does not share a logical grouping
+
+### Best Practices
+
+1. **Keep tab labels short** — Use one or two words for trigger labels. Long labels cause the tab bar to overflow on smaller screens.
+
+2. **Use consistent tab ordering** — If multiple tab groups appear on a page, keep the tabs in the same order for predictability.
+
+3. **Provide a sensible default** — Choose the most common or recommended option as the `defaultValue`.
+
+4. **Use `syncKey` for related groups** — When multiple tab groups represent the same choice (e.g., programming language), always use `syncKey` so the user only needs to choose once.
+
+## Accessibility
+
+The Tabs component implements the WAI-ARIA Tabs pattern:
+
+- The `TabsList` has `role="tablist"` to identify it as a tab container
+- Each `TabsTrigger` has `role="tab"` with `aria-selected` indicating the active state
+- Each `TabsContent` has `role="tabpanel"` with `aria-labelledby` referencing its trigger
+- Arrow keys navigate between tabs within the tab list
+- `Home` and `End` keys jump to the first and last tab
+- The active tab panel is focusable for keyboard users navigating the content

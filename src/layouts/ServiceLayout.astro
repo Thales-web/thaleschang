@@ -1,0 +1,58 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+import AboutNumbers from "@/components/about/AboutNumbers.astro";
+import Contact from "@/components/contact/Contact.astro";
+import FaqAccordions from "@/components/faq/FaqAccordionsSideImage.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+interface Props {
+  service: CollectionEntry<"services">;
+  /** Hide the AboutNumbers section */
+  hideNumbers?: boolean;
+  /** Hide the Contact section */
+  hideContact?: boolean;
+  /** Hide the FAQ section */
+  hideFaq?: boolean;
+}
+
+const { service, hideNumbers = false, hideContact = false, hideFaq = false } = Astro.props as Props;
+const { data } = service;
+---
+
+<BaseLayout type="service" title={data.title} description={data.description} image={data.image} service={service}>
+  <section class="site-container mt-8 py-20 md:pt-32">
+    <div class="grid grid-cols-1 items-start gap-8 md:grid-cols-2">
+      <div class="flex flex-col gap-8">
+        <div class="flex flex-col gap-4">
+          <h1 class="h1">{data.titleLong}</h1>
+        </div>
+
+        <div class="markdown-content max-w-none" data-pagefind-body>
+          <slot />
+        </div>
+      </div>
+
+      <div
+        class="order-first flex aspect-square justify-center overflow-clip rounded-xl md:order-last md:rounded-2xl"
+      >
+        {
+          data.image && (
+            <Image
+              src={data.image}
+              alt={`${data.title} service image`}
+              width={650}
+              densities={[1.5, 2]}
+              class="h-full w-full rounded-xl object-cover shadow-xl md:rounded-2xl"
+              loading="eager"
+            />
+          )
+        }
+      </div>
+    </div>
+  </section>
+  {!hideNumbers && <AboutNumbers />}
+  {!hideContact && <Contact />}
+  {!hideFaq && <FaqAccordions />}
+</BaseLayout>

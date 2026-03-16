@@ -1,0 +1,403 @@
+---
+title: "Advanced Techniques"
+section: "tutorials"
+description: "Advanced tips and techniques for power users, including keyboard shortcuts, batch processing, custom templates, search syntax, and performance optimization."
+sidebar:
+  label: "Advanced Techniques"
+  order: 1
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "tut-advanced"
+---
+
+## Overview
+
+This guide covers advanced techniques for experienced users who want to maximize their productivity. It includes keyboard shortcuts for rapid navigation, batch processing strategies, custom template authoring, advanced search syntax, and a performance optimization checklist.
+
+These techniques build on the fundamentals covered in the Getting Started section. If you have not completed the initial setup, begin with the [Introduction](/docs/getting-started) before proceeding.
+
+## Keyboard Shortcuts
+
+The documentation viewer supports a range of keyboard shortcuts for navigating content and activating features without using the mouse.
+
+### Global Shortcuts
+
+These shortcuts are available from any documentation page:
+
+| Shortcut | Action |
+|---|---|
+| <kbd>/</kbd> | Focus the search input |
+| <kbd>Escape</kbd> | Close the search dialog or active modal |
+| <kbd>Ctrl</kbd> + <kbd>K</kbd> | Open the command palette |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd> | Toggle dark mode |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd> | Toggle sidebar visibility |
+
+### Navigation Shortcuts
+
+Use these shortcuts to move between documentation pages:
+
+| Shortcut | Action |
+|---|---|
+| <kbd>N</kbd> | Go to the next page in the current section |
+| <kbd>P</kbd> | Go to the previous page in the current section |
+| <kbd>H</kbd> | Go to the documentation home page |
+| <kbd>T</kbd> | Scroll to the top of the current page |
+| <kbd>B</kbd> | Scroll to the bottom of the current page |
+
+### Table of Contents Shortcuts
+
+Navigate within the current page using the table of contents:
+
+| Shortcut | Action |
+|---|---|
+| <kbd>1</kbd> – <kbd>9</kbd> | Jump to the Nth heading in the table of contents |
+| <kbd>[</kbd> | Jump to the previous heading |
+| <kbd>]</kbd> | Jump to the next heading |
+
+<Aside variant="tip" title="Disabling shortcuts">
+If keyboard shortcuts conflict with other tools running in your browser, you can disable them in the [Site Settings](/docs/reference/site-settings). Set `keyboardShortcuts: false` in the configuration.
+</Aside>
+
+## Batch Processing
+
+When managing a large documentation project, you often need to perform the same operation across many files. This section covers common batch processing tasks and the tools to accomplish them.
+
+### Bulk Frontmatter Updates
+
+Use a script to update frontmatter fields across all MDX files. For example, to add a `pagefind: true` field to all files that are missing it:
+
+```typescript
+// scripts/update-frontmatter.ts
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+
+const DOCS_DIR = "src/docs/data/docs/en";
+
+function processDirectory(dirPath: string) {
+  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+
+    if (entry.isDirectory()) {
+      processDirectory(fullPath);
+    } else if (entry.name.endsWith(".mdx")) {
+      const content = fs.readFileSync(fullPath, "utf-8");
+      const { data, content: body } = matter(content);
+
+      if (data.pagefind === undefined) {
+        data.pagefind = true;
+        const updated = matter.stringify(body, data);
+        fs.writeFileSync(fullPath, updated);
+        console.log(`Updated: ${fullPath}`);
+      }
+    }
+  }
+}
+
+processDirectory(DOCS_DIR);
+```
+
+Run the script with:
+
+```bash
+npx tsx scripts/update-frontmatter.ts
+```
+
+### Batch Renaming Sections
+
+When you need to rename a sidebar section, update both the folder name and the sidebar configuration:
+
+```bash
+# Step 1: Rename the folder
+mv src/docs/data/docs/en/old-section src/docs/data/docs/en/new-section
+
+# Step 2: Update sidebarConfig.ts
+# Change id: "old-section" to id: "new-section"
+
+# Step 3: Update any internal links that reference the old section
+grep -rl "/docs/old-section" src/docs/data/docs/ | \
+  xargs sed -i 's|/docs/old-section|/docs/new-section|g'
+```
+
+### Generating Section Index Files
+
+Automate the creation of index files for new sections:
+
+```typescript
+// scripts/create-section.ts
+import fs from "fs";
+import path from "path";
+
+const sectionName = process.argv[2];
+if (!sectionName) {
+  console.error("Usage: npx tsx scripts/create-section.ts <section-name>");
+  process.exit(1);
+}
+
+const sectionDir = `src/docs/data/docs/en/${sectionName}`;
+fs.mkdirSync(sectionDir, { recursive: true });
+
+const title = sectionName
+  .split("-")
+  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+  .join(" ");
+
+const indexContent = `---
+title: "${title}"
+section: "tutorials"
+description: "Overview of the ${title} section."
+sidebar:
+  label: "Overview"
+  order: 1
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+---
+
+## Overview
+
+Welcome to the ${title} section.
+`;
+
+fs.writeFileSync(path.join(sectionDir, "index.mdx"), indexContent);
+console.log(`Created section: ${sectionDir}`);
+```
+
+## Custom Templates
+
+Create reusable page templates to maintain consistency across your documentation. Templates define a standard structure that authors can fill in, reducing the time to create new pages and ensuring a uniform reading experience.
+
+### Page Template: API Endpoint
+
+Use this template for documenting individual API endpoints:
+
+```mdx
+---
+title: "Endpoint Name"
+section: "tutorials"
+description: "Brief description of what the endpoint does"
+sidebar:
+  label: "Endpoint Name"
+  order: 1
+pagefind: true
+draft: false
+---
+
+## Overview
+
+Brief description of the endpoint's purpose and when to use it.
+
+## Request
+
+\`\`\`
+METHOD /path/{parameter}
+\`\`\`
+
+### Path Parameters
+
+| Parameter | Type | Description |
+|---|---|---|
+| `parameter` | `string` | Description of the parameter |
+
+### Request Body
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `field` | `string` | Yes | Description of the field |
+
+### Example Request
+
+\`\`\`bash
+curl -X METHOD "https://api.example.com/v1/path" \
+  -H "Authorization: Bearer TOKEN"
+\`\`\`
+
+## Response
+
+### Example Response
+
+\`\`\`json
+{
+  "data": {}
+}
+\`\`\`
+
+## Error Codes
+
+| Status | Code | Description |
+|---|---|---|
+| 400 | `VALIDATION_ERROR` | Invalid request body |
+| 404 | `NOT_FOUND` | Resource does not exist |
+```
+
+### Page Template: Tutorial
+
+Use this template for step-by-step tutorial pages:
+
+```mdx
+---
+title: "Tutorial Title"
+section: "tutorials"
+description: "What the reader will learn by the end of this tutorial"
+sidebar:
+  label: "Tutorial Title"
+  order: 1
+pagefind: true
+draft: false
+---
+
+## Overview
+
+Brief description of what this tutorial covers and the end result.
+
+## Prerequisites
+
+- Prerequisite 1
+- Prerequisite 2
+
+## Steps
+
+<Steps>
+
+1. **Step one title**
+
+   Step one instructions...
+
+2. **Step two title**
+
+   Step two instructions...
+
+3. **Step three title**
+
+   Step three instructions...
+
+</Steps>
+
+## Verification
+
+How to verify the tutorial was completed successfully.
+
+## Next Steps
+
+Links to related content.
+```
+
+## Advanced Search Syntax
+
+The Pagefind search integration supports advanced query syntax for precise searches.
+
+### Basic Queries
+
+| Query | Description |
+|---|---|
+| `authentication` | Matches pages containing the word "authentication" |
+| `api keys` | Matches pages containing both "api" and "keys" |
+| `"api keys"` | Matches the exact phrase "api keys" |
+
+### Filtering
+
+You can narrow search results using metadata filters:
+
+| Syntax | Description | Example |
+|---|---|---|
+| `section:components` | Filter by documentation section | `badge section:components` |
+| `tag:tutorial` | Filter by content tag | `oauth tag:tutorial` |
+| `lang:en` | Filter by language | `configuration lang:en` |
+
+### Exclusion
+
+Exclude terms from your search using the minus operator:
+
+| Query | Description |
+|---|---|
+| `authentication -oauth` | Pages about authentication but not OAuth |
+| `button -disabled` | Button documentation excluding disabled state |
+| `api -deprecated` | API pages excluding deprecated endpoints |
+
+### Wildcards
+
+Use wildcards for partial matching:
+
+| Query | Description |
+|---|---|
+| `auth*` | Matches "auth", "authentication", "authorization" |
+| `config*` | Matches "config", "configuration", "configure" |
+
+<Aside variant="info" title="Search indexing">
+Search results are based on the Pagefind index generated at build time. New or updated content will not appear in search results until you run `npm run build`. During development, search uses the most recent production build index.
+</Aside>
+
+## Performance Optimization
+
+Follow this checklist to ensure your documentation site loads quickly and performs well for all readers.
+
+### Build Optimization Checklist
+
+- [ ] **Optimize images** — Compress all images to WebP format. Use the `<Image>` component from `astro:assets` for automatic optimization.
+
+- [ ] **Minimize component imports** — Only import components you actually use. Large unused components increase the JavaScript bundle size.
+
+- [ ] **Enable asset caching** — Configure your hosting provider to set long-lived cache headers for static assets in the `_astro/` directory.
+
+- [ ] **Use production builds** — Always deploy the output of `npm run build`, not the development server. Production builds apply minification, tree-shaking, and dead code elimination.
+
+- [ ] **Audit page weight** — Use browser developer tools to check that no single documentation page loads more than 500 KB of resources on initial load.
+
+### Content Optimization
+
+- [ ] **Use lazy loading for images** — Add `loading="lazy"` to images that appear below the fold.
+
+- [ ] **Limit code block length** — Keep code examples under 50 lines. Use collapsible sections or tabs for longer examples.
+
+- [ ] **Reduce sidebar depth** — Limit your sidebar to two levels of nesting. Deeply nested navigation is harder to scan and slows rendering.
+
+- [ ] **Exclude large pages from search** — If a page contains a lot of auto-generated content (e.g., a changelog), set `pagefind: false` in its frontmatter to reduce the search index size.
+
+### Runtime Performance
+
+- [ ] **Avoid inline scripts** — Use Astro's `client:*` directives for interactive components instead of inline `<script>` tags.
+
+- [ ] **Prefer CSS over JavaScript** — Use CSS transitions and animations instead of JavaScript-based animations wherever possible.
+
+- [ ] **Test on mobile** — Verify that the documentation loads in under 3 seconds on a simulated 4G mobile connection using Lighthouse.
+
+- [ ] **Monitor Core Web Vitals** — Track Largest Contentful Paint (LCP), Cumulative Layout Shift (CLS), and Interaction to Next Paint (INP) for key documentation pages.
+
+### Measurement Tools
+
+| Tool | Purpose |
+|---|---|
+| Lighthouse | Overall performance, accessibility, and SEO audit |
+| WebPageTest | Detailed waterfall analysis and filmstrip comparison |
+| Chrome DevTools | Network tab for request analysis, Performance tab for runtime profiling |
+| Pagefind stats | Search index size and indexing coverage |
+
+<Aside variant="tip" title="Performance budget">
+Set a performance budget for your documentation site. A good target is:
+- **LCP** under 2.5 seconds
+- **CLS** under 0.1
+- **INP** under 200 milliseconds
+- **Total page weight** under 500 KB
+- **Search index** under 1 MB
+</Aside>
+
+## Next Steps
+
+Now that you are familiar with advanced techniques, explore these related resources:
+
+- [Frontmatter Reference](/docs/reference/frontmatter-reference) — Complete list of all frontmatter fields
+- [Site Settings](/docs/reference/site-settings) — Global configuration options
+- [Components](/docs/components) — Pre-built MDX components for rich documentation

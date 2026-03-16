@@ -1,0 +1,170 @@
+---
+import Button from "@/components/button/Button.astro";
+import { Checkbox } from "@/components/starwind/checkbox";
+import { Input } from "@/components/starwind/input";
+import { Label } from "@/components/starwind/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/starwind/select";
+import { Textarea } from "@/components/starwind/textarea";
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { getLocalizedRoute, getTranslatedData, useTranslations } from "@/js/translationUtils";
+
+interface Props {
+  layout?: "single" | "twoCol";
+}
+
+const { layout = "single" } = Astro.props;
+const isTwoCol = layout === "twoCol";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
+---
+
+<form
+  id="contact-form"
+  name="contact"
+  method="POST"
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class:list={["flex flex-col gap-6", { "@container": isTwoCol }]}
+>
+  <!-- Netlify Forms hidden fields -->
+  <input type="hidden" name="form-name" value="contact" />
+  <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+  {isTwoCol ? (
+    <>
+      <div class="grid gap-6 @md:grid-cols-2">
+        <div class="flex flex-col">
+          <Label for="full-name">{t("form_name")}</Label>
+          <Input id="full-name" type="text" name="full-name" required class="min-h-12 px-4 py-3" placeholder={t("form_name_placeholder")} />
+        </div>
+        <div class="flex flex-col">
+          <Label for="email">{t("form_email")}</Label>
+          <Input id="email" type="email" name="email" required class="min-h-12 px-4 py-3" placeholder={t("form_email_placeholder")} />
+        </div>
+      </div>
+      <div class="grid gap-6 @md:grid-cols-2">
+        <div class="flex flex-col">
+          <Label for="phone">{t("form_phone")}</Label>
+          <Input id="phone" type="tel" name="phone" class="min-h-12 px-4 py-3" placeholder={t("form_phone_placeholder")} />
+        </div>
+        <div class="flex flex-col">
+          <Label for="reason">{t("form_reason")}</Label>
+          <Select id="reason" name="reason">
+            <SelectTrigger class="min-h-12 w-full px-4 py-3">
+              <SelectValue placeholder={t("form_reason_placeholder")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="website-inquiry">{t("form_reason_website")}</SelectItem>
+                <SelectItem value="seo-consulting">{t("form_reason_seo")}</SelectItem>
+                <SelectItem value="maintenance">{t("form_reason_maintenance")}</SelectItem>
+                <SelectItem value="partnership">{t("form_reason_partnership")}</SelectItem>
+                <SelectItem value="other">{t("form_reason_other")}</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    </>
+  ) : (
+    <>
+      <div class="flex flex-col">
+        <Label for="full-name">{t("form_name")}</Label>
+        <Input type="text" name="full-name" required class="min-h-12 px-4 py-3" placeholder={t("form_name_placeholder")} />
+      </div>
+      <div class="flex flex-col">
+        <Label for="email">{t("form_email")}</Label>
+        <Input type="email" name="email" required class="min-h-12 px-4 py-3" placeholder={t("form_email_placeholder")} />
+      </div>
+      <div class="flex flex-col">
+        <Label for="phone">{t("form_phone")}</Label>
+        <Input type="tel" name="phone" class="min-h-12 px-4 py-3" placeholder={t("form_phone_placeholder")} />
+      </div>
+      <div class="flex flex-col">
+        <Label for="reason">{t("form_reason")}</Label>
+        <Select name="reason">
+          <SelectTrigger class="min-h-12 w-full px-4 py-3">
+            <SelectValue placeholder={t("form_reason_placeholder")} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="website-inquiry">{t("form_reason_website")}</SelectItem>
+              <SelectItem value="seo-consulting">{t("form_reason_seo")}</SelectItem>
+              <SelectItem value="maintenance">{t("form_reason_maintenance")}</SelectItem>
+              <SelectItem value="partnership">{t("form_reason_partnership")}</SelectItem>
+              <SelectItem value="other">{t("form_reason_other")}</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+    </>
+  )}
+  <div class="flex flex-col">
+    <Label for="message">{t("form_message")}</Label>
+    <Textarea
+      id="message"
+      name="message"
+      required
+      class="min-h-12 px-4 py-3"
+      placeholder={t("form_message_placeholder")}
+      rows={4}
+    />
+  </div>
+  <div class="mt-2 flex flex-col">
+    <div class="flex gap-1">
+      <Label for="consent" class="sr-only">Consent</Label>
+      <Checkbox id="consent" variant="primary" name="consent" required /><p>
+        {t("form_consent")}
+      </p>
+    </div>
+  </div>
+  <div>
+    <Button variant="primary" type="submit" class="w-full py-3 text-lg">{t("form_submit")}</Button>
+  </div>
+</form>
+
+<div id="form-success" class="hidden rounded-lg border border-green-200 bg-green-50 p-6 text-center dark:border-green-800 dark:bg-green-950">
+  <p class="text-lg font-medium text-green-800 dark:text-green-200">{t("form_success")}</p>
+</div>
+
+<script>
+  function handleFormSubmit() {
+    const form = document.querySelector("#contact-form") as HTMLFormElement;
+    const successMsg = document.querySelector("#form-success") as HTMLElement;
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        try {
+          const response = await fetch("/", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(formData as any).toString(),
+          });
+
+          if (response.ok) {
+            form.classList.add("hidden");
+            successMsg?.classList.remove("hidden");
+          }
+        } catch (error) {
+          console.error("Form submission error:", error);
+        }
+      });
+    }
+  }
+
+  handleFormSubmit();
+
+  document.addEventListener("astro:after-swap", handleFormSubmit);
+</script>

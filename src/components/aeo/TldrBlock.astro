@@ -1,0 +1,24 @@
+---
+/**
+ * TL;DR Block Component (AEO)
+ * Concise answer block for "Answer-first" content formatting.
+ * Designed to be extracted by AI engines and Google Featured Snippets.
+ *
+ * Usage in MDX:
+ * <TldrBlock>
+ *   The concise answer to the main question of this article goes here.
+ *   Keep it under 2-3 sentences for maximum snippet capture rate.
+ * </TldrBlock>
+ */
+---
+
+<aside
+  class="tldr-block bg-info/10 border-info my-6 rounded-lg border-l-4 p-5"
+  role="note"
+  aria-label="TL;DR"
+>
+  <p class="text-info mt-0 mb-2 text-sm font-bold uppercase tracking-wider">TL;DR</p>
+  <div class="text-foreground text-base leading-relaxed [&>p]:my-0">
+    <slot />
+  </div>
+</aside>

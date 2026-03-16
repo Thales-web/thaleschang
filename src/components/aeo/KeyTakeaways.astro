@@ -1,0 +1,25 @@
+---
+/**
+ * Key Takeaways Component (AEO)
+ * Highlighted summary box for the top of articles.
+ * Optimized for Google Featured Snippets and AI citation.
+ *
+ * Usage in MDX:
+ * <KeyTakeaways>
+ *   - First key takeaway point
+ *   - Second key takeaway point
+ *   - Third key takeaway point
+ * </KeyTakeaways>
+ */
+---
+
+<aside
+  class="key-takeaways bg-accent/50 dark:bg-accent/10 border-accent my-6 rounded-lg border p-5"
+  role="note"
+  aria-label="Key takeaways"
+>
+  <h2 class="text-foreground mt-0 mb-3 text-lg font-bold">Key Takeaways</h2>
+  <div class="text-muted-foreground [&>ul]:my-0 [&>ul]:list-disc [&>ul]:pl-5 [&_li]:my-1">
+    <slot />
+  </div>
+</aside>

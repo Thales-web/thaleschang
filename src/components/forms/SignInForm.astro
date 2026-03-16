@@ -1,0 +1,82 @@
+---
+import { Icon } from "astro-icon/components";
+
+import Button from "@/components/button/Button.astro";
+import { Input } from "@/components/starwind/input";
+import { Label } from "@/components/starwind/label";
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { getLocalizedRoute, useTranslations } from "@/js/translationUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
+---
+
+<div class="w-full">
+  <div class="mb-12">
+    <h1 class="h3 mb-2 text-xl">{t("sign_in_title")}</h1>
+    <p class="text-muted-foreground">
+      {t("dont_have_account")}
+      <a
+        class="text-primary-accent whitespace-nowrap hover:underline"
+        href={getLocalizedRoute(currLocale, "/sign-up")}>{t("create_free_account")}</a
+      >
+    </p>
+  </div>
+  <div class="mb-6">
+    <form class="-m-2 flex flex-wrap" id="login__form" name="login__form">
+      <div class="w-full p-2">
+        <Label for="login__email" class="sr-only">{t("email_address")}</Label>
+        <Input
+          class="bg-muted w-full"
+          id="login__email"
+          type="email"
+          placeholder={t("email_address")}
+          required
+        />
+      </div>
+      <div class="w-full p-2">
+        <div class="relative">
+          <Label for="login__password" class="sr-only">{t("password")}</Label>
+          <Input
+            class="bg-muted w-full"
+            id="login__password"
+            type="password"
+            placeholder={t("password")}
+            required
+          />
+          <a
+            class="text-primary-accent inline-block pb-4 text-sm tracking-tight sm:absolute sm:top-1/2 sm:right-4 sm:-translate-y-1/2 sm:transform sm:p-0 sm:px-1"
+            href={getLocalizedRoute(currLocale, "/password-reset")}>{t("forgot_password")}</a
+          >
+        </div>
+      </div>
+      <div class="w-full p-2">
+        <Button variant="primary" type="submit" class="w-full rounded-md before:rounded-md"
+          >{t("sign_in")}</Button
+        >
+        <div class="-mx-2.5 my-2 flex items-center">
+          <div class="flex-1 p-2.5">
+            <div class="bg-border h-px"></div>
+          </div>
+          <div class="auto p-2.5">
+            <span class="text-muted-foreground text-sm">{t("or")}</span>
+          </div>
+          <div class="flex-1 p-2.5">
+            <div class="bg-border h-px"></div>
+          </div>
+        </div>
+
+        <!-- Google sign in button -->
+        <a
+          class="bg-base-200 hover:bg-base-300 primary-focus flex w-full justify-center rounded-md px-5 py-2.5 font-medium transition"
+          href="#"
+        >
+          <Icon name="starter/google" aria-hidden="true" class="mr-3 size-6 shrink-0" />
+          <span class="text-base-900 xs:block hidden">{t("sign_in_with_google")}</span><span
+            class="text-base-900 xs:hidden">Google</span
+          >
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

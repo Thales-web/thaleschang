@@ -1,0 +1,28 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+
+import { filterCollectionByLanguage, getPageLocale } from "@/js/localeUtils";
+import CandidateLayout from "@/layouts/CandidateLayout.astro";
+
+export async function getStaticPaths() {
+  const candidates = await getCollection("candidates", ({ data }) => {
+    return data.draft !== true;
+  });
+
+  const filteredCandidates = filterCollectionByLanguage(candidates, getPageLocale(import.meta.url));
+
+  return filteredCandidates.map((candidate) => ({
+    params: { slug: candidate.id },
+    props: candidate,
+  }));
+}
+
+type Props = CollectionEntry<"candidates">;
+
+const candidate = Astro.props as Props;
+const { Content } = await render(candidate);
+---
+
+<CandidateLayout candidate={candidate}>
+  <Content />
+</CandidateLayout>

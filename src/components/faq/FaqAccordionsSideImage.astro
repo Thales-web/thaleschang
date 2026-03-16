@@ -1,0 +1,99 @@
+---
+/**
+ * * FAQ section with side image and accordions
+ * Auto-generates FAQPage JSON-LD schema (AEO)
+ *
+ * Props:
+ *   expandAll - GEO 최적화: true이면 모든 답변을 펼침 상태로 렌더링
+ */
+
+import doctorImage from "@images/faq/woman.png";
+import { Image } from "astro:assets";
+
+import { clientConfig } from "@/config/clientConfig";
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { generateFaqPageSchema } from "@/js/jsonLD";
+import { getLocalizedRoute, getTranslatedData, useTranslations } from "@/js/translationUtils";
+
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./accordion-small";
+
+interface Props {
+  expandAll?: boolean;
+}
+
+const { expandAll = false } = Astro.props;
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const faqData = getTranslatedData("faqData", currLocale);
+const t = useTranslations(currLocale);
+
+const faqSchema = clientConfig.seo.enableFaqSchema
+  ? generateFaqPageSchema(faqData)
+  : null;
+---
+
+<section class="overflow-hidden py-16 md:py-24">
+  <div class="site-container">
+    <div class="grid gap-8 md:grid-cols-2 md:gap-16">
+      <!-- Left Side - FAQ Content -->
+      <div class="flex h-full flex-col justify-between" data-mos="fade-right">
+        <div class="md:max-w-lg">
+          <h2 class="text-foreground h2 mb-4">{t("faq_title")}</h2>
+          <p class="description mr-auto mb-8 max-w-sm">
+            {t("faq_description_side")}
+          </p>
+        </div>
+
+        <div class="mt-6 flex flex-col gap-3">
+          {expandAll ? (
+            <div class="space-y-4">
+              {faqData.map((faqItem) => (
+                <div class="border-border border-b-2 pb-4">
+                  <h3 class="font-heading text-lg font-semibold mb-2">{faqItem.question}</h3>
+                  <div class="text-muted-foreground" set:html={faqItem.answer} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Accordion class="space-y-1">
+              {faqData.map((faqItem, idx) => (
+                <AccordionItem value={`item-${idx}`} class="border-border border-b-2 pb-1">
+                  <AccordionTrigger class="font-heading px-0 py-4 text-lg font-semibold">
+                    {faqItem.question}
+                  </AccordionTrigger>
+                  <AccordionContent class="text-muted-foreground px-0" details={faqItem.answer} />
+                </AccordionItem>
+              ))}
+            </Accordion>
+          )}
+
+          <div class="mt-6">
+            <p class="text-muted-foreground">
+              <span>{t("faq_still_questions")}</span>
+              <a class="text-primary-accent ml-1 hover:underline" href={getLocalizedRoute(currLocale, "/contact")}>{t("contact_us")}</a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Image -->
+      <div class="order-first flex md:order-last" data-mos="fade-left">
+        <div class="mb-auto aspect-3/4 h-auto w-full overflow-hidden rounded-2xl">
+          <Image
+            src={doctorImage}
+            alt="FAQ illustration"
+            width={800}
+            densities={[1.5, 2]}
+            class="h-full w-full object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {faqSchema && (
+    <Fragment
+      set:html={`<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>`}
+    />
+  )}
+</section>

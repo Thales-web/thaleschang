@@ -1,0 +1,188 @@
+---
+import { Image } from "astro:assets";
+import { type CollectionEntry, getCollection } from "astro:content";
+
+import CandidateCard from "@/components/candidates/CandidateCard.astro";
+import { filterCollectionByLanguage, getLocaleFromUrl } from "@/js/localeUtils";
+import { getLocalizedRoute } from "@/js/translationUtils";
+
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  candidate: CollectionEntry<"candidates">;
+}
+
+const { candidate } = Astro.props;
+const {
+  firstName,
+  lastName,
+  location,
+  experienceLevel,
+  status,
+  dateApplied,
+  jobPreferences,
+  phone,
+  email,
+  linkedinProfile,
+  githubProfile,
+  portfolioUrl,
+  resumeUrl,
+  coverLetter,
+  avatar,
+} = candidate.data;
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const name = `${firstName} ${lastName}`;
+
+// Related candidates
+const allCandidates = await getCollection("candidates", ({ data }) => data.draft !== true);
+const filteredCandidates = filterCollectionByLanguage(allCandidates, currLocale);
+const currentPreferences = jobPreferences ?? [];
+const relatedCandidates = filteredCandidates
+  .filter((c) => {
+    const isNotSelf = c.id !== candidate.id;
+    const prefs = c.data.jobPreferences ?? [];
+    return isNotSelf && prefs.some((p) => currentPreferences.includes(p));
+  })
+  .slice(0, 3);
+
+const formattedDate = new Date(dateApplied).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "2-digit",
+});
+---
+
+<BaseLayout title={name} description={`${name} - ${location}`}>
+  <div class="site-container max-w-7xl py-20 md:pt-32">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+      {
+        avatar?.url && (
+          <Image
+            width={80}
+            height={80}
+            src={avatar.url}
+            alt={avatar.alt || name}
+            class="size-16 rounded-full object-cover lg:size-20"
+          />
+        )
+      }
+      <div>
+        <h1 class="h1">{name}</h1>
+        <p class="text-muted-foreground">{location}</p>
+      </div>
+    </div>
+
+    <!-- Content + Sidebar -->
+    <div class="mt-12 grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_320px] lg:gap-12">
+      <!-- Main Content -->
+      <div class="markdown-content">
+        <slot />
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="order-first lg:sticky lg:top-24 lg:order-none">
+        <div class="space-y-1 rounded-xl border shadow-md">
+          {
+            coverLetter && (
+              <div class="border-b px-5 py-4">
+                <p class="text-muted-foreground text-sm">{coverLetter}</p>
+              </div>
+            )
+          }
+          <div class="flex items-center justify-between border-b px-5 py-3">
+            <span class="text-sm font-medium">Experience</span>
+            <span class="text-muted-foreground text-sm">{experienceLevel}</span>
+          </div>
+          <div class="flex items-center justify-between border-b px-5 py-3">
+            <span class="text-sm font-medium">Status</span>
+            <span class="text-muted-foreground text-sm">{status}</span>
+          </div>
+          <div class="flex items-center justify-between border-b px-5 py-3">
+            <span class="text-sm font-medium">Applied on</span>
+            <span class="text-muted-foreground text-sm">{formattedDate}</span>
+          </div>
+          {
+            jobPreferences && jobPreferences.length > 0 && (
+              <div class="flex items-start justify-between border-b px-5 py-3">
+                <span class="text-sm font-medium">Preferences</span>
+                <ul class="text-muted-foreground text-right text-sm">
+                  {jobPreferences.map((p) => (
+                    <li>{p}</li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+          {
+            phone && (
+              <div class="flex items-center justify-between border-b px-5 py-3">
+                <span class="text-sm font-medium">Phone</span>
+                <a
+                  href={`tel:${phone.replace(/\s+/g, "")}`}
+                  class="text-primary-accent text-sm font-medium hover:underline"
+                >
+                  {phone}
+                </a>
+              </div>
+            )
+          }
+          <div class="flex items-center justify-between border-b px-5 py-3">
+            <span class="text-sm font-medium">Email</span>
+            <a
+              href={`mailto:${email}`}
+              class="text-primary-accent text-sm font-medium hover:underline"
+            >
+              {email}
+            </a>
+          </div>
+          <div class="flex items-center gap-3 px-5 py-3 text-xs">
+            {
+              linkedinProfile && (
+                <a href={linkedinProfile} class="text-primary-accent font-medium hover:underline">
+                  LinkedIn
+                </a>
+              )
+            }
+            {
+              githubProfile && (
+                <a href={githubProfile} class="text-primary-accent font-medium hover:underline">
+                  GitHub
+                </a>
+              )
+            }
+            {
+              portfolioUrl && (
+                <a href={portfolioUrl} class="text-primary-accent font-medium hover:underline">
+                  Portfolio
+                </a>
+              )
+            }
+            {
+              resumeUrl && (
+                <a href={resumeUrl} class="text-primary-accent font-medium hover:underline">
+                  Resume
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Related Candidates -->
+    {
+      relatedCandidates.length > 0 && (
+        <div class="mt-16">
+          <h2 class="h2 mb-8">Related Candidates</h2>
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {relatedCandidates.map((c) => (
+              <CandidateCard candidate={c} />
+            ))}
+          </div>
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>

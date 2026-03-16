@@ -1,0 +1,29 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { tv } from "tailwind-variants";
+
+type Props = HTMLAttributes<"div"> & {
+  /**
+   * The type of accordion.  If "single", only one item can be open at a time.
+   */
+  type?: "single" | "multiple";
+  /**
+   * The value of the item that should be open by default
+   */
+  defaultValue?: string;
+};
+
+const accordion = tv({ base: "starwind-accordion starwind-accordion-faq-small" });
+
+const { type = "single", defaultValue, class: className, ...rest } = Astro.props;
+---
+
+<div class={accordion({ class: className })} data-type={type} data-value={defaultValue} {...rest}>
+  <slot />
+</div>
+
+<script>
+  import { setupAccordions } from "@/components/starwind/accordion/accordion-handler";
+  setupAccordions(".starwind-accordion");
+  document.addEventListener("astro:after-swap", () => setupAccordions(".starwind-accordion"));
+</script>

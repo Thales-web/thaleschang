@@ -1,0 +1,29 @@
+---
+/**
+ * Kakao Pixel Component
+ * Renders Kakao Pixel tracking script only when kakaoPixelId is configured.
+ */
+import { clientConfig } from "@/config/clientConfig";
+
+const kakaoId = clientConfig.analytics.kakaoPixelId;
+---
+
+{
+  kakaoId && (
+    <script is:inline define:vars={{ kakaoId }}>
+      !(function (k, a, e, p, i, x) {
+        k.kakaoPixel =
+          k.kakaoPixel ||
+          function () {
+            (k.kakaoPixel.q = k.kakaoPixel.q || []).push(arguments);
+          };
+        x = a.createElement(e);
+        x.async = 1;
+        x.src = "https://t1.daumcdn.net/kas/static/kp.js";
+        i = a.getElementsByTagName(e)[0];
+        i.parentNode.insertBefore(x, i);
+      })(window, document, "script");
+      kakaoPixel(kakaoId).pageView();
+    </script>
+  )
+}

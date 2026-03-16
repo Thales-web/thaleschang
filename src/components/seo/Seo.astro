@@ -1,0 +1,151 @@
+---
+import { getImage } from "astro:assets";
+import { type CollectionEntry } from "astro:content";
+import { SEO } from "astro-seo";
+
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { getTranslatedData } from "@/js/translationUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const siteData = getTranslatedData("siteData", currLocale);
+const navData = getTranslatedData("navData", currLocale);
+
+import jsonLDGenerator, { generateSiteNavigationSchema } from "@/js/jsonLD";
+
+import HrefLang from "./HrefLang.astro";
+
+import { type FaqItem } from "@/config/types/configDataTypes";
+
+interface BaseProps {
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+
+interface GenProps extends BaseProps {
+  type: "general";
+  image?: ImageMetadata;
+}
+
+interface BlogProps extends BaseProps {
+  type: "blog";
+  image: ImageMetadata;
+  authors: CollectionEntry<"authors">[];
+  postFrontmatter: CollectionEntry<"blog">["data"];
+}
+
+interface ServiceProps extends BaseProps {
+  type: "service";
+  image?: ImageMetadata;
+  service: CollectionEntry<"services">;
+}
+
+interface PersonProps extends BaseProps {
+  type: "person";
+  image?: ImageMetadata;
+  person: CollectionEntry<"authors">;
+}
+
+interface FaqPageProps extends BaseProps {
+  type: "faq";
+  image?: ImageMetadata;
+  faqItems: FaqItem[];
+}
+
+type Props = GenProps | BlogProps | ServiceProps | PersonProps | FaqPageProps;
+
+const { type, title, description, image, noindex = false } = Astro.props as Props;
+
+let optimizedImage;
+let jsonLD;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+
+if (image) {
+  optimizedImage = await getImage({
+    src: image,
+    format: "webp",
+    quality: "high",
+    width: 1200,
+  });
+}
+
+if (type === "blog") {
+  const { authors, postFrontmatter } = Astro.props as BlogProps;
+  const jsonldImage = image ? optimizedImage : siteData.defaultImage;
+
+  jsonLD = jsonLDGenerator({
+    type: "blog",
+    postFrontmatter: postFrontmatter,
+    image: jsonldImage,
+    authors: authors,
+    canonicalUrl: canonicalUrl,
+  });
+} else if (type === "service") {
+  const { service } = Astro.props as ServiceProps;
+  jsonLD = jsonLDGenerator({ type: "service", service });
+} else if (type === "person") {
+  const { person } = Astro.props as PersonProps;
+  jsonLD = jsonLDGenerator({ type: "person", person });
+} else if (type === "faq") {
+  const { faqItems } = Astro.props as FaqPageProps;
+  jsonLD = jsonLDGenerator({ type: "faq", faqItems });
+} else {
+  jsonLD = jsonLDGenerator({ type: "general" });
+}
+
+function trimEndSlash(str: string) {
+  if (str[str.length - 1] === "/") {
+    return str.slice(0, -1);
+  } else {
+    return str;
+  }
+}
+
+const imageUrl =
+  trimEndSlash(Astro.site?.toString() || "") + (optimizedImage?.src || siteData.defaultImage.src);
+
+// SiteNavigationElement schema
+const navSchema = generateSiteNavigationSchema(navData);
+const navSchemaTag = `<script type="application/ld+json">${JSON.stringify(navSchema)}</script>`;
+---
+
+<SEO
+  title={title}
+  description={description}
+  canonical={canonicalUrl.toString()}
+  openGraph={{
+    basic: {
+      title: title,
+      type: "website",
+      image: imageUrl,
+      url: canonicalUrl.toString(),
+    },
+    optional: {
+      description: description,
+      siteName: siteData.title,
+    },
+    image: {
+      type: "image/webp",
+      width: optimizedImage?.attributes.width || "1200",
+      height: optimizedImage?.attributes.height || "800",
+      alt: title,
+    },
+  }}
+  twitter={{
+    site: "@" + siteData.author.twitter,
+    creator: "@" + siteData.author.twitter,
+    card: "summary_large_image",
+    title: title,
+    description: description,
+    image: imageUrl,
+  }}
+  noindex={noindex}
+  nofollow={noindex}
+/>
+
+<!-- hreflang attributes -->
+<HrefLang />
+
+<!-- JSON-LD structured data -->
+<Fragment set:html={jsonLD} />
+<Fragment set:html={navSchemaTag} />

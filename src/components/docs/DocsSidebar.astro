@@ -1,0 +1,80 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import type { SidebarNavData } from "@/docs/config/types/docsConfigTypes";
+import { getDocsBySection, getSectionFromId } from "@/js/docsUtils";
+import { getLocalizedRoute } from "@/js/translationUtils";
+import { docsSiteSettings } from "@/docs/config/siteSettings.json";
+
+interface Props {
+  docs: CollectionEntry<"docs">[];
+  sidebarNavData: SidebarNavData;
+  currentId: string;
+  locale: string;
+}
+
+const { docs, sidebarNavData, currentId, locale } = Astro.props;
+const docsBySection = getDocsBySection(docs, sidebarNavData);
+const docsRoute = docsSiteSettings.docsRoute;
+---
+
+<nav class="docs-sidebar flex flex-col gap-6" aria-label="Documentation sidebar">
+  {sidebarNavData.tabs.map((tab) => (
+    <div>
+      {sidebarNavData.tabs.length > 1 && (
+        <h4 class="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          {tab.title}
+        </h4>
+      )}
+
+      {tab.sections.map((section) => {
+        const sectionDocs = docsBySection.get(section.id) ?? [];
+        return (
+          <div class="mb-4">
+            <h5 class="mb-2 text-sm font-semibold text-foreground">
+              {section.title}
+            </h5>
+            <ul class="flex flex-col gap-0.5 border-l border-border pl-0">
+              {sectionDocs.map((doc) => {
+                const isActive = doc.id === currentId;
+                const label = doc.data.sidebar?.label ?? doc.data.title;
+                return (
+                  <li>
+                    <a
+                      href={getLocalizedRoute(locale, `/${docsRoute}/${doc.id}`)}
+                      class:list={[
+                        "block border-l-2 py-1.5 pl-4 text-sm transition-colors",
+                        {
+                          "border-primary text-primary-accent font-medium": isActive,
+                          "border-transparent text-muted-foreground hover:border-border hover:text-foreground": !isActive,
+                        },
+                      ]}
+                      aria-current={isActive ? "page" : undefined}
+                    >
+                      {label}
+                      {doc.data.sidebar?.badge && (
+                        <span
+                          class:list={[
+                            "ml-2 inline-block rounded-full px-1.5 py-0.5 text-[10px] font-semibold leading-none",
+                            {
+                              "bg-info text-info-foreground": doc.data.sidebar.badge.variant === "note" || !doc.data.sidebar.badge.variant,
+                              "bg-success text-success-foreground": doc.data.sidebar.badge.variant === "tip",
+                              "bg-warning text-warning-foreground": doc.data.sidebar.badge.variant === "caution",
+                              "bg-error text-error-foreground": doc.data.sidebar.badge.variant === "danger",
+                            },
+                          ]}
+                        >
+                          {doc.data.sidebar.badge.text}
+                        </span>
+                      )}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  ))}
+</nav>

@@ -1,0 +1,46 @@
+---
+import { getCollection, render } from "astro:content";
+
+import ExternalLink from "@/components/markdown-components/ExternalLink.astro";
+import { filterCollectionByLanguage, getPageLocale } from "@/js/localeUtils";
+import { getTranslatedData } from "@/js/translationUtils";
+import DocsLayout from "@/layouts/DocsLayout.astro";
+
+export async function getStaticPaths() {
+  const docs = await getCollection("docs", ({ data }) => {
+    return data.draft !== true;
+  });
+
+  const filteredDocs = filterCollectionByLanguage(docs, getPageLocale(import.meta.url));
+  const sidebarData = getTranslatedData("sidebarNavData", getPageLocale(import.meta.url));
+  const documentationTabs = sidebarData.tabs;
+
+  const paths: any[] = [];
+
+  if (documentationTabs && documentationTabs.length > 0) {
+    for (const section of documentationTabs) {
+      const sectionDocs = filteredDocs.filter((doc) => doc.data.section === section.id);
+      const sectionPaths = sectionDocs.map((doc) => ({
+        params: { slug: doc.id as string },
+        props: { doc, sectionId: section.id },
+      }));
+      paths.push(...sectionPaths);
+    }
+  } else {
+    const defaultPaths = filteredDocs.map((doc) => ({
+      params: { slug: doc.id as string },
+      props: { doc, sectionId: "main" },
+    }));
+    paths.push(...defaultPaths);
+  }
+
+  return paths;
+}
+
+const { doc, sectionId = "main" } = Astro.props;
+const { Content, headings } = await render(doc);
+---
+
+<DocsLayout doc={doc} headings={headings} sectionId={sectionId}>
+  <Content components={{ a: ExternalLink }} />
+</DocsLayout>

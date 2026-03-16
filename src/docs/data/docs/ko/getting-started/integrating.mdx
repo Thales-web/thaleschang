@@ -1,0 +1,225 @@
+---
+title: "Integrating with an Existing Theme"
+section: "main"
+description: "A five-step guide to adding Pathfinder documentation to an existing Astro project or theme."
+sidebar:
+  label: "Theme Integration"
+  order: 3
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "gs-integrate"
+---
+
+## Overview
+
+If you already have an Astro project and want to add Pathfinder documentation to it, this guide walks you through the integration process in five steps. By the end, your existing site will have a fully functional `/docs` section powered by Pathfinder.
+
+This approach is ideal when you have an existing marketing site, blog, or application and want to add structured documentation without starting a new project from scratch.
+
+## Prerequisites
+
+Before you begin, ensure your existing project meets the following requirements:
+
+- Astro version 4.0 or higher
+- Node.js version 18.14.1 or higher
+- MDX integration installed (`@astrojs/mdx`)
+- Tailwind CSS v4 configured
+
+## Step 1: Copy the Documentation Source Files
+
+Copy the entire `src/docs/` directory from the Pathfinder starter into your existing project. This directory contains all the components, configuration files, layouts, and starter content.
+
+```bash
+# From the Pathfinder starter project
+cp -r src/docs/ /path/to/your-project/src/docs/
+```
+
+Your project structure should now include:
+
+```
+your-project/
+├── src/
+│   ├── pages/          # Your existing pages
+│   ├── components/     # Your existing components
+│   ├── docs/           # Pathfinder documentation (newly added)
+│   │   ├── components/
+│   │   ├── config/
+│   │   ├── data/
+│   │   ├── layouts/
+│   │   └── styles/
+│   └── ...
+├── package.json
+└── astro.config.mjs
+```
+
+## Step 2: Install Required Dependencies
+
+Add the dependencies that Pathfinder requires to your project:
+
+```bash
+npm install @astrojs/mdx pagefind
+```
+
+If you do not already have Tailwind CSS v4 installed, add it as well:
+
+```bash
+npm install tailwindcss @astrojs/tailwind
+```
+
+## Step 3: Update Your Astro Configuration
+
+Modify your `astro.config.mjs` to include the MDX integration and configure the auto-import settings for Pathfinder components:
+
+```javascript
+// astro.config.mjs
+import { defineConfig } from "astro/config";
+import mdx from "@astrojs/mdx";
+import tailwind from "@astrojs/tailwind";
+
+export default defineConfig({
+  integrations: [
+    mdx({
+      // Auto-import Pathfinder components in all MDX files
+      components: {
+        Aside: "./src/docs/components/Aside.astro",
+        Badge: "./src/docs/components/Badge.astro",
+        Button: "./src/docs/components/Button.astro",
+        Steps: "./src/docs/components/Steps.astro",
+        Tabs: "./src/docs/components/Tabs/Tabs.astro",
+        TabsList: "./src/docs/components/Tabs/TabsList.astro",
+        TabsTrigger: "./src/docs/components/Tabs/TabsTrigger.astro",
+        TabsContent: "./src/docs/components/Tabs/TabsContent.astro",
+      },
+    }),
+    tailwind(),
+  ],
+});
+```
+
+## Step 4: Create the Documentation Route
+
+Create a dynamic route file that renders documentation pages. Add the following file to your pages directory:
+
+```bash
+mkdir -p src/pages/docs
+```
+
+Create `src/pages/docs/[...slug].astro`:
+
+```astro
+---
+import { getCollection } from "astro:content";
+import DocsLayout from "../../docs/layouts/DocsLayout.astro";
+
+export async function getStaticPaths() {
+  const docs = await getCollection("docs");
+  return docs.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<DocsLayout frontmatter={entry.data}>
+  <Content />
+</DocsLayout>
+```
+
+## Step 5: Configure Content Collections
+
+Register the documentation content collection in your `src/content/config.ts` file. If the file does not exist, create it:
+
+```typescript
+// src/content/config.ts
+import { defineCollection, z } from "astro:content";
+
+const docsCollection = defineCollection({
+  type: "content",
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    sidebar: z
+      .object({
+        label: z.string().optional(),
+        order: z.number().optional(),
+        badge: z
+          .object({
+            text: z.string(),
+            variant: z.string().optional(),
+          })
+          .optional(),
+      })
+      .optional(),
+    tableOfContents: z
+      .object({
+        minHeadingLevel: z.number().optional(),
+        maxHeadingLevel: z.number().optional(),
+      })
+      .optional(),
+    pagefind: z.boolean().optional(),
+    draft: z.boolean().optional(),
+    mappingKey: z.string().optional(),
+  }),
+});
+
+export const collections = {
+  docs: docsCollection,
+};
+```
+
+## Verifying the Integration
+
+After completing all five steps, start your development server to verify that everything is working:
+
+```bash
+npm run dev
+```
+
+Navigate to `http://localhost:4321/docs` in your browser. You should see the Pathfinder documentation landing page with the sidebar, navigation, and all starter content.
+
+### Common Issues
+
+If you encounter problems during integration, check the following:
+
+| Issue | Solution |
+|---|---|
+| Components not rendering | Verify the auto-import paths in `astro.config.mjs` |
+| Styles missing | Ensure Tailwind CSS is processing the docs directory |
+| Content not appearing | Check that content collection is properly registered |
+| 404 on docs routes | Verify the dynamic route file is in the correct location |
+| Search not working | Run a production build to generate the Pagefind index |
+
+## Customizing the Integration
+
+### Using a Different Base Route
+
+If you want your documentation to live at a path other than `/docs`, update the `docsRoute` setting in `src/docs/config/siteSettings.ts`:
+
+```typescript
+export const siteSettings = {
+  docsRoute: "/documentation", // Changes the base path
+};
+```
+
+Then move your route file accordingly to `src/pages/documentation/[...slug].astro`.
+
+### Scoping Styles
+
+If Pathfinder styles conflict with your existing site styles, you can scope the documentation styles by wrapping the docs layout in a CSS scope:
+
+```css
+/* Only apply docs styles within the docs layout */
+.docs-wrapper {
+  @import "../docs/styles/docs.css";
+}
+```
+
+## Next Steps
+
+With the integration complete, explore the [Components](/docs/components) section to learn about the pre-built MDX components, or visit the [Reference](/docs/reference/frontmatter-reference) section for detailed configuration options.

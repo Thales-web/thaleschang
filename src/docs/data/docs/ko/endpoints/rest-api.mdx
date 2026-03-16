@@ -1,0 +1,299 @@
+---
+title: "REST API Endpoints"
+section: "api"
+description: "Complete reference for the REST API endpoints, including request formats, response structures, and error codes."
+sidebar:
+  label: "REST API Endpoints"
+  order: 1
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "api-rest"
+---
+
+## Overview
+
+This page documents all available REST API endpoints. The API follows RESTful conventions with JSON request and response bodies. All endpoints require authentication unless otherwise noted.
+
+## Base URL
+
+All API requests should be made to the following base URL:
+
+```
+https://api.example.com/v1
+```
+
+For development and testing, use the sandbox environment:
+
+```
+https://sandbox.api.example.com/v1
+```
+
+## Authentication
+
+All requests must include an API key in the `Authorization` header:
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+  https://api.example.com/v1/users
+```
+
+See the [Authentication Overview](/docs/authentication/overview) for details on obtaining and managing API keys.
+
+## Users Endpoints
+
+### List All Users
+
+Retrieve a paginated list of all users in your organization.
+
+```
+GET /users
+```
+
+#### Query Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `page` | `integer` | `1` | Page number for pagination |
+| `limit` | `integer` | `20` | Number of results per page (max 100) |
+| `sort` | `string` | `"created_at"` | Sort field (`name`, `email`, `created_at`) |
+| `order` | `string` | `"desc"` | Sort order (`asc` or `desc`) |
+
+#### Example Request
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+  "https://api.example.com/v1/users?page=1&limit=10&sort=name&order=asc"
+```
+
+#### Example Response
+
+```json
+{
+  "data": [
+    {
+      "id": "usr_abc123",
+      "name": "Jane Smith",
+      "email": "jane@example.com",
+      "role": "admin",
+      "created_at": "2024-01-15T09:30:00Z"
+    },
+    {
+      "id": "usr_def456",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "role": "member",
+      "created_at": "2024-02-20T14:15:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 10,
+    "total": 42,
+    "total_pages": 5
+  }
+}
+```
+
+### Get a Single User
+
+Retrieve details for a specific user by ID.
+
+```
+GET /users/:id
+```
+
+#### Example Request
+
+```bash
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+  https://api.example.com/v1/users/usr_abc123
+```
+
+#### Example Response
+
+```json
+{
+  "id": "usr_abc123",
+  "name": "Jane Smith",
+  "email": "jane@example.com",
+  "role": "admin",
+  "created_at": "2024-01-15T09:30:00Z",
+  "last_login": "2024-03-10T18:45:00Z",
+  "preferences": {
+    "theme": "dark",
+    "notifications": true,
+    "language": "en"
+  }
+}
+```
+
+### Create a User
+
+Create a new user in your organization.
+
+```
+POST /users
+```
+
+#### Request Body
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `name` | `string` | Yes | The user's full name |
+| `email` | `string` | Yes | A valid email address |
+| `role` | `string` | No | User role (`admin`, `member`, `viewer`). Defaults to `member` |
+
+#### Example Request
+
+```bash
+curl -X POST \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alice Johnson", "email": "alice@example.com", "role": "member"}' \
+  https://api.example.com/v1/users
+```
+
+#### Example Response
+
+```json
+{
+  "id": "usr_ghi789",
+  "name": "Alice Johnson",
+  "email": "alice@example.com",
+  "role": "member",
+  "created_at": "2024-03-13T10:00:00Z"
+}
+```
+
+## Products Endpoints
+
+### List All Products
+
+Retrieve a paginated list of products.
+
+```
+GET /products
+```
+
+#### Query Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `page` | `integer` | `1` | Page number |
+| `limit` | `integer` | `20` | Results per page (max 100) |
+| `category` | `string` | — | Filter by product category |
+| `status` | `string` | `"active"` | Filter by status (`active`, `archived`, `draft`) |
+
+#### Example Response
+
+```json
+{
+  "data": [
+    {
+      "id": "prod_001",
+      "name": "Documentation Theme",
+      "category": "themes",
+      "price": 49.00,
+      "status": "active",
+      "created_at": "2024-01-01T00:00:00Z"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 8,
+    "total_pages": 1
+  }
+}
+```
+
+### Get a Single Product
+
+```
+GET /products/:id
+```
+
+Returns the full product object including description, images, and metadata.
+
+### Create a Product
+
+```
+POST /products
+```
+
+#### Request Body
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `name` | `string` | Yes | Product name |
+| `category` | `string` | Yes | Product category |
+| `price` | `number` | Yes | Price in USD |
+| `description` | `string` | No | Product description |
+| `status` | `string` | No | Initial status. Defaults to `draft` |
+
+## Error Codes
+
+All API errors return a consistent JSON structure:
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "The email field is required.",
+    "details": [
+      {
+        "field": "email",
+        "message": "This field is required"
+      }
+    ]
+  }
+}
+```
+
+### HTTP Status Codes
+
+| Status Code | Meaning | Description |
+|---|---|---|
+| `200` | OK | Request succeeded |
+| `201` | Created | Resource was created successfully |
+| `400` | Bad Request | Invalid request body or parameters |
+| `401` | Unauthorized | Missing or invalid API key |
+| `403` | Forbidden | API key lacks required permissions |
+| `404` | Not Found | Resource does not exist |
+| `409` | Conflict | Resource already exists (e.g., duplicate email) |
+| `422` | Unprocessable Entity | Request body failed validation |
+| `429` | Too Many Requests | Rate limit exceeded |
+| `500` | Internal Server Error | Unexpected server error |
+
+### Error Codes
+
+| Code | HTTP Status | Description |
+|---|---|---|
+| `VALIDATION_ERROR` | 400/422 | Request body failed validation |
+| `AUTHENTICATION_ERROR` | 401 | Invalid or expired API key |
+| `PERMISSION_ERROR` | 403 | Insufficient permissions |
+| `NOT_FOUND` | 404 | Resource not found |
+| `DUPLICATE_ERROR` | 409 | Resource already exists |
+| `RATE_LIMITED` | 429 | Too many requests |
+| `INTERNAL_ERROR` | 500 | Server error |
+
+## Rate Limiting
+
+API requests are rate-limited to prevent abuse:
+
+| Plan | Rate Limit | Burst Limit |
+|---|---|---|
+| Free | 60 requests/minute | 10 requests/second |
+| Pro | 600 requests/minute | 50 requests/second |
+| Enterprise | 6000 requests/minute | 200 requests/second |
+
+Rate limit information is included in response headers:
+
+```
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 45
+X-RateLimit-Reset: 1710324000
+```

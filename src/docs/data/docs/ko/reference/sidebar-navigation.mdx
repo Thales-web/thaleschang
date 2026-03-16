@@ -1,0 +1,225 @@
+---
+title: "Sidebar Navigation Configuration"
+section: "main"
+description: "Reference guide for configuring sidebar tabs, sections, and page ordering in Pathfinder documentation."
+sidebar:
+  label: "Sidebar Navigation"
+  order: 3
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "ref-sidebar"
+---
+
+## Overview
+
+The sidebar navigation is configured in `src/docs/config/sidebarConfig.ts`. This file defines the tab structure and content sections that appear in the left sidebar of every documentation page.
+
+The sidebar supports two levels of organization: **tabs** at the top level and **sections** within each tab. Sections map directly to content directories, and pages within each section are ordered using frontmatter.
+
+## Configuration File
+
+The sidebar configuration is located at:
+
+```
+src/docs/config/sidebarConfig.ts
+```
+
+## Basic Structure
+
+The configuration exports an array of `SidebarTab` objects, each containing an array of `SidebarSection` objects:
+
+```typescript
+// src/docs/config/sidebarConfig.ts
+import type { SidebarTab } from "../types";
+
+export const sidebarConfig: SidebarTab[] = [
+  {
+    label: "Guide",
+    sections: [
+      {
+        label: "Getting Started",
+        id: "getting-started",
+      },
+      {
+        label: "Components",
+        id: "components",
+      },
+    ],
+  },
+  {
+    label: "API",
+    sections: [
+      {
+        label: "Endpoints",
+        id: "endpoints",
+      },
+      {
+        label: "Authentication",
+        id: "authentication",
+      },
+    ],
+  },
+];
+```
+
+## SidebarTab Properties
+
+Each tab supports the following properties:
+
+| Property | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `label` | `string` | Yes | — | The text displayed on the tab |
+| `sections` | `SidebarSection[]` | Yes | — | Array of content sections within this tab |
+| `icon` | `string` | No | — | An icon identifier displayed before the tab label |
+
+## SidebarSection Properties
+
+Each section supports the following properties:
+
+| Property | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `label` | `string` | Yes | — | The section heading displayed in the sidebar |
+| `id` | `string` | Yes | — | The folder name in `data/docs/{locale}/` that contains the section's content |
+| `collapsed` | `boolean` | No | `false` | Whether the section starts in a collapsed state |
+| `icon` | `string` | No | — | An icon identifier displayed before the section label |
+
+## Mapping Sections to Content
+
+The `id` property of each section must match a directory name inside your content locale folder. For example:
+
+```
+sidebarConfig section id: "getting-started"
+↓
+Content directory: src/docs/data/docs/en/getting-started/
+```
+
+All MDX files inside that directory will appear as pages under that section. The order of pages within a section is controlled by the `sidebar.order` frontmatter field in each MDX file.
+
+## Collapsed Sections
+
+You can set a section to start in a collapsed state, which is useful for long sidebars:
+
+```typescript
+{
+  label: "Advanced Topics",
+  id: "advanced",
+  collapsed: true,
+}
+```
+
+Users can click the section header to expand and collapse it. The collapsed state is not persisted across page loads.
+
+## Multiple Tabs
+
+Tabs provide top-level organization for your sidebar. Each tab acts as a separate view of the sidebar, showing only its own sections:
+
+```typescript
+export const sidebarConfig: SidebarTab[] = [
+  {
+    label: "Guide",
+    icon: "book",
+    sections: [
+      { label: "Getting Started", id: "getting-started" },
+      { label: "Components", id: "components" },
+      { label: "Reference", id: "reference" },
+    ],
+  },
+  {
+    label: "API",
+    icon: "code",
+    sections: [
+      { label: "Endpoints", id: "endpoints" },
+      { label: "Authentication", id: "authentication" },
+    ],
+  },
+  {
+    label: "Tutorials",
+    icon: "graduation-cap",
+    sections: [
+      { label: "Tutorials", id: "tutorials" },
+    ],
+  },
+];
+```
+
+## Page Ordering Within Sections
+
+Pages within a section are ordered by the `sidebar.order` frontmatter field:
+
+```yaml
+---
+title: "Installation"
+section: "main"
+sidebar:
+  label: "Installation"
+  order: 1
+---
+```
+
+Pages are sorted in ascending order (lowest number first). Pages without an `order` field default to `0` and are sorted alphabetically among themselves.
+
+## Complete Example
+
+Here is a complete sidebar configuration for a documentation site:
+
+```typescript
+// src/docs/config/sidebarConfig.ts
+import type { SidebarTab } from "../types";
+
+export const sidebarConfig: SidebarTab[] = [
+  {
+    label: "Guide",
+    sections: [
+      {
+        label: "Getting Started",
+        id: "getting-started",
+      },
+      {
+        label: "Components",
+        id: "components",
+      },
+      {
+        label: "Reference",
+        id: "reference",
+        collapsed: true,
+      },
+    ],
+  },
+  {
+    label: "API",
+    sections: [
+      {
+        label: "REST API",
+        id: "endpoints",
+      },
+      {
+        label: "Authentication",
+        id: "authentication",
+      },
+    ],
+  },
+  {
+    label: "Resources",
+    sections: [
+      {
+        label: "Tutorials",
+        id: "tutorials",
+      },
+    ],
+  },
+];
+```
+
+## Best Practices
+
+- **Limit tabs to 3-5** — Too many tabs make navigation confusing. Group related sections together.
+- **Use descriptive section labels** — Section labels should clearly describe the content within. Avoid abbreviations.
+- **Consistent ordering** — Use sequential `order` values (1, 2, 3, ...) in frontmatter to make reordering straightforward.
+- **Collapse sparingly** — Only collapse sections that contain reference material or advanced topics that most readers skip initially.
+- **Match directory names** — Keep `id` values and directory names identical to avoid confusion when editing content and configuration simultaneously.

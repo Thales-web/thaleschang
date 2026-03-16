@@ -1,0 +1,283 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import { Image } from "astro:assets";
+
+import CompanyCard from "@/components/companies/CompanyCard.astro";
+import CompanyFilters from "@/components/companies/CompanyFilters.astro";
+import { filterCollectionByLanguage, getLocaleFromUrl } from "@/js/localeUtils";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+
+const allCompanies: CollectionEntry<"companies">[] = await getCollection(
+  "companies",
+  ({ data }) => data.draft !== true,
+);
+
+const companies = filterCollectionByLanguage(
+  allCompanies,
+  currLocale,
+) as CollectionEntry<"companies">[];
+
+companies.sort((a, b) => a.data.name.localeCompare(b.data.name));
+
+// Featured companies (first 3)
+const featuredCompanies = companies.slice(0, 3);
+
+// Group by industry
+const industries = [...new Set(companies.map((c) => c.data.industry).filter(Boolean))] as string[];
+
+const slugify = (str: string) =>
+  str.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+const highlights = [
+  {
+    title: "3,200+ vetted companies",
+    description: "From early-stage startups to global enterprises.",
+  },
+  {
+    title: "Across 40+ industries",
+    description: "Tech, design, education, health, and more.",
+  },
+  {
+    title: "Remote-first & hybrid options",
+    description: "Work from anywhere or explore local offices.",
+  },
+  {
+    title: "Transparent company profiles",
+    description: "Get insights into values, benefits, and hiring culture.",
+  },
+];
+
+const testimonials = [
+  {
+    quote: "HireWise helped us connect with design talent that aligned with our async, remote-first culture.",
+    source: "Product Design Team, Figma",
+    bg: "bg-orange-500",
+  },
+  {
+    quote: "We discovered a fantastic open-source advocate through HireWise. The platform fits our culture perfectly.",
+    source: "Hiring Team, Polar",
+    bg: "bg-blue-600",
+  },
+];
+---
+
+<BaseLayout title="Companies" description="Browse companies in our directory.">
+  <!-- Hero Section -->
+  <section class="site-container pt-20 md:pt-32">
+    <div class="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
+      <div>
+        <p class="text-muted-foreground flex items-center gap-2 text-xs font-medium uppercase">
+          <span class="flex gap-0.5">
+            <span class="bg-primary-accent size-1.5 rounded-full"></span>
+            <span class="bg-primary-accent size-1.5 rounded-full"></span>
+            <span class="bg-primary-accent size-1.5 rounded-full"></span>
+          </span>
+          companies
+        </p>
+        <h1
+          class="text-foreground mt-6 text-4xl font-semibold tracking-tight text-balance sm:text-5xl"
+        >
+          Explore top companies hiring now
+        </h1>
+        <p class="text-muted-foreground mt-4 text-balance text-lg">
+          Discover teams building the future. Browse by industry, size, or values — and find a company that fits you.
+        </p>
+        <div class="mt-6 flex">
+          <a
+            href="#companies"
+            class="bg-foreground text-background inline-flex items-center rounded-lg px-5 py-2.5 text-sm font-medium transition hover:opacity-90"
+          >
+            Browse all companies
+          </a>
+        </div>
+        <!-- Highlights -->
+        <div class="mt-12 grid grid-cols-2 gap-8">
+          {
+            highlights.map((item) => (
+              <div>
+                <h3 class="text-foreground text-base font-medium">{item.title}</h3>
+                <p class="text-muted-foreground text-sm text-balance">{item.description}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- Testimonials + Visual Grid -->
+      <div class="hidden grid-cols-2 gap-2 lg:grid">
+        {
+          featuredCompanies.slice(0, 1).map((c) =>
+            c.data.logo ? (
+              <div class="bg-muted flex items-center justify-center rounded-3xl p-8">
+                <Image
+                  src={c.data.logo}
+                  alt={`${c.data.name} logo`}
+                  width={120}
+                  height={120}
+                  class="size-24 object-contain"
+                />
+              </div>
+            ) : (
+              <div class="bg-muted flex items-center justify-center rounded-3xl p-8">
+                <span class="text-foreground text-3xl font-bold">{c.data.name.slice(0, 1)}</span>
+              </div>
+            ),
+          )
+        }
+        {
+          testimonials.slice(0, 1).map((t) => (
+            <article
+              class={`${t.bg} flex flex-col items-center justify-center rounded-3xl p-5 text-center text-white`}
+            >
+              <blockquote class="text-sm font-medium text-balance">"{t.quote}"</blockquote>
+              <footer class="mt-2 text-xs opacity-80">— {t.source}</footer>
+            </article>
+          ))
+        }
+        <div class="bg-muted flex items-center justify-center rounded-full p-4" aria-hidden="true"></div>
+        {
+          testimonials.slice(1, 2).map((t) => (
+            <article
+              class={`${t.bg} flex flex-col items-center justify-center rounded-3xl p-5 text-center text-white`}
+            >
+              <blockquote class="text-sm font-medium text-balance">"{t.quote}"</blockquote>
+              <footer class="mt-2 text-xs opacity-80">— {t.source}</footer>
+            </article>
+          ))
+        }
+        {
+          featuredCompanies.slice(1, 2).map((c) =>
+            c.data.logo ? (
+              <div class="bg-muted flex items-center justify-center rounded-3xl p-8">
+                <Image
+                  src={c.data.logo}
+                  alt={`${c.data.name} logo`}
+                  width={120}
+                  height={120}
+                  class="size-24 object-contain"
+                />
+              </div>
+            ) : (
+              <div class="bg-muted flex items-center justify-center rounded-3xl p-8">
+                <span class="text-foreground text-3xl font-bold">{c.data.name.slice(0, 1)}</span>
+              </div>
+            ),
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Companies -->
+  <section id="companies" class="site-container scroll-mt-24 py-12 lg:py-20">
+    <div class="bg-muted rounded-2xl p-1">
+      <div class="px-4 py-3">
+        <h2 class="text-foreground text-xl font-semibold">Featured Companies</h2>
+      </div>
+      <div class="grid grid-cols-1 gap-1 lg:grid-cols-3">
+        {featuredCompanies.map((company) => <CompanyCard company={company} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Browse by Industry with Filters -->
+  <section class="site-container py-12">
+    <h2 class="text-foreground text-3xl font-semibold tracking-tight text-balance sm:text-4xl">
+      Search companies by industry.
+    </h2>
+    <div class="mt-8 grid grid-cols-1 gap-1 lg:grid-cols-5">
+      <!-- Industry Categories -->
+      <div class="lg:col-span-4 flex flex-col gap-12">
+        {
+          industries.map((industry) => {
+            const companiesInIndustry = companies.filter(
+              (c) => c.data.industry === industry,
+            );
+            return (
+              <div
+                id={slugify(industry)}
+                data-industry-block={slugify(industry)}
+                class="bg-muted rounded-2xl p-1"
+              >
+                <div class="px-4 py-3">
+                  <h3 class="text-foreground text-xl font-semibold">{industry}</h3>
+                </div>
+                <div class="flex flex-col gap-1">
+                  {companiesInIndustry.map((company) => (
+                    <CompanyCard company={company} />
+                  ))}
+                </div>
+              </div>
+            );
+          })
+        }
+      </div>
+
+      <!-- Filters Sidebar -->
+      <div class="hidden lg:block">
+        <aside class="lg:sticky lg:top-20 lg:z-10">
+          <CompanyFilters />
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter Subscribe Section -->
+  <section class="site-container py-12 lg:pb-24">
+    <div class="bg-card rounded-xl border p-4 shadow-sm lg:p-8">
+      <div class="grid grid-cols-1 items-baseline gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div class="lg:col-span-2">
+          <h2
+            class="text-foreground text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
+          >
+            Subscribe to our newsletter
+          </h2>
+          <p class="text-muted-foreground mt-4 max-w-lg text-balance">
+            Enjoy the latest news and updates from our team and community.
+          </p>
+        </div>
+        <div>
+          <form class="bg-muted flex flex-col gap-1 rounded-xl p-1">
+            <div>
+              <label for={`email-companies-${currLocale}`} class="sr-only">Email address</label>
+              <input
+                type="email"
+                id={`email-companies-${currLocale}`}
+                name="email"
+                required
+                placeholder="Enter your email address"
+                class="bg-card text-foreground placeholder:text-muted-foreground focus:ring-primary-accent block h-10 w-full rounded-lg border px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2"
+              />
+            </div>
+            <div class="mt-1 flex">
+              <button
+                type="submit"
+                class="bg-foreground text-background w-full rounded-lg px-4 py-2.5 text-sm font-medium transition hover:opacity-90"
+              >
+                Subscribe
+              </button>
+            </div>
+          </form>
+          <p class="text-muted-foreground mt-2 text-xs">
+            By subscribing, you agree to receive our latest updates. No spam, promise!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  const updateIndustryVisibility = () => {
+    const blocks = document.querySelectorAll("[data-industry-block]");
+    blocks.forEach((block) => {
+      const visibleCards = block.querySelectorAll("[data-company-card]:not(.hidden)");
+      block.classList.toggle("hidden", visibleCards.length === 0);
+    });
+  };
+
+  document.addEventListener("DOMContentLoaded", updateIndustryVisibility);
+  document.addEventListener("company-filters:applied", updateIndustryVisibility);
+</script>

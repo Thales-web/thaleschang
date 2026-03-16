@@ -1,0 +1,55 @@
+---
+import SiteLogo from "@/components/site-logo/SiteLogo.astro";
+import SocialIcon from "@/components/social-icon/SocialIcon.astro";
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { getTranslatedData } from "@/js/translationUtils";
+
+import FooterLink from "./FooterLink.astro";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const siteData = getTranslatedData("siteData", currLocale);
+const footerData = getTranslatedData("footerData", currLocale);
+const today = new Date();
+---
+
+<section class="overflow-hidden pt-16 pb-10">
+  <div class="site-container">
+    <div class="border-b pb-16">
+      <div class="-m-8 flex flex-wrap">
+        <div class="w-full p-8 sm:w-1/2 lg:w-6/12">
+          <div class="lg:max-w-sm">
+            <SiteLogo />
+            <p class="text-muted-foreground mt-4 font-medium md:max-w-xs">
+              {footerData.description}
+            </p>
+            <div class="mt-10 flex flex-wrap gap-3 lg:mt-16">
+              {footerData.socials.map((social) => (
+                <SocialIcon
+                  href={social.href}
+                  icon={social.icon}
+                  social={social.label}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+        {
+          footerData.columns.map((col) => (
+            <div class="w-full p-8 sm:w-1/2 lg:w-2/12" aria-label={col.title}>
+              <h3 class="font-heading mb-8 text-sm font-medium uppercase">{col.title}</h3>
+              <ul class="space-y-2">
+                {col.links.map((link) => (
+                  <FooterLink label={link.label} href={link.href} />
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+    <p class="text-muted-foreground py-5 text-center text-sm leading-normal font-medium">
+      Copyright {today.getFullYear()}
+      {siteData.name}. All Rights Reserved
+    </p>
+  </div>
+</section>

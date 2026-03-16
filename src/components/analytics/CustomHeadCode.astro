@@ -1,0 +1,13 @@
+---
+/**
+ * Custom Head Code Component
+ * Renders arbitrary HTML/scripts in the <head> section.
+ * Useful for third-party verification tags, pixels, or any custom code.
+ * Configured via Admin > Client Settings > Custom Head Code.
+ */
+import { clientConfig } from "@/config/clientConfig";
+
+const code = clientConfig.analytics.customHeadCode;
+---
+
+{code && <Fragment set:html={code} />}

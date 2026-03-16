@@ -1,0 +1,28 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+
+import { filterCollectionByLanguage, getPageLocale } from "@/js/localeUtils";
+import CompanyLayout from "@/layouts/CompanyLayout.astro";
+
+export async function getStaticPaths() {
+  const companies = await getCollection("companies", ({ data }) => {
+    return data.draft !== true;
+  });
+
+  const filteredCompanies = filterCollectionByLanguage(companies, getPageLocale(import.meta.url));
+
+  return filteredCompanies.map((company) => ({
+    params: { slug: company.id },
+    props: company,
+  }));
+}
+
+type Props = CollectionEntry<"companies">;
+
+const company = Astro.props as Props;
+const { Content } = await render(company);
+---
+
+<CompanyLayout company={company}>
+  <Content />
+</CompanyLayout>

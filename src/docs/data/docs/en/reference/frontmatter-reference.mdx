@@ -1,0 +1,282 @@
+---
+title: "Frontmatter Reference"
+section: "main"
+description: "Complete reference for all frontmatter fields available in Pathfinder documentation MDX files."
+sidebar:
+  label: "Frontmatter Reference"
+  order: 1
+  badge:
+    text: "Updated"
+    variant: "caution"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "ref-frontmatter"
+---
+
+## Overview
+
+Every MDX file in Pathfinder starts with a YAML frontmatter block enclosed between `---` delimiters. Frontmatter defines metadata about the page, including its title, sidebar position, search behavior, and table of contents configuration.
+
+This reference documents every available frontmatter field, its type, whether it is required, and its default value.
+
+## Complete Example
+
+Here is a frontmatter block using all available fields:
+
+```yaml
+---
+title: "Page Title"
+section: "main"
+description: "A brief description for SEO and link previews"
+sidebar:
+  label: "Sidebar Label"
+  order: 3
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "unique-key"
+---
+```
+
+## Field Reference
+
+### `title`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | Yes |
+| **Default** | — |
+
+The page title displayed in the main content heading, the browser tab title, and any automatically generated navigation links. This field is required for every documentation page.
+
+```yaml
+title: "Getting Started with Authentication"
+section: "main"
+```
+
+The title should be concise and descriptive. It is used as the `<title>` element in the HTML `<head>`, which affects SEO and appears in browser tabs and bookmarks.
+
+### `description`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | No |
+| **Default** | `""` |
+
+A short summary of the page content, used for the `<meta name="description">` tag and social media link previews (Open Graph and Twitter cards). Aim for 120 to 160 characters.
+
+```yaml
+description: "Learn how to configure OAuth 2.0 authentication for your API integration."
+```
+
+<Aside variant="tip" title="SEO best practice">
+Write descriptions that accurately summarize the page content. Search engines use this field to generate snippet text in search results. A well-written description improves click-through rates.
+</Aside>
+
+### `sidebar`
+
+The `sidebar` field is an object that controls how the page appears in the sidebar navigation.
+
+#### `sidebar.label`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | No |
+| **Default** | Value of `title` |
+
+The text displayed in the sidebar navigation. Use this when you want a shorter label in the sidebar than the full page title.
+
+```yaml
+sidebar:
+  label: "Auth Setup"
+```
+
+If omitted, the sidebar displays the `title` value instead.
+
+#### `sidebar.order`
+
+| Property | Value |
+|---|---|
+| **Type** | `number` |
+| **Required** | No |
+| **Default** | `0` |
+
+Controls the sort position of the page within its sidebar section. Pages are sorted in ascending order, so lower numbers appear first. Pages with the same order value are sorted alphabetically by their label.
+
+```yaml
+sidebar:
+  order: 2
+```
+
+<Aside variant="info" title="Ordering strategy">
+Use increments of 1 for sequential pages. This leaves room to insert new pages between existing ones without renumbering everything. For example, use orders 1, 2, 3 instead of 10, 20, 30.
+</Aside>
+
+#### `sidebar.badge`
+
+| Property | Value |
+|---|---|
+| **Type** | `object` |
+| **Required** | No |
+| **Default** | — |
+
+Displays a small badge next to the page label in the sidebar. Useful for marking pages as new, updated, or deprecated.
+
+The badge object has two properties:
+
+| Sub-Property | Type | Required | Description |
+|---|---|---|---|
+| `text` | `string` | Yes | The text displayed inside the badge |
+| `variant` | `"tip" \| "caution" \| "danger" \| "note"` | No | The color scheme of the badge (defaults to `"note"`) |
+
+```yaml
+sidebar:
+  badge:
+    text: "New"
+    variant: "tip"
+```
+
+```yaml
+sidebar:
+  badge:
+    text: "Deprecated"
+    variant: "danger"
+```
+
+### `tableOfContents`
+
+The `tableOfContents` field is an object that controls the right-side table of contents generated from headings in the page content.
+
+#### `tableOfContents.minHeadingLevel`
+
+| Property | Value |
+|---|---|
+| **Type** | `number` |
+| **Required** | No |
+| **Default** | `2` |
+
+The minimum heading level to include in the table of contents. Headings with a lower level (larger number is shallower, but level refers to `h1`–`h6`) are excluded.
+
+```yaml
+tableOfContents:
+  minHeadingLevel: 2
+```
+
+With `minHeadingLevel: 2`, only `## Heading` and deeper levels are included. The page title (`# Heading` / `h1`) is always excluded from the table of contents.
+
+#### `tableOfContents.maxHeadingLevel`
+
+| Property | Value |
+|---|---|
+| **Type** | `number` |
+| **Required** | No |
+| **Default** | `3` |
+
+The maximum heading level to include in the table of contents. Headings deeper than this level are excluded.
+
+```yaml
+tableOfContents:
+  maxHeadingLevel: 4
+```
+
+| Configuration | Headings Included |
+|---|---|
+| `min: 2, max: 2` | `h2` only |
+| `min: 2, max: 3` | `h2` and `h3` |
+| `min: 2, max: 4` | `h2`, `h3`, and `h4` |
+| `min: 3, max: 4` | `h3` and `h4` only |
+
+### `pagefind`
+
+| Property | Value |
+|---|---|
+| **Type** | `boolean` |
+| **Required** | No |
+| **Default** | `true` |
+
+Controls whether the page is indexed by Pagefind for full-text search. Set to `false` to exclude a page from search results.
+
+```yaml
+pagefind: false
+```
+
+Pages excluded from search are still accessible via direct URL and sidebar navigation. Only the search index is affected.
+
+Common reasons to exclude a page from search:
+
+- Changelog or release notes pages that produce noisy search results
+- Redirect or placeholder pages with minimal content
+- Draft pages that are not yet ready for readers
+
+### `draft`
+
+| Property | Value |
+|---|---|
+| **Type** | `boolean` |
+| **Required** | No |
+| **Default** | `false` |
+
+When set to `true`, the page is excluded from production builds. Draft pages are only visible during local development with `npm run dev`.
+
+```yaml
+draft: true
+```
+
+<Aside variant="caution" title="Draft behavior">
+Draft pages are completely removed from the production build output. They will not appear in the sidebar, search results, or sitemap. Links to draft pages from other pages will result in 404 errors in production.
+</Aside>
+
+### `mappingKey`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | No |
+| **Default** | — |
+
+A unique identifier used for mapping content across locales in multi-language documentation. When you have the same page in multiple languages, the `mappingKey` connects the translations so the language switcher can navigate between them.
+
+```yaml
+mappingKey: "auth-overview"
+```
+
+The mapping key must be unique across all pages in a single locale. Use a consistent naming convention like `section-page` (e.g., `gs-intro`, `comp-aside`, `ref-settings`).
+
+## Quick Reference Table
+
+| Field | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `title` | `string` | Yes | — | Page title for heading, browser tab, and navigation |
+| `description` | `string` | No | `""` | SEO meta description and social preview text |
+| `sidebar.label` | `string` | No | `title` | Sidebar display text |
+| `sidebar.order` | `number` | No | `0` | Sort position within the sidebar section |
+| `sidebar.badge.text` | `string` | No | — | Badge label text |
+| `sidebar.badge.variant` | `string` | No | `"note"` | Badge color variant |
+| `tableOfContents.minHeadingLevel` | `number` | No | `2` | Minimum heading level in ToC |
+| `tableOfContents.maxHeadingLevel` | `number` | No | `3` | Maximum heading level in ToC |
+| `pagefind` | `boolean` | No | `true` | Include page in search index |
+| `draft` | `boolean` | No | `false` | Exclude page from production builds |
+| `mappingKey` | `string` | No | — | Cross-locale content mapping identifier |
+
+## Validation
+
+Frontmatter is validated against a Zod schema at build time. If a required field is missing or a field has an invalid type, the build will fail with a descriptive error message pointing to the offending file and field.
+
+Common validation errors:
+
+| Error | Cause | Fix |
+|---|---|---|
+| `Required field "title"` | The `title` field is missing | Add a `title` field to the frontmatter |
+| `Expected string, received number` | A string field has a numeric value | Wrap the value in quotes |
+| `Invalid enum value` | A variant or badge type is misspelled | Check the allowed values in this reference |

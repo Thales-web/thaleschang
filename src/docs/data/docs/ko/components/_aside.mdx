@@ -1,0 +1,153 @@
+---
+title: "Aside Component"
+section: "main"
+description: "A callout component with four severity variants for highlighting important information in your documentation."
+sidebar:
+  label: "Aside"
+  order: 2
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: true
+mappingKey: "comp-aside"
+---
+
+## Overview
+
+The Aside component creates visually distinct callout boxes to highlight important information, tips, warnings, or danger notices in your documentation. It supports four severity variants, each with its own color scheme and icon.
+
+Aside is auto-imported in all MDX files, so you can use it without an import statement.
+
+## Basic Usage
+
+```mdx
+<Aside>
+  This is a default informational aside. Use it to provide additional
+  context that supplements the main content.
+</Aside>
+```
+
+## Variants
+
+The Aside component supports four variants, each designed for a specific purpose:
+
+### Info (Default)
+
+The default variant is used for supplementary information that adds context without indicating urgency.
+
+```mdx
+<Aside variant="info">
+  The development server runs on port 4321 by default. You can change
+  this in the Astro configuration file.
+</Aside>
+```
+
+### Tip
+
+Use the tip variant to share helpful suggestions and best practices.
+
+```mdx
+<Aside variant="tip">
+  You can use keyboard shortcut Ctrl+Shift+P to open the command
+  palette in VS Code for quick access to common actions.
+</Aside>
+```
+
+### Caution
+
+The caution variant warns users about potential issues or things they should be careful about.
+
+```mdx
+<Aside variant="caution">
+  Modifying the sidebar configuration requires restarting the
+  development server for changes to take effect.
+</Aside>
+```
+
+### Danger
+
+Use the danger variant for critical warnings about destructive actions or breaking changes.
+
+```mdx
+<Aside variant="danger">
+  Running `npm run clean` will permanently delete the `dist/` directory
+  and all generated files. This action cannot be undone.
+</Aside>
+```
+
+## Custom Titles
+
+By default, each variant displays a title that matches its type (e.g., "Note" for info, "Tip" for tip). You can override this with a custom title:
+
+```mdx
+<Aside variant="tip" title="Performance Tip">
+  Enable image optimization in your Astro config to automatically
+  generate responsive images and reduce page load times.
+</Aside>
+```
+
+## Props Reference
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `variant` | `"info" \| "tip" \| "caution" \| "danger"` | `"info"` | The visual style and icon of the aside |
+| `title` | `string` | Variant name | Custom title text displayed at the top |
+
+## Styling
+
+Each variant uses a distinct color scheme that works in both light and dark modes:
+
+| Variant | Light Background | Dark Background | Border Color |
+|---|---|---|---|
+| info | Blue 50 | Blue 950 | Blue 400 |
+| tip | Green 50 | Green 950 | Green 400 |
+| caution | Amber 50 | Amber 950 | Amber 400 |
+| danger | Red 50 | Red 950 | Red 400 |
+
+## Accessibility
+
+The Aside component includes the following accessibility features:
+
+- Uses the `role="note"` ARIA attribute to indicate supplementary content
+- The danger variant uses `role="alert"` to ensure screen readers announce critical warnings
+- Color is never the sole indicator of meaning; each variant includes a distinct icon
+- All text meets WCAG 2.1 AA contrast requirements in both light and dark modes
+
+## Best Practices
+
+- **Use sparingly** — Too many asides on a single page dilute their impact. Reserve them for genuinely important information.
+- **Match the severity** — Choose the variant that accurately reflects the importance of the message. Do not use danger for minor suggestions.
+- **Keep content concise** — Asides work best with one to three sentences. For longer content, consider using a dedicated section instead.
+- **Avoid nesting** — Do not place asides inside other asides. This creates confusing visual hierarchy and poor accessibility.
+
+## Examples in Context
+
+Here is how asides might appear in a typical documentation page:
+
+```mdx
+## Configuring the Build Pipeline
+
+The build pipeline processes your MDX files and generates static HTML.
+
+<Aside variant="info">
+  The build process typically takes 10-30 seconds depending on the
+  number of pages in your documentation.
+</Aside>
+
+### Optimizing Build Performance
+
+You can reduce build times by enabling incremental builds.
+
+<Aside variant="tip" title="Quick Optimization">
+  Set `experimental.incremental: true` in your Astro config to
+  enable incremental builds during development.
+</Aside>
+
+### Cache Invalidation
+
+<Aside variant="caution">
+  Clearing the build cache will cause the next build to reprocess
+  all files from scratch, which may significantly increase build time.
+</Aside>
+```

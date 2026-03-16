@@ -1,0 +1,165 @@
+---
+title: "Custom Components"
+section: "main"
+description: "Learn how to use and create custom MDX components in Pathfinder, including auto-importing and best practices."
+sidebar:
+  label: "Custom Components"
+  order: 1
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "comp-intro"
+---
+
+## Overview
+
+Pathfinder ships with a library of pre-built MDX components that you can use directly in your documentation files. These components are auto-imported, meaning you do not need to add import statements at the top of your MDX files. Simply use the component tag and it will render automatically.
+
+This section documents every available component, including usage examples, props tables, and accessibility notes.
+
+## Auto-Import System
+
+All built-in components are registered in the MDX integration configuration within `astro.config.mjs`. When the MDX compiler processes your files, it automatically resolves these component names to their corresponding Astro files.
+
+```javascript
+// astro.config.mjs (excerpt)
+mdx({
+  components: {
+    Aside: "./src/docs/components/Aside.astro",
+    Badge: "./src/docs/components/Badge.astro",
+    Button: "./src/docs/components/Button.astro",
+    Steps: "./src/docs/components/Steps.astro",
+    // ... additional components
+  },
+});
+```
+
+Because of this auto-import system, you can write:
+
+```mdx
+<Aside variant="tip">
+  This is a helpful tip for your readers.
+</Aside>
+```
+
+Without needing to add an import line at the top of the file.
+
+## Available Components
+
+The following components are available out of the box:
+
+| Component | Description | Section |
+|---|---|---|
+| Aside | Callout boxes with four severity variants | [Aside](/docs/components/aside) |
+| Badge | Inline status indicators with color variants | [Badge](/docs/components/badge) |
+| Button | Styled buttons with multiple variants and sizes | [Button](/docs/components/button) |
+| Steps | Ordered step-by-step instructions wrapper | [Steps](/docs/components/steps) |
+| Tabs | Tabbed content panels with synchronization | [Tabs](/docs/components/tabs) |
+
+## Creating Custom Components
+
+You can create your own MDX components to extend the documentation theme. Here is a step-by-step guide.
+
+### Step 1: Create the Component File
+
+Create a new `.astro` file in the `src/docs/components/` directory:
+
+```astro
+---
+// src/docs/components/Card.astro
+interface Props {
+  title: string;
+  icon?: string;
+}
+
+const { title, icon } = Astro.props;
+---
+
+<div class="card rounded-lg border border-gray-200 p-6 dark:border-gray-700">
+  <div class="card-header flex items-center gap-2 mb-3">
+    {icon && <span class="text-xl">{icon}</span>}
+    <h3 class="text-lg font-semibold m-0">{title}</h3>
+  </div>
+  <div class="card-body text-gray-600 dark:text-gray-300">
+    <slot />
+  </div>
+</div>
+```
+
+### Step 2: Register the Component
+
+Add your new component to the auto-import configuration in `astro.config.mjs`:
+
+```javascript
+mdx({
+  components: {
+    // ... existing components
+    Card: "./src/docs/components/Card.astro",
+  },
+});
+```
+
+### Step 3: Use the Component
+
+Now you can use your custom component in any MDX file:
+
+```mdx
+<Card title="Performance" icon="⚡">
+  Pathfinder generates static HTML at build time, resulting in fast
+  page loads and excellent Core Web Vitals scores.
+</Card>
+```
+
+## Component Design Guidelines
+
+When creating custom components, follow these guidelines to maintain consistency with the existing theme:
+
+### Use Tailwind Utility Classes
+
+All built-in components use Tailwind CSS utility classes for styling. This ensures consistency with the theme and makes it easy to customize colors, spacing, and typography.
+
+### Support Dark Mode
+
+Always include `dark:` variants for colors and backgrounds. Pathfinder supports a full dark mode, and your custom components should respect the user's preference.
+
+### Accept a Slot
+
+Most documentation components should accept a default `<slot />` for content. This follows the established pattern and makes components flexible.
+
+### Type Your Props
+
+Use the `Props` interface to define and document your component's API. This provides autocompletion in editors and catches errors during development.
+
+```astro
+---
+interface Props {
+  variant?: "default" | "primary" | "secondary";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+}
+
+const { variant = "default", size = "md", disabled = false } = Astro.props;
+---
+```
+
+## Component File Structure
+
+```
+src/docs/components/
+├── Aside.astro          # Callout boxes
+├── Badge.astro          # Inline badges
+├── Button.astro         # Styled buttons
+├── Steps.astro          # Step-by-step wrapper
+├── Tabs/
+│   ├── Tabs.astro       # Tab container
+│   ├── TabsList.astro   # Tab button list
+│   ├── TabsTrigger.astro # Individual tab button
+│   └── TabsContent.astro # Tab panel content
+└── Card.astro           # Custom component (example)
+```
+
+## Next Steps
+
+Explore the individual component pages to learn about props, variants, and usage examples for each built-in component.

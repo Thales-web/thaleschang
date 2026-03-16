@@ -1,0 +1,192 @@
+---
+title: "Badge"
+section: "main"
+description: "Documentation for the Badge component with five color variants and three size options for inline status labels."
+sidebar:
+  label: "Badge"
+  order: 3
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "comp-badge"
+---
+
+## Overview
+
+The Badge component renders a small inline label for indicating status, categories, or metadata. Badges are commonly used in documentation to mark features as new, deprecated, or experimental, and to label API endpoints with their HTTP methods.
+
+Badge is auto-imported into every MDX file, so you can use it directly without an import statement.
+
+## Basic Usage
+
+Use the Badge component inline with your text:
+
+```mdx
+The authentication module <Badge variant="tip">Stable</Badge> provides OAuth 2.0 support.
+```
+
+The authentication module <Badge variant="tip">Stable</Badge> provides OAuth 2.0 support.
+
+## Variants
+
+Badge supports five color variants to communicate different levels of meaning:
+
+### Note (Default)
+
+The default variant for general-purpose labels with a neutral appearance:
+
+```mdx
+<Badge variant="note">Default</Badge>
+```
+
+<Badge variant="note">Default</Badge>
+
+### Tip
+
+Use the `tip` variant for positive indicators like stable releases, recommended options, or completed status:
+
+```mdx
+<Badge variant="tip">Stable</Badge>
+<Badge variant="tip">Recommended</Badge>
+<Badge variant="tip">Complete</Badge>
+```
+
+<Badge variant="tip">Stable</Badge> <Badge variant="tip">Recommended</Badge> <Badge variant="tip">Complete</Badge>
+
+### Caution
+
+Use the `caution` variant for items that require attention, such as deprecated features or experimental APIs:
+
+```mdx
+<Badge variant="caution">Deprecated</Badge>
+<Badge variant="caution">Experimental</Badge>
+<Badge variant="caution">Beta</Badge>
+```
+
+<Badge variant="caution">Deprecated</Badge> <Badge variant="caution">Experimental</Badge> <Badge variant="caution">Beta</Badge>
+
+### Danger
+
+Use the `danger` variant for critical labels like breaking changes or security advisories:
+
+```mdx
+<Badge variant="danger">Breaking Change</Badge>
+<Badge variant="danger">Security</Badge>
+<Badge variant="danger">Removed</Badge>
+```
+
+<Badge variant="danger">Breaking Change</Badge> <Badge variant="danger">Security</Badge> <Badge variant="danger">Removed</Badge>
+
+### Info
+
+Use the `info` variant for informational labels like version numbers or method types:
+
+```mdx
+<Badge variant="info">v2.0</Badge>
+<Badge variant="info">GET</Badge>
+<Badge variant="info">Required</Badge>
+```
+
+<Badge variant="info">v2.0</Badge> <Badge variant="info">GET</Badge> <Badge variant="info">Required</Badge>
+
+## Sizes
+
+Badge comes in three sizes to fit different contexts:
+
+### Small (Default)
+
+The default size, suitable for inline use within body text:
+
+```mdx
+<Badge size="sm" variant="tip">Small</Badge>
+```
+
+<Badge size="sm" variant="tip">Small</Badge>
+
+### Medium
+
+A slightly larger badge for use in headings or when more visual weight is needed:
+
+```mdx
+<Badge size="md" variant="tip">Medium</Badge>
+```
+
+<Badge size="md" variant="tip">Medium</Badge>
+
+### Large
+
+The largest badge size, suitable for hero sections or standalone labels:
+
+```mdx
+<Badge size="lg" variant="tip">Large</Badge>
+```
+
+<Badge size="lg" variant="tip">Large</Badge>
+
+## Props
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `variant` | `"note" \| "tip" \| "caution" \| "danger" \| "info"` | `"note"` | The color scheme and visual style of the badge |
+| `size` | `"sm" \| "md" \| "lg"` | `"sm"` | Controls the padding and font size |
+
+## Practical Examples
+
+### API Method Labels
+
+Use badges to label API endpoints with their HTTP methods:
+
+```mdx
+## User Endpoints
+
+<Badge variant="tip">GET</Badge> `/api/users` — List all users
+
+<Badge variant="tip">GET</Badge> `/api/users/{id}` — Get a specific user
+
+<Badge variant="info">POST</Badge> `/api/users` — Create a new user
+
+<Badge variant="caution">PUT</Badge> `/api/users/{id}` — Update a user
+
+<Badge variant="danger">DELETE</Badge> `/api/users/{id}` — Delete a user
+```
+
+### Feature Status Table
+
+Combine badges with tables to create feature status overviews:
+
+```mdx
+| Feature | Status | Since |
+|---|---|---|
+| OAuth 2.0 | <Badge variant="tip">Stable</Badge> | v1.0 |
+| WebSocket API | <Badge variant="caution">Beta</Badge> | v2.1 |
+| GraphQL | <Badge variant="caution">Experimental</Badge> | v2.3 |
+| SAML SSO | <Badge variant="danger">Removed</Badge> | — |
+```
+
+| Feature | Status | Since |
+|---|---|---|
+| OAuth 2.0 | <Badge variant="tip">Stable</Badge> | v1.0 |
+| WebSocket API | <Badge variant="caution">Beta</Badge> | v2.1 |
+| GraphQL | <Badge variant="caution">Experimental</Badge> | v2.3 |
+| SAML SSO | <Badge variant="danger">Removed</Badge> | — |
+
+### Version Indicators
+
+Use badges alongside headings to indicate which version introduced a feature:
+
+```mdx
+## Response Caching <Badge variant="info">v2.0</Badge>
+
+Response caching is available starting in version 2.0...
+```
+
+## Accessibility
+
+- Badges use sufficient color contrast ratios for all variants in both light and dark modes
+- Text content inside badges is read by screen readers as part of the normal text flow
+- Badges do not rely solely on color to convey meaning; the text content provides the primary information

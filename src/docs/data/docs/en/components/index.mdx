@@ -1,0 +1,248 @@
+---
+title: "Using Custom Components"
+section: "main"
+description: "Learn how to create, import, and use custom MDX components in your Pathfinder documentation pages."
+sidebar:
+  label: "Custom Components"
+  order: 1
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "comp-intro"
+---
+
+## Overview
+
+Pathfinder ships with a set of pre-built MDX components that are automatically available in every documentation page. You can also create your own custom components to extend the documentation system with project-specific UI patterns.
+
+MDX allows you to use JSX components directly inside your Markdown content. This means you can mix standard Markdown syntax with interactive, styled components without leaving your content files.
+
+## Pre-Built Components
+
+The following components are included with Pathfinder and are auto-imported into every MDX file:
+
+| Component | Description |
+|---|---|
+| [Aside](/docs/components/aside) | Callout boxes for tips, warnings, and notes |
+| [Badge](/docs/components/badge) | Inline status indicators and labels |
+| [Button](/docs/components/button) | Clickable buttons with multiple variants |
+| [Steps](/docs/components/steps) | Numbered step-by-step instructions |
+| [Tabs](/docs/components/tabs) | Tabbed content panels |
+
+Because these components are auto-imported, you can use them directly in your MDX files without any import statement:
+
+```mdx
+## My Documentation Page
+
+Here is a tip for the reader:
+
+<Aside variant="tip" title="Pro tip">
+You do not need to import this component. It is available automatically.
+</Aside>
+```
+
+## Creating Custom Components
+
+When the built-in components do not cover your needs, you can create custom Astro or React components and use them in your MDX files.
+
+### Step 1: Create the Component
+
+Create a new `.astro` file in a components directory. For documentation-specific components, place them in `src/docs/components/`:
+
+```astro
+---
+// src/docs/components/Card.astro
+
+interface Props {
+  title: string;
+  description?: string;
+  href?: string;
+  icon?: string;
+}
+
+const { title, description, href, icon } = Astro.props;
+---
+
+<div class="not-content rounded-lg border border-gray-200 p-6 dark:border-gray-700">
+  <div class="flex items-start gap-4">
+    {icon && <span class="text-2xl">{icon}</span>}
+    <div>
+      <h3 class="mt-0 text-lg font-semibold">{title}</h3>
+      {description && <p class="text-sm text-gray-600 dark:text-gray-400">{description}</p>}
+      {href && (
+        <a href={href} class="mt-2 inline-block text-sm font-medium text-blue-600 hover:underline dark:text-blue-400">
+          Learn more &rarr;
+        </a>
+      )}
+    </div>
+  </div>
+</div>
+```
+
+### Step 2: Import and Use the Component
+
+To use a custom component in an MDX file, import it at the top of the file:
+
+```mdx
+---
+title: "My Page"
+section: "main"
+---
+
+import Card from "@/docs/components/Card.astro";
+
+## Feature Overview
+
+<Card
+  title="Authentication"
+  description="Secure your API with OAuth 2.0 and JWT tokens."
+  href="/docs/authentication/overview"
+/>
+
+<Card
+  title="REST API"
+  description="Complete reference for all REST API endpoints."
+  href="/docs/endpoints/rest-api"
+/>
+```
+
+### Step 3: (Optional) Add to Auto-Imports
+
+If you use a custom component frequently across many pages, add it to the auto-import configuration so you do not need to write the import statement every time:
+
+```typescript
+// astro.config.mjs
+AutoImport({
+  imports: [
+    // Existing auto-imports...
+    "@/docs/components/Card.astro",
+  ],
+}),
+```
+
+After adding it to auto-imports, the component is available in all MDX files without an explicit import.
+
+## The `not-content` Class
+
+When you create custom components that contain heading elements (`h1`–`h6`), list items, or other semantic HTML, the documentation theme's prose styles may interfere with your component's layout.
+
+To prevent this, add the `not-content` class to your component's outermost wrapper element:
+
+```astro
+<div class="not-content">
+  <!-- Your component markup -->
+  <h3>This heading will not receive prose styles</h3>
+  <ul>
+    <li>This list will not receive prose margins</li>
+  </ul>
+</div>
+```
+
+The `not-content` class tells the Tailwind Typography plugin to skip styling for everything inside that element. This gives you full control over the component's appearance.
+
+### When to Use `not-content`
+
+Use `not-content` when your component:
+
+- Contains headings that should not appear in the table of contents
+- Has its own list styling that conflicts with prose defaults
+- Uses a custom layout that prose margins would disrupt
+- Renders interactive elements that need precise spacing
+
+### When Not to Use `not-content`
+
+Do not use `not-content` when:
+
+- Your component is a simple wrapper around Markdown content
+- You want the component's text to inherit the documentation's typography
+- The component contains only inline elements like badges or icons
+
+## Props Interface Pattern
+
+When building custom components, define a `Props` interface to get type checking and editor autocompletion:
+
+```astro
+---
+interface Props {
+  /** The card title displayed as a heading */
+  title: string;
+  /** Optional description text below the title */
+  description?: string;
+  /** URL to link to from the card */
+  href?: string;
+  /** Visual variant of the card */
+  variant?: "default" | "highlight" | "outline";
+}
+
+const { title, description, href, variant = "default" } = Astro.props;
+---
+```
+
+This pattern provides several benefits:
+
+- **Type safety** — TypeScript will warn you if you pass an invalid prop type
+- **Documentation** — JSDoc comments appear in editor hover tooltips
+- **Defaults** — Destructuring with defaults keeps your template clean
+- **Autocompletion** — Your editor will suggest available props when using the component
+
+## Slots
+
+Astro components support slots for passing child content. Use the default slot to let users provide arbitrary Markdown or HTML inside your component:
+
+```astro
+---
+// src/docs/components/Callout.astro
+interface Props {
+  type?: "info" | "warning" | "error";
+}
+
+const { type = "info" } = Astro.props;
+
+const colors = {
+  info: "border-blue-500 bg-blue-50 dark:bg-blue-950",
+  warning: "border-yellow-500 bg-yellow-50 dark:bg-yellow-950",
+  error: "border-red-500 bg-red-50 dark:bg-red-950",
+};
+---
+
+<div class:list={["not-content rounded-lg border-l-4 p-4", colors[type]]}>
+  <slot />
+</div>
+```
+
+Usage in MDX:
+
+```mdx
+<Callout type="warning">
+  This action cannot be undone. Make sure you have a backup before proceeding.
+</Callout>
+```
+
+## Best Practices
+
+Follow these guidelines when creating custom components:
+
+1. **Keep components focused** — Each component should do one thing well. Prefer composing multiple small components over building one large multi-purpose component.
+
+2. **Use semantic HTML** — Choose the right HTML elements for accessibility. Use `button` for actions, `a` for navigation, `ul`/`ol` for lists.
+
+3. **Support dark mode** — Always include dark mode variants for colors and backgrounds using Tailwind's `dark:` prefix.
+
+4. **Document your props** — Add JSDoc comments to your Props interface so other authors understand what each prop does.
+
+5. **Test across viewports** — Verify that your component looks correct on mobile, tablet, and desktop screen sizes.
+
+## Next Steps
+
+Explore the individual component pages to see detailed usage examples and props tables:
+
+- [Aside](/docs/components/aside) — Callout boxes with four severity variants
+- [Badge](/docs/components/badge) — Inline status labels
+- [Button](/docs/components/button) — Interactive buttons with accessibility support
+- [Steps](/docs/components/steps) — Ordered step-by-step instructions
+- [Tabs](/docs/components/tabs) — Tabbed content panels with synchronization

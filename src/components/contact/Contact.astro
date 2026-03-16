@@ -1,0 +1,53 @@
+---
+import ContactForm from "@/components/forms/ContactForm.astro";
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { useTranslations } from "@/js/translationUtils";
+const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
+---
+
+<section id="contact" class="site-container my-20 scroll-mt-20 md:my-32">
+  <div class="mt-6 grid gap-10 lg:grid-cols-2">
+    <div class="">
+      <h2 class="h2 mb-4">{t("book_appointment")}</h2>
+      <p class="description mb-8">
+        {t("book_appointment_description")}
+      </p>
+      <div class="mb-8">
+        <h3 class="font-heading mb-4 text-xl leading-normal font-semibold">{t("office_hours")}</h3>
+        <p class="text-muted-foreground">{t("office_hours_weekday")}</p>
+        <p class="text-muted-foreground">{t("office_hours_saturday")}</p>
+        <p class="text-muted-foreground">{t("office_hours_sunday")}</p>
+      </div>
+      <div class="mb-8">
+        <h3 class="font-heading mb-4 text-xl leading-normal font-semibold">{t("contact_info")}</h3>
+        <p class="text-muted-foreground mb-2">
+          <span class="font-semibold">{t("phone")} </span>
+          <a href={`tel:${t("contact_phone_number")}`} class="hover:text-primary-accent transition">{t("contact_phone_number")}</a>
+        </p>
+        <p class="text-muted-foreground mb-2">
+          <span class="font-semibold">{t("email")} </span>
+          <a
+            class="text-foreground hover:text-primary-accent hover:decoration-primary-accent underline transition"
+            href={`mailto:${t("contact_email_address")}`}
+          >{t("contact_email_address")}</a>
+        </p>
+      </div>
+      <div class="mb-8">
+        <h3 class="font-heading mb-4 text-xl leading-normal font-semibold">{t("our_location")}</h3>
+        <p class="text-muted-foreground">
+          {t("emergency_hotline")}
+          <span class="font-semibold">{t("emergency_phone_number")}</span>
+        </p>
+      </div>
+    </div>
+    <div class="">
+      <div class="rounded-lg border p-8 shadow-md">
+        <h3 class="font-heading tracking-px-n mb-6 text-3xl leading-tight font-semibold">
+          {t("send_message")}
+        </h3>
+        <ContactForm />
+      </div>
+    </div>
+  </div>
+</section>

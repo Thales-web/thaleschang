@@ -1,0 +1,173 @@
+---
+title: "Top Navigation Configuration"
+section: "main"
+description: "Reference guide for configuring the top navigation bar links and structure in Pathfinder."
+sidebar:
+  label: "Top Navigation"
+  order: 2
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "ref-nav"
+---
+
+## Overview
+
+The top navigation bar is configured in `src/docs/config/navConfig.ts`. This file exports an array of navigation items that are displayed as links in the header of every documentation page.
+
+The navigation bar provides top-level links that persist across all pages, making it ideal for linking to major sections, external resources, or related sites.
+
+## Configuration File
+
+The navigation configuration is located at:
+
+```
+src/docs/config/navConfig.ts
+```
+
+## Basic Structure
+
+The configuration exports an array of `NavItem` objects:
+
+```typescript
+// src/docs/config/navConfig.ts
+import type { NavItem } from "../types";
+
+export const navConfig: NavItem[] = [
+  {
+    label: "Documentation",
+    href: "/docs",
+  },
+  {
+    label: "Blog",
+    href: "/blog",
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/your-org/pathfinder",
+    external: true,
+  },
+];
+```
+
+## NavItem Properties
+
+Each navigation item supports the following properties:
+
+| Property | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `label` | `string` | Yes | — | The text displayed in the navigation bar |
+| `href` | `string` | Yes | — | The URL the link points to |
+| `external` | `boolean` | No | `false` | Whether the link opens in a new tab |
+| `icon` | `string` | No | — | An optional icon identifier displayed before the label |
+| `hideOnMobile` | `boolean` | No | `false` | Whether to hide this item on mobile viewports |
+
+## External Links
+
+When `external` is set to `true`, the link will:
+
+- Open in a new browser tab (`target="_blank"`)
+- Include `rel="noopener noreferrer"` for security
+- Display an external link icon after the label
+
+```typescript
+{
+  label: "API Reference",
+  href: "https://api.example.com/docs",
+  external: true,
+}
+```
+
+## Icons
+
+You can add an icon before the navigation label by specifying an icon identifier:
+
+```typescript
+{
+  label: "GitHub",
+  href: "https://github.com/your-org/pathfinder",
+  external: true,
+  icon: "github",
+}
+```
+
+The available icon identifiers depend on the icon set configured in your theme. By default, Pathfinder supports a set of common icons including `github`, `discord`, `twitter`, and `external`.
+
+## Mobile Behavior
+
+On mobile viewports, the navigation bar collapses into a hamburger menu. All navigation items are displayed in the mobile menu by default. To hide specific items on mobile (for example, items that are redundant with sidebar navigation), use the `hideOnMobile` property:
+
+```typescript
+{
+  label: "Getting Started",
+  href: "/docs/getting-started",
+  hideOnMobile: true, // Hidden on mobile since it's in the sidebar
+}
+```
+
+## Complete Example
+
+Here is a complete navigation configuration with various link types:
+
+```typescript
+// src/docs/config/navConfig.ts
+import type { NavItem } from "../types";
+
+export const navConfig: NavItem[] = [
+  {
+    label: "Docs",
+    href: "/docs",
+  },
+  {
+    label: "Components",
+    href: "/docs/components",
+    hideOnMobile: true,
+  },
+  {
+    label: "Blog",
+    href: "/blog",
+  },
+  {
+    label: "Changelog",
+    href: "/changelog",
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/your-org/pathfinder",
+    external: true,
+    icon: "github",
+  },
+  {
+    label: "Discord",
+    href: "https://discord.gg/your-server",
+    external: true,
+    icon: "discord",
+  },
+];
+```
+
+## Ordering
+
+Navigation items are displayed in the order they appear in the array. Place the most important links first, as they will be most visible on all screen sizes.
+
+## Styling
+
+The navigation bar uses the following default styles:
+
+| Element | Style |
+|---|---|
+| Background | Matches the page background with a subtle border-bottom |
+| Link text | Medium weight, muted color that brightens on hover |
+| Active link | Primary color with underline indicator |
+| External icon | Small arrow icon, slightly offset from the label |
+| Mobile menu | Full-width dropdown with larger touch targets |
+
+## Best Practices
+
+- **Keep it concise** — The navigation bar has limited horizontal space. Aim for 4-6 items maximum.
+- **Prioritize by importance** — Place the most frequently accessed links first in the array.
+- **Use clear labels** — Navigation labels should be one or two words. Avoid long descriptive text.
+- **Group external links** — Place external links at the end of the navigation array so users know they will leave the site.
+- **Test on mobile** — Always verify that the navigation works well on mobile viewports. Use `hideOnMobile` to reduce clutter when needed.

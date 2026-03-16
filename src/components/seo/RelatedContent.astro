@@ -1,0 +1,133 @@
+---
+/**
+ * Cross-Collection Related Content
+ *
+ * Displays related content from other collections (services, projects, blog)
+ * based on keyword matching. Strengthens internal linking signals for SEO.
+ *
+ * Usage:
+ *   <RelatedContent keywords={["SEO", "marketing"]} currentPath="/blog/my-post" />
+ *
+ * The component searches services, projects, and blog titles/descriptions
+ * for keyword overlap and renders up to `limit` matching items.
+ */
+
+import { getCollection } from "astro:content";
+
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { filterCollectionByLanguage } from "@/js/localeUtils";
+import { getLocalizedRoute, useTranslations } from "@/js/translationUtils";
+
+interface Props {
+  keywords: string[];
+  currentPath?: string;
+  limit?: number;
+}
+
+const { keywords, currentPath, limit = 6 } = Astro.props;
+const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
+
+const normalizedKeywords = keywords.map((k) => k.toLowerCase());
+
+function matchScore(title: string, description: string): number {
+  const text = `${title} ${description}`.toLowerCase();
+  return normalizedKeywords.reduce((score, kw) => score + (text.includes(kw) ? 1 : 0), 0);
+}
+
+// Gather content from all collections
+const [allServices, allProjects, allPosts] = await Promise.all([
+  getCollection("services", ({ data }) => data.draft !== true),
+  getCollection("projects", ({ data }) => data.draft !== true),
+  getCollection("blog", ({ data }) => data.draft !== true),
+]);
+
+const services = filterCollectionByLanguage(allServices, currLocale);
+const projects = filterCollectionByLanguage(allProjects, currLocale);
+const posts = filterCollectionByLanguage(allPosts, currLocale);
+
+interface RelatedItem {
+  title: string;
+  description: string;
+  href: string;
+  type: "service" | "project" | "blog";
+  score: number;
+}
+
+const items: RelatedItem[] = [];
+
+for (const s of services) {
+  const score = matchScore(s.data.title, s.data.description);
+  if (score > 0) {
+    items.push({
+      title: s.data.title,
+      description: s.data.description,
+      href: getLocalizedRoute(currLocale, `/services/${s.id}`),
+      type: "service",
+      score,
+    });
+  }
+}
+
+for (const p of projects) {
+  const score = matchScore(p.data.title, p.data.description);
+  if (score > 0) {
+    items.push({
+      title: p.data.title,
+      description: p.data.description,
+      href: getLocalizedRoute(currLocale, `/projects/${p.id}`),
+      type: "project",
+      score,
+    });
+  }
+}
+
+for (const post of posts) {
+  const score = matchScore(post.data.title, post.data.description);
+  if (score > 0) {
+    items.push({
+      title: post.data.title,
+      description: post.data.description,
+      href: getLocalizedRoute(currLocale, `/blog/${post.id}`),
+      type: "blog",
+      score,
+    });
+  }
+}
+
+// Filter out current page and sort by relevance score
+const filtered = items
+  .filter((item) => !currentPath || item.href !== currentPath)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, limit);
+
+const typeLabels: Record<string, string> = {
+  service: t("related_type_service"),
+  project: t("related_type_project"),
+  blog: t("related_type_blog"),
+};
+---
+
+{
+  filtered.length > 0 && (
+    <div class="mt-12 border-t pt-8">
+      <h3 class="h3 mb-6">{t("related_content")}</h3>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {filtered.map((item) => (
+          <a
+            href={item.href}
+            class="group block rounded-lg border p-4 transition hover:border-primary-500"
+          >
+            <span class="bg-muted text-muted-foreground mb-2 inline-block rounded px-2 py-0.5 text-xs font-medium uppercase">
+              {typeLabels[item.type]}
+            </span>
+            <h4 class="group-hover:text-primary-accent font-medium transition-colors">
+              {item.title}
+            </h4>
+            <p class="text-muted-foreground mt-1 line-clamp-2 text-sm">{item.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  )
+}

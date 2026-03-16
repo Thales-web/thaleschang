@@ -1,0 +1,87 @@
+---
+import { Image } from "astro:assets";
+import { type CollectionEntry, getEntries } from "astro:content";
+import { Icon } from "astro-icon/components";
+
+import Category from "@/components/category/Category.astro";
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { formatDate, humanize, slugify } from "@/js/textUtils";
+import { getLocalizedRoute } from "@/js/translationUtils";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  showDescription?: boolean;
+  class?: string;
+  rest?: any; // catch-all for any additional parameters, such as "aria-label"
+}
+
+const { post, showDescription = false, class: className, ...rest } = Astro.props as Props;
+const { title, description, categories, authors, pubDate, heroImage } = post.data;
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const authorsData = await getEntries(authors);
+---
+
+<article class=`${className}` {...rest}>
+  <a
+    href={getLocalizedRoute(currLocale, `/blog/${post.id}/`)}
+    class="flex aspect-video max-h-96 shrink-0 justify-center overflow-hidden rounded-md sm:justify-normal"
+  >
+    {
+      heroImage ? (
+        <figure class="aspect-video max-h-96 shrink-0 justify-center overflow-hidden rounded-md border sm:justify-normal md:rounded-lg">
+          <Image
+            src={heroImage}
+            alt={`Cover for ${title}`}
+            height={1000}
+            quality="high"
+            densities={[1.5, 2]}
+            class="h-full w-full rounded-md object-cover transition-transform duration-700 hover:scale-105 md:rounded-lg"
+            transition:name={`post-image-${post.id}`}
+          />
+        </figure>
+      ) : (
+        <div class="bg-muted flex h-full w-full items-center justify-center rounded-md border p-4 text-center md:rounded-lg">
+          <h3 class="font-heading text-xl font-semibold text-pretty md:text-2xl">{title}</h3>
+        </div>
+      )
+    }
+  </a>
+  <div>
+    <!-- categories -->
+    <div class="mt-4 flex flex-wrap gap-4">
+      {categories.map((category) => <Category category={category} />)}
+    </div>
+
+    <div class="text-muted-foreground mt-3 flex flex-wrap gap-1 text-sm">
+      <!-- first author -->
+      <p class="whitespace-nowrap">
+        {authorsData[0].data.name}
+      </p>
+      <span>&bull;</span>
+
+      <!-- published date -->
+      <p class="whitespace-nowrap">
+        {formatDate(pubDate, currLocale)}
+      </p>
+    </div>
+
+    <!-- title -->
+    <div class="mt-2">
+      <a href={getLocalizedRoute(currLocale, `/blog/${post.id}/`)} class="group transition-colors">
+        <h2
+          class="font-heading border-primary-accent/0 group-hover:border-primary-accent inline border-b-2 text-lg font-semibold transition-colors md:text-2xl"
+        >
+          {title}
+        </h2>
+      </a>
+    </div>
+
+    <!-- description -->
+    {
+      showDescription && (
+        <p class="text-muted-foreground mt-2 text-sm md:text-base">{description}</p>
+      )
+    }
+  </div>
+</article>

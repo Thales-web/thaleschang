@@ -1,0 +1,24 @@
+---
+/**
+ * Naver Analytics Component
+ * Renders Naver Analytics tracking script only when naverAnalyticsId is configured.
+ */
+import { clientConfig } from "@/config/clientConfig";
+
+const naId = clientConfig.analytics.naverAnalyticsId;
+---
+
+{
+  naId && (
+    <script is:inline define:vars={{ naId }}>
+      if (!window.wcs_add) window.wcs_add = {};
+      wcs_add["wa"] = naId;
+      if (!window._nasa) window._nasa = {};
+      if (window.wcs) {
+        wcs.inflow();
+        wcs_do(_nasa);
+      }
+    </script>
+    <script is:inline src="https://wcs.naver.net/wcslog.js" async />
+  )
+}

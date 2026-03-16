@@ -1,0 +1,332 @@
+---
+title: "Advanced Techniques"
+section: "tutorials"
+description: "Learn advanced productivity techniques including keyboard shortcuts, batch processing, templates, and search syntax."
+sidebar:
+  label: "Advanced Techniques"
+  order: 1
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "tut-advanced"
+---
+
+## Overview
+
+This tutorial covers advanced techniques that help you work more efficiently with Pathfinder and your documentation workflow. These techniques are optional but can significantly improve productivity once you are comfortable with the basics.
+
+## Keyboard Shortcuts
+
+Pathfinder supports keyboard shortcuts for common documentation navigation actions. These shortcuts work on all pages within the documentation site.
+
+### Navigation Shortcuts
+
+| Shortcut | Action | Description |
+|---|---|---|
+| <kbd>/</kbd> | Open search | Focus the search input |
+| <kbd>Esc</kbd> | Close search | Close the search modal |
+| <kbd>←</kbd> | Previous page | Navigate to the previous page in the sidebar |
+| <kbd>→</kbd> | Next page | Navigate to the next page in the sidebar |
+| <kbd>t</kbd> | Toggle theme | Switch between light and dark modes |
+| <kbd>s</kbd> | Toggle sidebar | Show or hide the sidebar on desktop |
+
+### Editor Shortcuts
+
+When writing MDX files in VS Code, these shortcuts improve your workflow:
+
+| Shortcut | Action |
+|---|---|
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd> | Preview MDX file |
+| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> | Open command palette |
+| <kbd>Ctrl</kbd> + <kbd>B</kbd> | Toggle bold text |
+| <kbd>Ctrl</kbd> + <kbd>I</kbd> | Toggle italic text |
+| <kbd>Ctrl</kbd> + <kbd>`</kbd> | Toggle inline code |
+| <kbd>Alt</kbd> + <kbd>↑</kbd> | Move line up |
+| <kbd>Alt</kbd> + <kbd>↓</kbd> | Move line down |
+
+## Batch Processing
+
+When you need to perform operations across multiple documentation files, batch processing can save significant time.
+
+### Bulk Frontmatter Updates
+
+Use a script to update frontmatter across all MDX files. Here is an example Node.js script that adds a `pagefind: true` field to every file that does not already have it:
+
+```javascript
+// scripts/update-frontmatter.js
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+
+const docsDir = "src/docs/data/docs";
+
+function processFile(filePath) {
+  const content = fs.readFileSync(filePath, "utf-8");
+  const { data, content: body } = matter(content);
+
+  if (data.pagefind === undefined) {
+    data.pagefind = true;
+    const updated = matter.stringify(body, data);
+    fs.writeFileSync(filePath, updated);
+    console.log(`Updated: ${filePath}`);
+  }
+}
+
+function walkDir(dir) {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const fullPath = path.join(dir, file);
+    const stat = fs.statSync(fullPath);
+    if (stat.isDirectory()) {
+      walkDir(fullPath);
+    } else if (file.endsWith(".mdx")) {
+      processFile(fullPath);
+    }
+  }
+}
+
+walkDir(docsDir);
+```
+
+Run it with:
+
+```bash
+node scripts/update-frontmatter.js
+```
+
+### Bulk Link Validation
+
+Check all internal links in your documentation to ensure none are broken:
+
+```bash
+# Install the link checker
+npm install -g broken-link-checker
+
+# Check all links after building the site
+npm run build
+blc http://localhost:4321/docs --recursive --ordered
+```
+
+## Templates
+
+Create reusable templates for common documentation page types to ensure consistency.
+
+### Page Template: Component Documentation
+
+```mdx
+---
+title: "Component Name"
+section: "tutorials"
+description: "Brief description of the component."
+sidebar:
+  label: "Component Name"
+  order: 1
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "comp-name"
+---
+
+## Overview
+
+Brief description of what the component does and when to use it.
+
+## Basic Usage
+
+\`\`\`mdx
+<ComponentName>Content</ComponentName>
+\`\`\`
+
+## Variants
+
+### Variant A
+
+Description and example.
+
+### Variant B
+
+Description and example.
+
+## Props Reference
+
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `prop1` | `string` | — | Description |
+| `prop2` | `boolean` | `false` | Description |
+
+## Accessibility
+
+- Accessibility feature 1
+- Accessibility feature 2
+
+## Best Practices
+
+- Best practice 1
+- Best practice 2
+```
+
+### Page Template: API Endpoint
+
+```mdx
+---
+title: "Endpoint Name"
+section: "tutorials"
+description: "Brief description of the endpoint."
+sidebar:
+  label: "Endpoint Name"
+  order: 1
+pagefind: true
+draft: false
+---
+
+## Endpoint
+
+\`\`\`
+METHOD /path/:parameter
+\`\`\`
+
+## Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `param1` | `string` | Yes | Description |
+
+## Request Body
+
+\`\`\`json
+{
+  "field": "value"
+}
+\`\`\`
+
+## Response
+
+\`\`\`json
+{
+  "id": "123",
+  "field": "value"
+}
+\`\`\`
+
+## Error Codes
+
+| Code | Description |
+|---|---|
+| `400` | Invalid request |
+| `404` | Resource not found |
+```
+
+## Search Syntax
+
+Pagefind supports several advanced search features that help users find content more quickly.
+
+### Basic Search
+
+Type any word or phrase into the search bar to find matching pages:
+
+```
+configuration
+```
+
+### Multi-Word Search
+
+Separate words with spaces to find pages containing all terms:
+
+```
+sidebar navigation config
+```
+
+### Exact Phrases
+
+Wrap phrases in double quotes to search for exact matches:
+
+```
+"view transitions"
+```
+
+### Excluding Terms
+
+Prefix a term with a minus sign to exclude pages containing that word:
+
+```
+navigation -sidebar
+```
+
+### Section Filtering
+
+Pagefind indexes content by section. The search results display the section and heading where each match was found, helping users navigate directly to the relevant content.
+
+## Content Organization Strategies
+
+### When to Split Pages
+
+Follow these guidelines for deciding when to split content into separate pages:
+
+| Signal | Action |
+|---|---|
+| Page exceeds 1500 words | Consider splitting into sub-pages |
+| Multiple unrelated topics | Split into topic-focused pages |
+| Deep heading nesting (H5+) | Restructure into separate pages |
+| Frequent cross-references within | Keep on one page |
+| Standalone FAQ items | Consider a dedicated FAQ page |
+
+### Cross-Referencing
+
+Use markdown links to connect related pages:
+
+```markdown
+For more information, see [Sidebar Configuration](/docs/reference/sidebar-navigation).
+```
+
+Avoid duplicating content across pages. Instead, link to the authoritative source and add a brief summary sentence for context.
+
+### Versioning Content
+
+When documenting features that change between versions, use the Badge component to mark version-specific content:
+
+```mdx
+## New Feature <Badge text="v2.0" variant="info" />
+
+This feature was introduced in version 2.0 and is not available in earlier releases.
+```
+
+## Performance Optimization
+
+### Image Optimization
+
+Optimize images used in documentation to reduce page load times:
+
+```bash
+# Install image optimization tools
+npm install sharp
+
+# Resize and compress images in bulk
+npx sharp-cli resize 1200 --input "src/docs/assets/*.png" --output "src/docs/assets/optimized/"
+```
+
+### Build Performance
+
+For large documentation sites, optimize build times:
+
+1. **Enable incremental builds** during development
+2. **Exclude draft pages** from production builds (handled automatically)
+3. **Minimize external dependencies** in MDX files
+4. **Use static imports** instead of dynamic imports where possible
+
+```javascript
+// astro.config.mjs
+export default defineConfig({
+  experimental: {
+    // Enable incremental builds for faster development
+    incremental: true,
+  },
+});
+```
+
+## Next Steps
+
+Now that you are familiar with these advanced techniques, explore the [Reference](/docs/reference/frontmatter-reference) section for detailed configuration options, or visit the [Components](/docs/components) section to learn about all available MDX components.

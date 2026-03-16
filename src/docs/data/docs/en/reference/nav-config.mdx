@@ -1,0 +1,232 @@
+---
+title: "Navigation Config"
+section: "main"
+description: "Reference for configuring the top navigation bar links in the Pathfinder documentation theme."
+sidebar:
+  label: "Top Navigation"
+  order: 2
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "ref-nav"
+---
+
+## Overview
+
+The top navigation bar appears at the top of every documentation page. It provides persistent links to important sections of your site, external resources, or related projects. The navigation is configured through a single TypeScript file with a straightforward array of link objects.
+
+## Config File Location
+
+The navigation configuration lives at:
+
+```
+src/docs/config/navConfig.ts
+```
+
+This file exports an array of navigation item objects that define the links displayed in the top navigation bar.
+
+## Basic Configuration
+
+Here is a minimal navigation configuration:
+
+```typescript
+// src/docs/config/navConfig.ts
+
+export interface NavItem {
+  text: string;
+  link: string;
+  newTab?: boolean;
+}
+
+export const navConfig: NavItem[] = [
+  {
+    text: "Documentation",
+    link: "/docs",
+  },
+  {
+    text: "Blog",
+    link: "/blog",
+  },
+  {
+    text: "GitHub",
+    link: "https://github.com/your-org/your-repo",
+    newTab: true,
+  },
+];
+```
+
+## NavItem Properties
+
+Each navigation item is an object with the following properties:
+
+### `text`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | Yes |
+
+The visible label displayed in the navigation bar. Keep it short — one or two words is ideal to prevent the navigation from overflowing on smaller screens.
+
+```typescript
+{
+  text: "API Reference",
+  link: "/docs/endpoints/rest-api",
+}
+```
+
+### `link`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | Yes |
+
+The URL that the navigation link points to. This can be:
+
+- **An absolute path** for internal pages: `/docs`, `/blog`, `/about`
+- **A full URL** for external sites: `https://github.com/your-org`
+- **An anchor link** for same-page navigation: `#features`
+
+```typescript
+// Internal link
+{
+  text: "Documentation",
+  link: "/docs",
+}
+
+// External link
+{
+  text: "GitHub",
+  link: "https://github.com/your-org/your-repo",
+  newTab: true,
+}
+```
+
+### `newTab`
+
+| Property | Value |
+|---|---|
+| **Type** | `boolean` |
+| **Required** | No |
+| **Default** | `false` |
+
+When set to `true`, the link opens in a new browser tab. The rendered anchor tag includes `target="_blank"` and `rel="noopener noreferrer"` for security.
+
+```typescript
+{
+  text: "GitHub",
+  link: "https://github.com/your-org/your-repo",
+  newTab: true,
+}
+```
+
+<Aside variant="tip" title="When to use newTab">
+Use `newTab: true` for external links so users do not navigate away from your documentation site. Keep internal links opening in the same tab for a seamless browsing experience.
+</Aside>
+
+## Properties Summary
+
+| Property | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `text` | `string` | Yes | — | Visible link label in the navigation bar |
+| `link` | `string` | Yes | — | URL or path the link navigates to |
+| `newTab` | `boolean` | No | `false` | Whether the link opens in a new browser tab |
+
+## Complete Example
+
+Here is a fully configured navigation with internal pages, external links, and mixed tab behaviors:
+
+```typescript
+// src/docs/config/navConfig.ts
+
+export interface NavItem {
+  text: string;
+  link: string;
+  newTab?: boolean;
+}
+
+export const navConfig: NavItem[] = [
+  {
+    text: "Docs",
+    link: "/docs",
+  },
+  {
+    text: "API",
+    link: "/docs/endpoints/rest-api",
+  },
+  {
+    text: "Blog",
+    link: "/blog",
+  },
+  {
+    text: "Changelog",
+    link: "/changelog",
+  },
+  {
+    text: "GitHub",
+    link: "https://github.com/your-org/pathfinder",
+    newTab: true,
+  },
+  {
+    text: "Discord",
+    link: "https://discord.gg/your-invite",
+    newTab: true,
+  },
+];
+```
+
+## Responsive Behavior
+
+The navigation bar adapts to different screen sizes:
+
+- **Desktop** (1024px and above) — All navigation items are displayed inline as horizontal links.
+- **Tablet** (768px to 1023px) — If items overflow, the navigation truncates with a "more" dropdown.
+- **Mobile** (below 768px) — Navigation items collapse into a hamburger menu accessible via a toggle button.
+
+### Recommendations for Mobile
+
+To ensure a good mobile experience:
+
+1. Limit the number of navigation items to 6 or fewer
+2. Use short text labels (one or two words)
+3. Place the most important links first, as they will be visible without scrolling
+
+## Ordering
+
+Navigation items are rendered in the order they appear in the array. The first item in the array appears on the far left of the navigation bar.
+
+To reorder navigation items, simply rearrange them in the array:
+
+```typescript
+// "Blog" will appear before "Docs"
+export const navConfig: NavItem[] = [
+  { text: "Blog", link: "/blog" },
+  { text: "Docs", link: "/docs" },
+];
+```
+
+## Active State
+
+The navigation automatically highlights the active link based on the current URL path. A link is considered active when the current page URL starts with the link's `link` value.
+
+For example, if the user is on `/docs/components/aside`, the navigation item with `link: "/docs"` will be highlighted as active because `/docs/components/aside` starts with `/docs`.
+
+<Aside variant="caution" title="Overlapping paths">
+If you have navigation items with overlapping paths (e.g., `/docs` and `/docs/api`), the more specific path takes precedence. Ensure your paths are distinct enough to avoid ambiguous highlighting.
+</Aside>
+
+## TypeScript Support
+
+The `NavItem` interface provides full type checking. Your editor will flag errors if you:
+
+- Omit the required `text` or `link` properties
+- Use an incorrect type for any property
+- Add properties that are not part of the interface
+
+This catches configuration mistakes at development time rather than at build time or runtime.

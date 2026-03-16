@@ -1,0 +1,204 @@
+@import url("./fonts.css");
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* tailwind plugins */
+@plugin "@tailwindcss/forms";
+
+/* dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* theme definition import */
+@import "./tailwind-theme.css";
+
+/* other imports into specific layers */
+@import "./mos.css" layer(utilities);
+@import "./markdown-content.css" layer(components);
+@import "./buttons.css" layer(components);
+
+
+/*
+ * Semantic color tokens (UNLAYERED — ensures CSS variable resolution works)
+ *
+ * These are intentionally OUTSIDE @layer so they always take precedence
+ * and can be referenced by @theme inline variables in Tailwind v4.
+ *
+ * When changing the primary color, update BOTH tailwind-theme.css AND this file.
+ * Generate colors: https://uicolors.app/create → https://oklch.com/
+ */
+
+:root {
+  /* default color of <body> background and text */
+  --background: oklch(98.5% 0 0); /* base-50 */
+  --foreground: oklch(14.5% 0 0); /* base-950 */
+
+  /* Background and text color for <Card> */
+  --card: oklch(98.5% 0 0); /* base-50 */
+  --card-foreground: oklch(14.5% 0 0); /* base-950 */
+
+  /* Colors for popovers like <SelectContent> and <TooltipContent> */
+  --popover: oklch(98.5% 0 0); /* base-50 */
+  --popover-foreground: oklch(14.5% 0 0); /* base-950 */
+
+  /* Primary colors for <Button>, etc. when variant="primary" */
+  --primary: oklch(54.6% 0.245 262.881); /* primary-600 */
+  --primary-foreground: oklch(98.5% 0 0); /* base-50 */
+
+  /* Primary color used for text and other accents on top of the background color */
+  --primary-accent: oklch(54.6% 0.245 262.881); /* primary-600 */
+
+  /* Secondary colors for <Button>, etc. when variant="secondary" */
+  --secondary: oklch(14.5% 0 0); /* base-950 */
+  --secondary-foreground: oklch(98.5% 0 0); /* base-50 */
+
+  /* Secondary color used for text and other accents on top of the background color */
+  --secondary-accent: oklch(14.5% 0 0); /* base-950 */
+
+  /* Muted colors used for <TabsList>, <Avatar>, etc. */
+  --muted: oklch(97% 0 0); /* base-100 */
+  --muted-foreground: oklch(43.9% 0 0); /* base-600 */
+
+  /* Accents used throughout the site */
+  --accent: oklch(97% 0 0); /* base-100 */
+  --accent-foreground: oklch(20.5% 0 0); /* base-900 */
+
+  /* Various component colors for variant="info" */
+  --info: oklch(82.8% 0.111 230.318); /* sky-300 */
+  --info-foreground: oklch(29.3% 0.066 243.157); /* sky-950 */
+
+  /* Various component colors for variant="success" */
+  --success: oklch(87.1% 0.15 154.449); /* green-300 */
+  --success-foreground: oklch(26.6% 0.065 152.934); /* green-950 */
+
+  /* Various component colors for variant="warning" */
+  --warning: oklch(87.9% 0.169 91.605); /* amber-300 */
+  --warning-foreground: oklch(27.9% 0.077 45.635); /* amber-950 */
+
+  /* Various component colors for variant="error" */
+  --error: oklch(50.5% 0.213 27.518); /* red-700 */
+  --error-foreground: oklch(98.5% 0 0); /* base-50 */
+
+  /* Default border color */
+  --border: oklch(92.2% 0 0); /* base-200 */
+
+  /* Border colors for inputs like <Input>, <Textarea>, <SelectTrigger>  */
+  --input: oklch(92.2% 0 0); /* base-200 */
+
+  /* Outline color for focus states */
+  --outline: oklch(54.6% 0.245 262.881); /* primary-600 */
+
+  /* Default transition duration */
+  --default-transition-duration: 0.2s;
+
+  /* Radius for rounded corners */
+  --radius: 0.65rem;
+
+  /* Spacing for padding and margin */
+  --spacing: 0.25rem;
+
+  /* custom shiki styling for markdown code blocks */
+  --astro-code-foreground: oklch(97% 0 0); /* base-100 */
+  --astro-code-background: oklch(20.5% 0 0); /* base-900 */
+  --astro-code-token-constant: oklch(80.9% 0.105 251.813); /* primary-300 */
+  --astro-code-token-string: oklch(48.8% 0.243 264.376); /* primary-700 */
+  --astro-code-token-comment: oklch(70.8% 0 0); /* base-400 */
+  --astro-code-token-keyword: oklch(87% 0 0); /* base-300 */
+  --astro-code-token-parameter: oklch(74.6% 0.16 232.661); /* sky-400 */
+  --astro-code-token-function: oklch(97% 0 0); /* base-100 */
+  --astro-code-token-string-expression: oklch(80.9% 0.105 251.813); /* primary-300 */
+  --astro-code-token-punctuation: oklch(70.8% 0 0); /* base-400 */
+  --astro-code-token-link: oklch(92.2% 0 0); /* base-200 */
+}
+
+/* overriding above variables when a parent has the class "dark" */
+.dark {
+  --background: oklch(14.5% 0 0); /* base-950 */
+  --foreground: oklch(98.5% 0 0); /* base-50 */
+  --card: oklch(20.5% 0 0); /* base-900 */
+  --card-foreground: oklch(98.5% 0 0); /* base-50 */
+  --popover: oklch(20.5% 0 0); /* base-900 */
+  --popover-foreground: oklch(98.5% 0 0); /* base-50 */
+  --primary: oklch(54.6% 0.245 262.881); /* primary-600 */
+  --primary-foreground: oklch(98.5% 0 0); /* base-50 */
+  --primary-accent: oklch(54.6% 0.245 262.881); /* primary-600 */
+  --secondary: oklch(98.5% 0 0); /* base-50 */
+  --secondary-foreground: oklch(14.5% 0 0); /* base-950 */
+  --secondary-accent: oklch(92.2% 0 0); /* base-200 */
+  --muted: oklch(20.5% 0 0); /* base-900 */
+  --muted-foreground: oklch(70.8% 0 0); /* base-400 */
+  --accent: oklch(37.1% 0 0); /* base-700 */
+  --accent-foreground: oklch(97% 0 0); /* base-100 */
+  --info: oklch(82.8% 0.111 230.318); /* sky-300 */
+  --info-foreground: oklch(29.3% 0.066 243.157); /* sky-950 */
+  --success: oklch(87.1% 0.15 154.449); /* green-300 */
+  --success-foreground: oklch(26.6% 0.065 152.934); /* green-950 */
+  --warning: oklch(87.9% 0.169 91.605); /* amber-300 */
+  --warning-foreground: oklch(27.9% 0.077 45.635); /* amber-950 */
+  --error: oklch(44.4% 0.177 26.899); /* red-800 */
+  --error-foreground: oklch(98.5% 0 0); /* base-50 */
+  --border: --alpha(oklch(98.5% 0 0) / 10%); /* base-50 / 10% */
+  --input: --alpha(oklch(98.5% 0 0) / 15%); /* base-50 / 15% */
+  --outline: oklch(70.7% 0.165 254.624); /* primary-400 */
+}
+
+/* https://tailwindcss.com/docs/adding-custom-styles#using-css-and-layer */
+@layer base {
+  /* starwind preflight merged with Cosmic Themes */
+  * {
+    @apply border-border outline-outline/50;
+  }
+  html {
+    @apply bg-background text-foreground leading-[1.6rem] scheme-light dark:scheme-dark;
+    scroll-behavior: smooth;
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+  }
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  .site-container {
+    @apply mx-auto max-w-[86rem] px-4;
+  }
+
+  /* styles navbar links */
+  .nav__link--base {
+    @apply text-muted-foreground hover:text-foreground leading-tight transition;
+  }
+
+  /* various H1 styling used throughout the components */
+  .h1 {
+    @apply font-heading text-4xl leading-tight font-semibold lg:text-5xl;
+  }
+
+  /* various H2 styling used throughout the components */
+  .h2 {
+    @apply font-heading text-2xl leading-tight font-semibold md:text-3xl lg:text-4xl;
+  }
+
+  /* various H3 styling used throughout the components */
+  .h3 {
+    @apply font-heading text-lg leading-tight font-semibold md:text-xl lg:text-2xl;
+  }
+
+  /* text details immediately below a number of section headings */
+  .description {
+    @apply text-muted-foreground text-pretty md:text-lg;
+  }
+}
+
+@layer utilities {
+  /* focus utility class (for when user is tabbing through items on page) */
+  .primary-focus {
+    @apply focus-visible:outline-outline focus-visible:outline-2;
+  }
+
+  /* use with "animate-pause" to pause a CSS animation */
+  .pause {
+    animation-play-state: paused !important;
+  }
+}

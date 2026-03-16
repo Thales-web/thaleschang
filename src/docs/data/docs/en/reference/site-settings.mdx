@@ -1,0 +1,259 @@
+---
+title: "Site Settings"
+section: "main"
+description: "Reference for global site settings in the Pathfinder documentation theme, including pagination, view transitions, and routing."
+sidebar:
+  label: "Site Settings"
+  order: 4
+  badge:
+    text: "Updated"
+    variant: "caution"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "ref-settings"
+---
+
+## Overview
+
+Site settings control global behaviors across your entire documentation site. These settings affect features like pagination, view transitions, copy-to-clipboard buttons, and the base route path. They are configured in a single TypeScript file and apply to all pages uniformly.
+
+## Config File Location
+
+The site settings configuration lives at:
+
+```
+src/docs/config/siteSettings.ts
+```
+
+This file exports an object containing all global settings for your documentation site.
+
+## Basic Configuration
+
+Here is the default site settings configuration:
+
+```typescript
+// src/docs/config/siteSettings.ts
+
+export interface SiteSettings {
+  copyLinkButtons: boolean;
+  useViewTransitions: boolean;
+  pagination: boolean;
+  docsRoute: string;
+}
+
+export const siteSettings: SiteSettings = {
+  copyLinkButtons: true,
+  useViewTransitions: false,
+  pagination: true,
+  docsRoute: "docs",
+};
+```
+
+## Available Settings
+
+### `copyLinkButtons`
+
+| Property | Value |
+|---|---|
+| **Type** | `boolean` |
+| **Required** | No |
+| **Default** | `true` |
+
+Controls whether copy-to-clipboard buttons appear on headings throughout the documentation. When enabled, hovering over any heading (h2 through h6) reveals a small link icon. Clicking the icon copies a direct URL to that heading to the clipboard.
+
+```typescript
+export const siteSettings = {
+  copyLinkButtons: true,
+};
+```
+
+#### When Enabled (`true`)
+
+- A link icon appears on hover for all headings h2 through h6
+- Clicking the icon copies the full URL with the heading anchor (e.g., `https://docs.example.com/docs/guide#installation`)
+- A brief confirmation tooltip appears after copying
+- The URL is updated in the browser address bar
+
+#### When Disabled (`false`)
+
+- No link icons appear on headings
+- Headings still have `id` attributes for direct linking, but there is no visual affordance for copying
+- Users can still manually copy the URL from the browser address bar
+
+<Aside variant="tip" title="Recommendation">
+Leave this enabled for most documentation sites. Copy-link buttons make it easy for readers to share specific sections with colleagues, which improves the discoverability of your content.
+</Aside>
+
+### `useViewTransitions`
+
+| Property | Value |
+|---|---|
+| **Type** | `boolean` |
+| **Required** | No |
+| **Default** | `false` |
+
+Enables the View Transitions API for smooth animated page transitions. When enabled, navigating between documentation pages triggers a crossfade animation instead of a full page reload.
+
+```typescript
+export const siteSettings = {
+  useViewTransitions: false,
+};
+```
+
+#### When Enabled (`true`)
+
+- Page navigations trigger a smooth crossfade animation
+- The sidebar and navigation bar persist visually during transitions
+- Scroll position is reset to the top of the new page
+- The browser's back and forward buttons work with animated transitions
+
+#### When Disabled (`false`)
+
+- Standard full-page navigation is used
+- Each page navigation triggers a complete page load
+- This is the more compatible option for older browsers
+
+<Aside variant="caution" title="Browser support">
+The View Transitions API is supported in Chrome 111+, Edge 111+, and Opera 97+. Firefox and Safari have partial or experimental support. When a browser does not support view transitions, navigation falls back to standard page loads regardless of this setting.
+</Aside>
+
+### `pagination`
+
+| Property | Value |
+|---|---|
+| **Type** | `boolean` |
+| **Required** | No |
+| **Default** | `true` |
+
+Controls whether previous/next navigation links appear at the bottom of each documentation page. These links help readers move sequentially through the documentation.
+
+```typescript
+export const siteSettings = {
+  pagination: true,
+};
+```
+
+#### When Enabled (`true`)
+
+- "Previous" and "Next" links appear at the bottom of each page
+- Links are determined by the sidebar order within the current section
+- The first page in a section shows only "Next"
+- The last page in a section shows only "Previous"
+- Link labels display the target page's sidebar label
+
+#### When Disabled (`false`)
+
+- No pagination links appear at the bottom of pages
+- Readers must use the sidebar or browser navigation to move between pages
+
+<Aside variant="info" title="Navigation context">
+Pagination links only connect pages within the same sidebar section. They do not cross section or tab boundaries. This keeps navigation predictable and contextually relevant.
+</Aside>
+
+### `docsRoute`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | No |
+| **Default** | `"docs"` |
+
+Defines the base URL path segment for all documentation pages. By default, documentation pages are served under `/docs/`. Changing this value moves the entire documentation to a different URL prefix.
+
+```typescript
+export const siteSettings = {
+  docsRoute: "docs",
+};
+```
+
+#### Examples
+
+| `docsRoute` Value | Documentation URL Pattern |
+|---|---|
+| `"docs"` | `/docs/getting-started/configuration` |
+| `"documentation"` | `/documentation/getting-started/configuration` |
+| `"guide"` | `/guide/getting-started/configuration` |
+| `"help"` | `/help/getting-started/configuration` |
+
+<Aside variant="danger" title="Route changes require page updates">
+If you change `docsRoute`, you must also rename the corresponding folder in `src/pages/` to match. For example, changing `docsRoute` from `"docs"` to `"guide"` requires renaming `src/pages/docs/` to `src/pages/guide/`.
+</Aside>
+
+#### Changing the Route
+
+To change the documentation base route:
+
+<Steps>
+
+1. **Update the setting**
+
+   Change the `docsRoute` value in `siteSettings.ts`:
+
+   ```typescript
+   export const siteSettings = {
+     docsRoute: "guide",
+   };
+   ```
+
+2. **Rename the pages directory**
+
+   ```bash
+   mv src/pages/docs src/pages/guide
+   ```
+
+3. **Update internal links**
+
+   Search your content for links that reference `/docs/` and update them to `/guide/`.
+
+4. **Update navigation config**
+
+   Update any links in `navConfig.ts` that reference the old route.
+
+5. **Test all navigation**
+
+   Start the development server and verify that all links, sidebar navigation, and pagination work correctly with the new route.
+
+</Steps>
+
+## Settings Summary
+
+| Setting | Type | Default | Description |
+|---|---|---|---|
+| `copyLinkButtons` | `boolean` | `true` | Show copy-to-clipboard buttons on headings |
+| `useViewTransitions` | `boolean` | `false` | Enable animated page transitions |
+| `pagination` | `boolean` | `true` | Show previous/next links at page bottom |
+| `docsRoute` | `string` | `"docs"` | Base URL path for documentation pages |
+
+## TypeScript Support
+
+The `SiteSettings` interface provides complete type checking for all settings. If you add an unrecognized property or use an incorrect type, your editor and the TypeScript compiler will report an error.
+
+```typescript
+export const siteSettings: SiteSettings = {
+  copyLinkButtons: true,
+  useViewTransitions: false,
+  pagination: true,
+  docsRoute: "docs",
+  // unknownSetting: true,  // TypeScript error: property does not exist
+};
+```
+
+## Environment-Specific Settings
+
+If you need different settings for development and production, you can use environment checks:
+
+```typescript
+const isDev = import.meta.env.DEV;
+
+export const siteSettings: SiteSettings = {
+  copyLinkButtons: true,
+  useViewTransitions: !isDev, // Only enable in production
+  pagination: true,
+  docsRoute: "docs",
+};
+```
+
+This pattern is useful for features like view transitions that you may want to test only in production builds, or for enabling verbose logging during development.

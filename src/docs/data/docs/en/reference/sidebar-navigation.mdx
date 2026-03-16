@@ -1,0 +1,350 @@
+---
+title: "Sidebar Config"
+section: "main"
+description: "Reference for configuring sidebar tabs and sections in the Pathfinder documentation theme."
+sidebar:
+  label: "Sidebar Navigation"
+  order: 3
+  badge:
+    text: "New"
+    variant: "tip"
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "ref-sidebar"
+---
+
+## Overview
+
+The sidebar is the primary navigation element for documentation pages. It organizes content into a hierarchical structure using two levels: **Documentation Tabs** at the top level and **Sidebar Sections** within each tab. Readers use the sidebar to browse topics, jump between sections, and understand the overall structure of your documentation.
+
+## Config File Location
+
+The sidebar configuration lives at:
+
+```
+src/docs/config/sidebarConfig.ts
+```
+
+This file exports an array of tab objects, each containing one or more sections. Sections correspond to folders in your content directory.
+
+## Architecture
+
+The sidebar has two primary structural components:
+
+### Documentation Tabs
+
+Tabs are the top-level organizational units. They appear as clickable headings or icons at the top of the sidebar. Each tab represents a major topic area such as "Guides", "API Reference", or "Tutorials".
+
+When a reader clicks a tab, the sidebar displays only the sections belonging to that tab. This keeps the navigation focused and prevents the sidebar from becoming overwhelming in large documentation sites.
+
+### Sidebar Sections
+
+Sections are groups of pages within a tab. Each section corresponds to a folder inside your content directory. The section title appears as a collapsible heading in the sidebar, and the pages within that folder are listed beneath it.
+
+## Configuration Structure
+
+Here is the TypeScript interface for the sidebar configuration:
+
+```typescript
+// src/docs/config/sidebarConfig.ts
+
+export interface SidebarSection {
+  id: string;
+  title: string;
+}
+
+export interface SidebarTab {
+  id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  sections: SidebarSection[];
+}
+
+export const sidebarConfig: SidebarTab[] = [
+  // Tab definitions here
+];
+```
+
+## Tab Properties
+
+Each tab object has the following properties:
+
+### `id`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | Yes |
+
+A unique identifier for the tab. This value is used internally for state management and URL routing. Use lowercase kebab-case (e.g., `"getting-started"`, `"api-reference"`).
+
+```typescript
+{
+  id: "guides",
+  // ...
+}
+```
+
+### `title`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | Yes |
+
+The display text shown in the sidebar tab header. This is the label readers see when switching between tabs.
+
+```typescript
+{
+  id: "guides",
+  title: "Guides",
+  // ...
+}
+```
+
+### `description`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | No |
+
+A brief description of the tab's content. This may be displayed as a tooltip or subtitle depending on the sidebar layout.
+
+```typescript
+{
+  id: "guides",
+  title: "Guides",
+  description: "Step-by-step tutorials and how-to guides",
+  // ...
+}
+```
+
+### `icon`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | No |
+
+An icon identifier displayed alongside the tab title. The icon system supports common icon libraries. Refer to your project's icon configuration for available icon names.
+
+```typescript
+{
+  id: "guides",
+  title: "Guides",
+  icon: "book-open",
+  // ...
+}
+```
+
+### `sections`
+
+| Property | Value |
+|---|---|
+| **Type** | `SidebarSection[]` |
+| **Required** | Yes |
+
+An array of section objects that belong to this tab. Each section maps to a folder in the content directory.
+
+## Section Properties
+
+Each section object has two properties:
+
+### `id`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | Yes |
+
+The section identifier. This value **must match the folder name** in your content directory. For example, if the section `id` is `"getting-started"`, the corresponding content must be in `src/docs/data/docs/en/getting-started/`.
+
+```typescript
+{
+  id: "getting-started",
+  title: "Getting Started",
+}
+```
+
+<Aside variant="danger" title="Folder name must match">
+If the section `id` does not match a folder name in the content directory, the section will appear in the sidebar but will have no pages listed beneath it. Always verify that folder names and section IDs are identical.
+</Aside>
+
+### `title`
+
+| Property | Value |
+|---|---|
+| **Type** | `string` |
+| **Required** | Yes |
+
+The display title shown as the section heading in the sidebar. This can differ from the `id` — the `id` is for folder matching, while `title` is for display.
+
+```typescript
+{
+  id: "getting-started",
+  title: "Getting Started",
+}
+```
+
+## Complete Example
+
+Here is a full sidebar configuration for a documentation site with two tabs:
+
+```typescript
+// src/docs/config/sidebarConfig.ts
+
+export interface SidebarSection {
+  id: string;
+  title: string;
+}
+
+export interface SidebarTab {
+  id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  sections: SidebarSection[];
+}
+
+export const sidebarConfig: SidebarTab[] = [
+  {
+    id: "guides",
+    title: "Guides",
+    description: "Learn how to use Pathfinder",
+    icon: "book-open",
+    sections: [
+      {
+        id: "getting-started",
+        title: "Getting Started",
+      },
+      {
+        id: "components",
+        title: "Components",
+      },
+      {
+        id: "tutorials",
+        title: "Tutorials",
+      },
+    ],
+  },
+  {
+    id: "api",
+    title: "API Reference",
+    description: "Technical reference documentation",
+    icon: "code",
+    sections: [
+      {
+        id: "reference",
+        title: "Configuration Reference",
+      },
+      {
+        id: "endpoints",
+        title: "API Endpoints",
+      },
+      {
+        id: "authentication",
+        title: "Authentication",
+      },
+    ],
+  },
+];
+```
+
+This configuration creates two sidebar tabs:
+
+1. **Guides** — Contains three sections: Getting Started, Components, and Tutorials
+2. **API Reference** — Contains three sections: Configuration Reference, API Endpoints, and Authentication
+
+## Properties Summary
+
+### Tab Properties
+
+| Property | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `id` | `string` | Yes | — | Unique tab identifier |
+| `title` | `string` | Yes | — | Display label in the sidebar |
+| `description` | `string` | No | — | Brief description or tooltip text |
+| `icon` | `string` | No | — | Icon identifier for the tab |
+| `sections` | `SidebarSection[]` | Yes | — | Array of sections within this tab |
+
+### Section Properties
+
+| Property | Type | Required | Default | Description |
+|---|---|---|---|---|
+| `id` | `string` | Yes | — | Must match the content folder name |
+| `title` | `string` | Yes | — | Display heading in the sidebar |
+
+## Page Ordering Within Sections
+
+Pages within a section are ordered by the `sidebar.order` frontmatter field. Pages with lower order values appear first. If two pages have the same order value, they are sorted alphabetically by their sidebar label.
+
+See the [Frontmatter Reference](/docs/reference/frontmatter-reference) for details on the `sidebar.order` field.
+
+## Adding a New Section
+
+To add a new section to the sidebar:
+
+<Steps>
+
+1. **Create the content folder**
+
+   Create a new folder in `src/docs/data/docs/en/` with the desired section name:
+
+   ```bash
+   mkdir src/docs/data/docs/en/my-new-section
+   ```
+
+2. **Add at least one MDX file**
+
+   Create an `index.mdx` file in the new folder with valid frontmatter:
+
+   ```yaml
+   ---
+   title: "My New Section"
+   sidebar:
+     label: "Overview"
+     order: 1
+   ---
+   ```
+
+3. **Register the section in sidebarConfig**
+
+   Add a new section object to the appropriate tab in `sidebarConfig.ts`:
+
+   ```typescript
+   {
+     id: "my-new-section",
+     title: "My New Section",
+   }
+   ```
+
+4. **Verify in the browser**
+
+   Start the development server and confirm the new section appears in the sidebar with the expected pages.
+
+</Steps>
+
+## Troubleshooting
+
+### Section appears but has no pages
+
+- Verify the section `id` matches the folder name exactly (case-sensitive)
+- Check that MDX files in the folder have valid frontmatter with a `title` field
+- Ensure no files have `draft: true` in production
+
+### Tab does not appear
+
+- Confirm the tab object has all required fields: `id`, `title`, and `sections`
+- Ensure the `sections` array is not empty
+- Check for TypeScript errors in the config file
+
+### Pages appear in the wrong order
+
+- Verify each page has a `sidebar.order` value in its frontmatter
+- Remember that lower order values appear first
+- Pages without an `order` value default to `0`

@@ -1,0 +1,46 @@
+---
+/**
+ * Google Tag Manager Component
+ * Place the <head> part in BaseHead, and the <noscript> part after <body>.
+ * Renders only when googleTagManagerId is configured.
+ */
+import { clientConfig } from "@/config/clientConfig";
+
+interface Props {
+  /** "head" for the script tag, "body" for the noscript iframe */
+  position: "head" | "body";
+}
+
+const { position } = Astro.props;
+const gtmId = clientConfig.analytics.googleTagManagerId;
+---
+
+{
+  gtmId && position === "head" && (
+    <script is:inline define:vars={{ gtmId }}>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", gtmId);
+    </script>
+  )
+}
+
+{
+  gtmId && position === "body" && (
+    <noscript>
+      <iframe
+        src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+        height="0"
+        width="0"
+        style="display:none;visibility:hidden"
+      />
+    </noscript>
+  )
+}

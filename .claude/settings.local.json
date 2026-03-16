@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find c:Usersilove10Billion-2026-projectthalesweb-master-template -type f -name *pagefind*)",
+      "Bash(xargs grep:*)",
+      "Bash(grep -r pagefind c:Usersilove10Billion-2026-projectthalesweb-master-template --include=*.mjs --include=*.config.*)"
+    ]
+  }
+}

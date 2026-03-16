@@ -1,0 +1,128 @@
+---
+title: "Welcome to Pathfinder"
+section: "main"
+description: "An overview of the Pathfinder documentation theme for Astro, featuring multi-language support, custom MDX components, and modern tooling."
+sidebar:
+  label: "Introduction"
+  order: 1
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 3
+pagefind: true
+draft: false
+mappingKey: "gs-intro"
+---
+
+## What is Pathfinder?
+
+Pathfinder is a full-featured documentation theme built on top of Astro. It provides a structured, scalable foundation for building professional documentation sites with minimal configuration. Whether you are documenting an open-source library, an internal tool, or an entire product suite, Pathfinder gives you the building blocks to get started quickly and iterate with confidence.
+
+Pathfinder was designed with real-world documentation needs in mind. It ships with sensible defaults while remaining fully customizable, so you can adapt it to match your brand and workflow without fighting the framework.
+
+## Key Features
+
+Pathfinder includes everything you need to build a modern documentation experience:
+
+- **Multi-language support (i18n)** — Serve your docs in multiple languages with built-in locale routing, language switchers, and per-locale content directories. Each language gets its own content collection, so translators can work independently without merge conflicts.
+
+- **Pre-built MDX components** — A library of ready-to-use components like Aside callouts, Tabs, Steps, Badges, and Buttons. These components are auto-imported into every MDX file, so you can use them without any import statements.
+
+- **Tailwind CSS v4** — Styled with Tailwind CSS v4 for rapid, utility-first design. The theme provides a consistent design token system that you can extend or override through standard Tailwind configuration.
+
+- **Responsive design** — Every page, component, and navigation element is fully responsive. The sidebar collapses into a mobile drawer, tables scroll horizontally, and code blocks wrap gracefully on smaller screens.
+
+- **Pagefind search integration** — Full-text search powered by Pagefind runs entirely in the browser with no server required. The search index is generated at build time, keeping your docs fast and self-contained.
+
+- **Dark mode support** — A complete dark color scheme is included out of the box. Users can toggle between light and dark modes, and their preference is persisted across sessions using local storage.
+
+## How the Documentation is Organized
+
+This documentation is split into several sections to help you find what you need:
+
+### Getting Started
+
+The **Getting Started** section walks you through installation, initial configuration, and integrating Pathfinder into an existing Astro project. If this is your first time using Pathfinder, start here.
+
+- [Initial Setup](/docs/getting-started/configuration) — Install dependencies, run the development server, and understand the project structure.
+- [Theme Integration](/docs/getting-started/integrating) — Add Pathfinder to an existing Astro site in five straightforward steps.
+
+### Components
+
+The **Components** section documents every pre-built MDX component that ships with the theme. Each page includes usage examples, a complete props table, and accessibility notes where applicable.
+
+### Reference
+
+The **Reference** section is a comprehensive lookup resource. It covers frontmatter fields, navigation configuration, sidebar structure, site-wide settings, and markdown styling.
+
+## Quick Start
+
+If you want to get up and running as fast as possible, follow these three steps:
+
+1. Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/your-org/pathfinder-docs.git
+cd pathfinder-docs
+npm install
+```
+
+2. Start the development server:
+
+```bash
+npm run dev
+```
+
+3. Open your browser and navigate to `http://localhost:4321/docs` to see the documentation site.
+
+From there, you can begin editing the MDX files in `src/docs/data/docs/en/` to replace the starter content with your own.
+
+## Technology Stack
+
+Pathfinder builds on a modern, well-supported technology stack:
+
+| Technology | Purpose |
+|---|---|
+| Astro | Static site framework with island architecture |
+| MDX | Markdown with JSX component support |
+| Tailwind CSS v4 | Utility-first CSS framework |
+| Pagefind | Client-side full-text search |
+| TypeScript | Type-safe configuration and components |
+
+## Design Principles
+
+Pathfinder follows a few guiding principles that inform every design decision:
+
+### Content First
+
+The theme stays out of the way of your content. Typography, spacing, and color choices are optimized for readability. Components enhance the reading experience without adding visual noise.
+
+### Progressive Disclosure
+
+Simple use cases should require simple configuration. Advanced features like i18n routing, custom sidebar icons, and search tuning are available when you need them but never required upfront.
+
+### Developer Experience
+
+Configuration files are fully typed. Components provide clear error messages when required props are missing. The development server supports hot module replacement, so changes appear instantly without a full page reload.
+
+## Browser Support
+
+Pathfinder supports all modern evergreen browsers:
+
+- Chrome 90+
+- Firefox 90+
+- Safari 15+
+- Edge 90+
+
+Internet Explorer is not supported.
+
+## Getting Help
+
+If you run into issues or have questions, there are several ways to get help:
+
+- **GitHub Issues** — Report bugs or request features on the project repository.
+- **Discussions** — Ask questions and share ideas in GitHub Discussions.
+- **Discord** — Join the community Discord server for real-time help.
+
+## Next Steps
+
+Ready to get started? Head to the [Initial Setup](/docs/getting-started/configuration) guide to install Pathfinder and configure your first documentation site.

@@ -1,0 +1,196 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import { filterCollectionByLanguage, getLocaleFromUrl } from "@/js/localeUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+
+const allCompanies: CollectionEntry<"companies">[] = await getCollection(
+  "companies",
+  ({ data }) => data.draft !== true,
+);
+
+const companies = filterCollectionByLanguage(allCompanies, currLocale) as CollectionEntry<"companies">[];
+
+const slugify = (str: string) =>
+  str.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+const uniq = <T,>(arr: T[]) => Array.from(new Set(arr));
+
+const industryValues = uniq(
+  companies.map((c) => c.data.industry).filter((v): v is string => Boolean(v)),
+);
+const companyTypeValues = uniq(
+  companies.map((c) => c.data.companyType).filter((v): v is string => Boolean(v)),
+);
+const remotePolicyValues = uniq(
+  companies.map((c) => c.data.remotePolicy).filter((v): v is string => Boolean(v)),
+);
+const sizeValues = uniq(
+  companies.map((c) => c.data.size).filter((v): v is string => Boolean(v)),
+);
+
+const filters = {
+  industries: industryValues.map((v) => ({ id: slugify(v), value: v, label: v })),
+  companyTypes: companyTypeValues.map((v) => ({ id: `ct-${slugify(v)}`, value: v, label: v })),
+  remotePolicies: remotePolicyValues.map((v) => ({ id: `rp-${slugify(v)}`, value: v, label: v })),
+  sizes: sizeValues.map((v) => ({ id: `sz-${slugify(v)}`, value: v, label: v })),
+};
+---
+
+<div class="bg-muted rounded-2xl p-1">
+  <div class="px-4 py-3">
+    <h2 class="text-foreground text-xl font-semibold">Filters</h2>
+  </div>
+  <div
+    class="bg-card rounded-xl border p-6 flex flex-col gap-4 shadow-sm"
+    data-company-filters
+  >
+    <!-- Industry Filter -->
+    <details class="group" open>
+      <summary class="text-foreground cursor-pointer list-none flex items-center justify-between py-2 text-sm font-medium">
+        <span>Industry</span>
+        <svg class="size-4 transition-transform group-open:rotate-45" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+      </summary>
+      <div class="space-y-1 mt-2 pb-2">
+        {filters.industries.map(({ id, label }) => (
+          <div>
+            <input
+              type="checkbox"
+              id={id}
+              name="industry"
+              value={label}
+              class="accent-primary rounded"
+            />
+            <label for={id} class="text-muted-foreground text-sm ml-1">{label}</label>
+          </div>
+        ))}
+      </div>
+    </details>
+
+    <!-- Company Type Filter -->
+    <details class="group">
+      <summary class="text-foreground cursor-pointer list-none flex items-center justify-between py-2 text-sm font-medium">
+        <span>Company Type</span>
+        <svg class="size-4 transition-transform group-open:rotate-45" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+      </summary>
+      <div class="space-y-1 mt-2 pb-2">
+        {filters.companyTypes.map(({ id, label }) => (
+          <div>
+            <input
+              type="checkbox"
+              id={id}
+              name="companyType"
+              value={label}
+              class="accent-primary rounded"
+            />
+            <label for={id} class="text-muted-foreground text-sm ml-1">{label}</label>
+          </div>
+        ))}
+      </div>
+    </details>
+
+    <!-- Remote Policy Filter -->
+    <details class="group">
+      <summary class="text-foreground cursor-pointer list-none flex items-center justify-between py-2 text-sm font-medium">
+        <span>Remote Policy</span>
+        <svg class="size-4 transition-transform group-open:rotate-45" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+      </summary>
+      <div class="space-y-1 mt-2 pb-2">
+        {filters.remotePolicies.map(({ id, label }) => (
+          <div>
+            <input
+              type="checkbox"
+              id={id}
+              name="remotePolicy"
+              value={label}
+              class="accent-primary rounded"
+            />
+            <label for={id} class="text-muted-foreground text-sm ml-1">{label}</label>
+          </div>
+        ))}
+      </div>
+    </details>
+
+    <!-- Size Filter -->
+    <details class="group">
+      <summary class="text-foreground cursor-pointer list-none flex items-center justify-between py-2 text-sm font-medium">
+        <span>Company Size</span>
+        <svg class="size-4 transition-transform group-open:rotate-45" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+      </summary>
+      <div class="space-y-1 mt-2 pb-2">
+        {filters.sizes.map(({ id, label }) => (
+          <div>
+            <input
+              type="checkbox"
+              id={id}
+              name="size"
+              value={label}
+              class="accent-primary rounded"
+            />
+            <label for={id} class="text-muted-foreground text-sm ml-1">{label}</label>
+          </div>
+        ))}
+      </div>
+    </details>
+
+    <div class="mt-4">
+      <button
+        id="clearCompanyFilters"
+        class="bg-muted text-foreground rounded-lg px-4 py-2 text-xs font-medium transition hover:opacity-80"
+      >
+        Clear Filters
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  const root = document.querySelector("[data-company-filters]");
+  if (root) {
+    const slugify = (str) =>
+      String(str || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+    const checkboxes = root.querySelectorAll('input[type="checkbox"]');
+    const clearBtn = root.querySelector("#clearCompanyFilters");
+
+    const getSelected = (name) =>
+      Array.from(root.querySelectorAll(`input[name="${name}"]:checked`)).map(
+        (el) => slugify(el.value)
+      );
+
+    const applyFilters = () => {
+      const selected = {
+        industry: getSelected("industry"),
+        companyType: getSelected("companyType"),
+        remotePolicy: getSelected("remotePolicy"),
+        size: getSelected("size"),
+      };
+
+      const hasAny = Object.values(selected).some((arr) => arr.length > 0);
+      const cards = document.querySelectorAll("[data-company-card]");
+
+      cards.forEach((card) => {
+        const values = {
+          industry: slugify(card.getAttribute("data-industry") || ""),
+          companyType: slugify(card.getAttribute("data-company-type") || ""),
+          remotePolicy: slugify(card.getAttribute("data-remote-policy") || ""),
+          size: slugify(card.getAttribute("data-size") || ""),
+        };
+
+        const visible = Object.entries(selected).every(([key, arr]) =>
+          arr.length === 0 ? true : arr.includes(values[key])
+        );
+
+        card.classList.toggle("hidden", hasAny ? !visible : false);
+      });
+
+      document.dispatchEvent(new CustomEvent("company-filters:applied"));
+    };
+
+    checkboxes.forEach((cb) => cb.addEventListener("change", applyFilters));
+    clearBtn?.addEventListener("click", () => {
+      checkboxes.forEach((cb) => (cb.checked = false));
+      applyFilters();
+    });
+  }
+</script>
