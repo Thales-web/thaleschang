@@ -52,8 +52,12 @@ export default config({
   },
 
   singletons: {
+    clientSettings: Collections.ClientSettings(),
+
     resumeEN: Collections.Resume("en"),
     resumeKO: Collections.Resume("ko"),
 
+    faqDataEN: Collections.FaqData("en"),
+    faqDataKO: Collections.FaqData("ko"),
   },
 });

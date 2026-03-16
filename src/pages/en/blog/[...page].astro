@@ -4,13 +4,12 @@ import { type Page } from "astro";
 import CategoryCloud from "@/components/category-cloud/CategoryCloud.astro";
 import Pagination from "@/components/pagination/Pagination.astro";
 import PostCard from "@/components/post-card/PostCardMultiLink.astro";
-import { defaultLocale } from "@/config/siteSettings.json";
 import { getAllPosts } from "@/js/blogUtils";
-import { getLocaleFromUrl } from "@/js/localeUtils";
+import { getPageLocale } from "@/js/localeUtils";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 export async function getStaticPaths({ paginate }) {
-  const posts = await getAllPosts("en");
+  const posts = await getAllPosts(getPageLocale(import.meta.url));
 
   return paginate(posts, {
     pageSize: 4,

@@ -1,25 +1,26 @@
 ---
 import Button from "@/components/starwind/button";
-import { defaultLocale } from "@/config/siteSettings.json";
 import { getAllPosts } from "@/js/blogUtils";
-import { getLocaleFromUrl } from "@/js/localeUtils";
-import { getLocalizedRoute } from "@/js/translationUtils";
+import { getLocaleFromUrl, getPageLocale } from "@/js/localeUtils";
+import { getLocalizedRoute, useTranslations } from "@/js/translationUtils";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 const currLocale = getLocaleFromUrl(Astro.url);
-const allPosts = await getAllPosts(defaultLocale);
+const PAGE_LOCALE = getPageLocale(import.meta.url);
+const t = useTranslations(currLocale);
+const allPosts = await getAllPosts(PAGE_LOCALE);
 const recentPosts = allPosts.slice(0, 3);
 ---
 
-<BaseLayout title="404 - 페이지를 찾을 수 없습니다" description="요청하신 페이지를 찾을 수 없습니다." noindex={true}>
+<BaseLayout title={t("404_title")} description={t("404_description")} noindex={true}>
   <section class="site-container flex min-h-[80vh] flex-col items-center justify-center py-24 text-center">
     <h1 class="mb-4 text-7xl font-bold">404</h1>
-    <p class="text-muted-foreground mb-8 text-xl">요청하신 페이지를 찾을 수 없습니다.</p>
-    <Button href={getLocalizedRoute(currLocale, "/")} variant="primary">홈으로 돌아가기</Button>
+    <p class="text-muted-foreground mb-8 text-xl">{t("404_message")}</p>
+    <Button href={getLocalizedRoute(currLocale, "/")} variant="primary">{t("404_button")}</Button>
 
     {recentPosts.length > 0 && (
       <div class="mt-16 w-full max-w-2xl text-left">
-        <h2 class="h3 mb-6 text-center">최근 게시글</h2>
+        <h2 class="h3 mb-6 text-center">{t("404_recent_posts")}</h2>
         <ul class="space-y-4">
           {recentPosts.map((post) => (
             <li>

@@ -1,24 +1,33 @@
 ---
 /**
- * English docs index redirects to the first document page.
+ * Docs index redirects to the first document page.
  */
 import { docsRoute, getAllDocs, getTabSections } from "@/js/docsUtils";
+import { getPageLocale } from "@/js/localeUtils";
 import { getLocalizedRoute } from "@/js/translationUtils";
 
-const allDocs = await getAllDocs("en");
-const tabSections = getTabSections("main", "en");
+const PAGE_LOCALE = getPageLocale(import.meta.url);
+
+const allDocs = await getAllDocs(PAGE_LOCALE);
+
+// Get the first tab's first section's first doc
+const tabSections = getTabSections("main", PAGE_LOCALE);
 
 if (tabSections.length > 0 && allDocs.length > 0) {
+  // Filter docs to "main" tab section
   const mainDocs = allDocs.filter((doc) => doc.data.section === "main");
+
+  // Try to find the index doc of the first section
   const firstSection = tabSections[0];
   const indexDoc = mainDocs.find(
     (doc) => doc.id === firstSection.id || doc.id === `${firstSection.id}/index`,
   );
 
   if (indexDoc) {
-    return Astro.redirect(getLocalizedRoute("en", `/${docsRoute}/${indexDoc.id}`));
+    return Astro.redirect(getLocalizedRoute(PAGE_LOCALE, `/${docsRoute}/${indexDoc.id}`));
   }
 
+  // Fallback: sort by order and use first doc
   const sortedDocs = mainDocs
     .filter((doc) => doc.id.startsWith(firstSection.id + "/"))
     .sort((a, b) => {
@@ -28,11 +37,12 @@ if (tabSections.length > 0 && allDocs.length > 0) {
     });
 
   if (sortedDocs.length > 0) {
-    return Astro.redirect(getLocalizedRoute("en", `/${docsRoute}/${sortedDocs[0].id}`));
+    return Astro.redirect(getLocalizedRoute(PAGE_LOCALE, `/${docsRoute}/${sortedDocs[0].id}`));
   }
 }
 
+// Final fallback: first doc found
 if (allDocs.length > 0) {
-  return Astro.redirect(getLocalizedRoute("en", `/${docsRoute}/${allDocs[0].id}`));
+  return Astro.redirect(getLocalizedRoute(PAGE_LOCALE, `/${docsRoute}/${allDocs[0].id}`));
 }
 ---

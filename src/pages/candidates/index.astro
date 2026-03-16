@@ -184,10 +184,10 @@ const testimonials = [
         <div>
           <form class="bg-muted flex flex-col gap-1 rounded-xl p-1">
             <div>
-              <label for="email-candidates" class="sr-only">Email address</label>
+              <label for={`email-candidates-${currLocale}`} class="sr-only">Email address</label>
               <input
                 type="email"
-                id="email-candidates"
+                id={`email-candidates-${currLocale}`}
                 name="email"
                 required
                 placeholder="Enter your email address"

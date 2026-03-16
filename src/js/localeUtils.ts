@@ -21,6 +21,25 @@ export function getLocaleFromUrl(url: URL): (typeof locales)[number] {
 }
 
 /**
+ * * Determines the locale from the page file path (import.meta.url)
+ * Works in `getStaticPaths` where `Astro.url` is not available.
+ * Pages under `src/pages/en/` return "en", root pages return defaultLocale.
+ *
+ * Usage: `const PAGE_LOCALE = getPageLocale(import.meta.url);`
+ */
+export function getPageLocale(fileUrl: string): (typeof locales)[number] {
+  for (const locale of locales) {
+    if (locale === defaultLocale) continue;
+    // Match /pages/en/ or \pages\en\ (Windows paths)
+    const patterns = [`/pages/${locale}/`, `\\pages\\${locale}\\`];
+    if (patterns.some((p) => fileUrl.includes(p))) {
+      return locale;
+    }
+  }
+  return defaultLocale;
+}
+
+/**
  * * filters a collection by language
  * @param collection: any[] collection to filter
  * @param locale: string language to filter by

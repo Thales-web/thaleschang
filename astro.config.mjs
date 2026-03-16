@@ -16,20 +16,21 @@ function seoConfigValidation() {
     hooks: {
       "astro:build:start": async () => {
         const { readFileSync } = await import("node:fs");
-        const content = readFileSync("./src/config/clientConfig.ts", "utf-8");
+        const raw = readFileSync("./src/data/settings/client-config/index.json", "utf-8");
+        const data = JSON.parse(raw);
         const warnings = [];
 
-        if (content.includes('"Your Business Name"'))
+        if (!data.businessName || data.businessName === "Your Business Name")
           warnings.push("business.name is not set");
-        if (content.includes('"https://yourdomain.com"'))
+        if (!data.businessUrl || data.businessUrl === "https://yourdomain.com")
           warnings.push("business.url is not set");
-        if (content.includes('"Your business description'))
+        if (!data.businessDescription || data.businessDescription.includes("Your business description"))
           warnings.push("business.description is not set");
 
         if (warnings.length > 0) {
           console.warn("\n[SEO Config] Warnings:");
           warnings.forEach((w) => console.warn(`  - ${w}`));
-          console.warn("  Update in src/config/clientConfig.ts\n");
+          console.warn("  Update in Admin > Client Settings (/admin)\n");
         }
       },
     },
@@ -103,6 +104,7 @@ export default defineConfig({
     },
     optimizeDeps: {
       include: ["motion-on-scroll"],
+      exclude: ["@keystatic/astro"],
     },
   },
 });

@@ -1,8 +1,7 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
 
-import { defaultLocale } from "@/config/siteSettings.json";
-import { filterCollectionByLanguage } from "@/js/localeUtils";
+import { filterCollectionByLanguage, getPageLocale } from "@/js/localeUtils";
 import CareerLayout from "@/layouts/CareerLayout.astro";
 
 export async function getStaticPaths() {
@@ -12,7 +11,7 @@ export async function getStaticPaths() {
   });
 
   // get rid of pages from other languages and remove locale from slug
-  const filteredPages = filterCollectionByLanguage(careers, "en");
+  const filteredPages = filterCollectionByLanguage(careers, getPageLocale(import.meta.url));
 
   return filteredPages.map((career) => ({
     params: { slug: career.id },

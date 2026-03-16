@@ -2,14 +2,16 @@
 /**
  * Docs index redirects to the first document page.
  */
-import { defaultLocale } from "@/config/siteSettings.json";
 import { docsRoute, getAllDocs, getTabSections } from "@/js/docsUtils";
+import { getPageLocale } from "@/js/localeUtils";
 import { getLocalizedRoute } from "@/js/translationUtils";
 
-const allDocs = await getAllDocs(defaultLocale);
+const PAGE_LOCALE = getPageLocale(import.meta.url);
+
+const allDocs = await getAllDocs(PAGE_LOCALE);
 
 // Get the first tab's first section's first doc
-const tabSections = getTabSections("main", defaultLocale);
+const tabSections = getTabSections("main", PAGE_LOCALE);
 
 if (tabSections.length > 0 && allDocs.length > 0) {
   // Filter docs to "main" tab section
@@ -22,7 +24,7 @@ if (tabSections.length > 0 && allDocs.length > 0) {
   );
 
   if (indexDoc) {
-    return Astro.redirect(getLocalizedRoute(defaultLocale, `/${docsRoute}/${indexDoc.id}`));
+    return Astro.redirect(getLocalizedRoute(PAGE_LOCALE, `/${docsRoute}/${indexDoc.id}`));
   }
 
   // Fallback: sort by order and use first doc
@@ -35,12 +37,12 @@ if (tabSections.length > 0 && allDocs.length > 0) {
     });
 
   if (sortedDocs.length > 0) {
-    return Astro.redirect(getLocalizedRoute(defaultLocale, `/${docsRoute}/${sortedDocs[0].id}`));
+    return Astro.redirect(getLocalizedRoute(PAGE_LOCALE, `/${docsRoute}/${sortedDocs[0].id}`));
   }
 }
 
 // Final fallback: first doc found
 if (allDocs.length > 0) {
-  return Astro.redirect(getLocalizedRoute(defaultLocale, `/${docsRoute}/${allDocs[0].id}`));
+  return Astro.redirect(getLocalizedRoute(PAGE_LOCALE, `/${docsRoute}/${allDocs[0].id}`));
 }
 ---

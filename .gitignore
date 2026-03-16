@@ -23,3 +23,8 @@ pnpm-debug.log*
 .netlify
 .vercel
 .wrangler
+
+# Temporary files
+*.tmp*
+*.astro.tmp.*
+.DS_Store

@@ -8,44 +8,8 @@ import FooterLink from "./FooterLink.astro";
 
 const currLocale = getLocaleFromUrl(Astro.url);
 const siteData = getTranslatedData("siteData", currLocale);
+const footerData = getTranslatedData("footerData", currLocale);
 const today = new Date();
-
-/**
- * Footer columns and links configuration
- * Edit this object to change column titles and links.
- */
-const footerColumns = [
-  {
-    title: "Products",
-    links: [
-      { label: "About", href: "#" },
-      { label: "Leadership", href: "#" },
-      { label: "Press/News", href: "#" },
-      { label: "Careers/Team", href: "#" },
-      { label: "Contact Us", href: "#" },
-    ],
-  },
-  {
-    title: "Important links",
-    links: [
-      { label: "About", href: "#" },
-      { label: "Leadership", href: "#" },
-      { label: "Press/News", href: "#" },
-      { label: "Careers/Team", href: "#" },
-      { label: "Contact Us", href: "#" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "#" },
-      { label: "Leadership", href: "#" },
-      { label: "Press/News", href: "#" },
-      { label: "Careers/Team", href: "#" },
-      { label: "Contact Us", href: "#" },
-    ],
-  },
-];
 ---
 
 <section class="overflow-hidden pt-16 pb-10">
@@ -56,30 +20,21 @@ const footerColumns = [
           <div class="lg:max-w-sm">
             <SiteLogo />
             <p class="text-muted-foreground mt-4 font-medium md:max-w-xs">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lectus interdum facilisis
-              odio scelerisque vel neque.
+              {footerData.description}
             </p>
             <div class="mt-10 flex flex-wrap gap-3 lg:mt-16">
-              <SocialIcon
-                href="https://twitter.com/BowTiedWebReapr"
-                icon="tabler/brand-x"
-                social="twitter (x)"
-              />
-              <SocialIcon
-                href="https://www.threads.com/@bowtiedwebreaper"
-                icon="tabler/brand-threads"
-                social="threads"
-              />
-              <SocialIcon
-                href="https://www.threads.com/@bowtiedwebreaper"
-                icon="tabler/brand-instagram"
-                social="instagram"
-              />
+              {footerData.socials.map((social) => (
+                <SocialIcon
+                  href={social.href}
+                  icon={social.icon}
+                  social={social.label}
+                />
+              ))}
             </div>
           </div>
         </div>
         {
-          footerColumns.map((col) => (
+          footerData.columns.map((col) => (
             <div class="w-full p-8 sm:w-1/2 lg:w-2/12" aria-label={col.title}>
               <h3 class="font-heading mb-8 text-sm font-medium uppercase">{col.title}</h3>
               <ul class="space-y-2">

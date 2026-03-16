@@ -4,14 +4,14 @@ import { type Page } from "astro";
 import Pagination from "@/components/pagination/Pagination.astro";
 import PostCard from "@/components/post-card/PostCardMultiLink.astro";
 import TagCloud from "@/components/tag-cloud/TagCloud.astro";
-import { defaultLocale } from "@/config/siteSettings.json";
 import { countItems, getAllPosts } from "@/js/blogUtils";
+import { getPageLocale } from "@/js/localeUtils";
 import { slugify, tagify } from "@/js/textUtils";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 // generate pagination for tag pages if there are a bunch of posts for a single tag
 export async function getStaticPaths({ paginate }) {
-  const posts = await getAllPosts("en");
+  const posts = await getAllPosts(getPageLocale(import.meta.url));
 
   // get all tags from the posts
   const allTags = posts.map((post) => post.data.tags).flat();

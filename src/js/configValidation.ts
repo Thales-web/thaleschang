@@ -11,16 +11,16 @@ export function validateClientConfig(): void {
 
   // Required business fields
   if (!business.name || business.name === "Your Business Name") {
-    warnings.push("clientConfig.business.name is not set - update in src/config/clientConfig.ts");
+    warnings.push("clientConfig.business.name is not set - update in Admin > Client Settings (/admin)");
   }
 
   if (!business.url || business.url === "https://yourdomain.com") {
-    warnings.push("clientConfig.business.url is not set - update in src/config/clientConfig.ts");
+    warnings.push("clientConfig.business.url is not set - update in Admin > Client Settings (/admin)");
   }
 
   if (!business.description || business.description.includes("Your business description")) {
     warnings.push(
-      "clientConfig.business.description is not set - update in src/config/clientConfig.ts",
+      "clientConfig.business.description is not set - update in Admin > Client Settings (/admin)",
     );
   }
 

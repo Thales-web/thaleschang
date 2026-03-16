@@ -4,7 +4,8 @@
  * Generates branded Open Graph images for blog posts using satori.
  * Each image includes: post title, description, date, and site branding.
  *
- * Usage: /og/en/my-blog-post.png
+ * Usage: /og/my-blog-post.png (default locale)
+ *        /og/en/my-blog-post.png (en locale)
  *
  * To enable: npm install satori sharp
  * Without these packages, this endpoint generates no pages (safe to leave in place).
@@ -25,13 +26,27 @@ try {
 export async function getStaticPaths(): Promise<GetStaticPathsResult> {
   if (!hasSatori) return [];
 
-  const { getAllPosts } = await import("@/js/blogUtils");
-  const posts = await getAllPosts();
+  const { getCollection } = await import("astro:content");
+  const { locales } = await import("@/config/siteSettings.json");
+  const { filterCollectionByLanguage, removeLocaleFromSlug } = await import("@/js/localeUtils");
 
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }));
+  const allPosts = await getCollection("blog", ({ data }) => data.draft !== true);
+
+  const paths = [];
+
+  for (const locale of locales) {
+    const localePosts = filterCollectionByLanguage(allPosts, locale);
+
+    for (const post of localePosts) {
+      const slug = removeLocaleFromSlug(post.id);
+      paths.push({
+        params: { slug: locale === locales[0] ? slug : `${locale}/${slug}` },
+        props: { post, locale },
+      });
+    }
+  }
+
+  return paths;
 }
 
 export const GET: APIRoute = async ({ props }) => {
@@ -41,10 +56,10 @@ export const GET: APIRoute = async ({ props }) => {
   const { clientConfig } = await import("@/config/clientConfig");
   const { formatDate } = await import("@/js/textUtils");
 
-  const { post } = props;
+  const { post, locale } = props;
   const title = post.data.title;
   const description = post.data.description.slice(0, 120);
-  const date = formatDate(post.data.pubDate, "ko");
+  const date = formatDate(post.data.pubDate, locale);
   const businessName = clientConfig.business.name;
 
   const svg = await satori(

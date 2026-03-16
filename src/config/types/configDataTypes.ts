@@ -42,6 +42,30 @@ export interface navMegaDropdownItem {
 export type navItem = navLinkItem | navDropdownItem | navMegaDropdownItem;
 
 // --------------------------------------------------------
+// footer data types
+export interface FooterLink {
+  label: string;
+  href: string;
+}
+
+export interface FooterColumn {
+  title: string;
+  links: FooterLink[];
+}
+
+export interface FooterSocialItem {
+  href: string;
+  icon: string;
+  label: string;
+}
+
+export interface FooterDataProps {
+  description: string;
+  columns: FooterColumn[];
+  socials: FooterSocialItem[];
+}
+
+// --------------------------------------------------------
 // faq data types
 export interface FaqItem {
   question: string; // this is the question of the accordion

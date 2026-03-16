@@ -2,8 +2,7 @@
 import { type CollectionEntry, getCollection, render } from "astro:content";
 
 import ExternalLink from "@/components/markdown-components/ExternalLink.astro";
-import { defaultLocale } from "@/config/siteSettings.json";
-import { filterCollectionByLanguage } from "@/js/localeUtils";
+import { filterCollectionByLanguage, getPageLocale } from "@/js/localeUtils";
 import ServiceLayout from "@/layouts/ServiceLayout.astro";
 
 export async function getStaticPaths() {
@@ -13,7 +12,7 @@ export async function getStaticPaths() {
   });
 
   // get rid of pages from other languages and remove locale from slug
-  const filteredServices = filterCollectionByLanguage(services, defaultLocale);
+  const filteredServices = filterCollectionByLanguage(services, getPageLocale(import.meta.url));
 
   return filteredServices.map((service) => ({
     params: { slug: service.id },

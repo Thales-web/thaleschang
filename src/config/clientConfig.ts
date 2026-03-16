@@ -1,88 +1,91 @@
 /**
  * Client Configuration - SEO/GEO/AEO Central Settings
  *
- * This is the SINGLE FILE to customize per client.
+ * Data is managed via Keystatic CMS at /admin → "Client Settings"
+ * Stored in src/data/settings/client-config/index.json
+ *
+ * Environment variables (PUBLIC_GA4_ID, etc.) override analytics values.
  * All structured data (JSON-LD), analytics, meta tags, and AI crawler rules
  * are derived from this configuration.
  */
 
-import { type ClientConfigProps } from "./types/configDataTypes";
+import { type ClientConfigProps, type BusinessType } from "./types/configDataTypes";
+import settingsData from "@/data/settings/client-config/index.json";
 
-export const clientConfig: ClientConfigProps = {
-  // ============================================================
-  // Business Information - used for Organization/LocalBusiness schema
-  // ============================================================
-  business: {
-    name: "Your Business Name",
-    legalName: "Your Business Legal Name Co., Ltd.",
-    type: "Organization", // Change to "LocalBusiness", "ProfessionalService", etc. for local businesses
-    description: "Your business description for structured data and AI engines.",
-    foundingDate: "2024-01-01",
-    url: "https://yourdomain.com", // Must match astro.config.mjs `site` value
+function buildClientConfig(): ClientConfigProps {
+  const data = settingsData;
 
-    // Logo path (relative to public/ or absolute URL)
-    logo: "/logo.svg",
-    image: "/images/og-default.jpg",
+  // Build address only if at least streetAddress is provided
+  const address = data.addressStreetAddress
+    ? {
+        streetAddress: data.addressStreetAddress,
+        city: data.addressCity || "",
+        region: data.addressRegion || "",
+        postalCode: data.addressPostalCode || "",
+        country: data.addressCountry || "",
+      }
+    : undefined;
 
-    // Uncomment and fill for LocalBusiness schema
-    // address: {
-    //   streetAddress: "123 Main St",
-    //   city: "Seoul",
-    //   region: "Seoul",
-    //   postalCode: "06000",
-    //   country: "KR",
-    // },
-    // phone: "+82-2-1234-5678",
-    // email: "contact@yourdomain.com",
-    // priceRange: "$$",
-    // openingHours: ["Mo-Fr 09:00-18:00"],
-    // geo: {
-    //   latitude: 37.5665,
-    //   longitude: 126.978,
-    // },
-  },
+  // Build geo only if both coordinates provided
+  const geo =
+    data.geoLatitude != null && data.geoLongitude != null
+      ? { latitude: data.geoLatitude, longitude: data.geoLongitude }
+      : undefined;
 
-  // ============================================================
-  // Social Media Links - used for Organization schema sameAs
-  // ============================================================
-  social: {
-    // twitter: "yourbrand",
-    // facebook: "https://facebook.com/yourbrand",
-    // instagram: "https://instagram.com/yourbrand",
-    // linkedin: "https://linkedin.com/company/yourbrand",
-    // youtube: "https://youtube.com/@yourbrand",
-    // github: "https://github.com/yourbrand",
-    // naver: "https://blog.naver.com/yourbrand",
-  },
+  return {
+    business: {
+      name: data.businessName,
+      legalName: data.businessLegalName || undefined,
+      type: (data.businessType as BusinessType) || "Organization",
+      description: data.businessDescription,
+      foundingDate: data.businessFoundingDate || undefined,
+      url: data.businessUrl,
+      logo: data.businessLogo || "/logo.svg",
+      image: data.businessImage || undefined,
+      phone: data.businessPhone || undefined,
+      email: data.businessEmail || undefined,
+      priceRange: data.businessPriceRange || undefined,
+      address,
+      openingHours: data.openingHours?.length ? data.openingHours : undefined,
+      geo,
+    },
+    social: {
+      twitter: data.socialTwitter || undefined,
+      facebook: data.socialFacebook || undefined,
+      instagram: data.socialInstagram || undefined,
+      linkedin: data.socialLinkedin || undefined,
+      youtube: data.socialYoutube || undefined,
+      github: data.socialGithub || undefined,
+      naver: data.socialNaver || undefined,
+    },
+    analytics: {
+      // Env vars override JSON values
+      googleAnalyticsId:
+        import.meta.env.PUBLIC_GA4_ID || data.googleAnalyticsId || undefined,
+      googleTagManagerId:
+        import.meta.env.PUBLIC_GTM_ID || data.googleTagManagerId || undefined,
+      googleSearchConsoleVerification:
+        import.meta.env.PUBLIC_GOOGLE_VERIFICATION ||
+        data.googleSearchConsoleVerification ||
+        undefined,
+      naverSearchAdvisorVerification:
+        import.meta.env.PUBLIC_NAVER_VERIFICATION ||
+        data.naverSearchAdvisorVerification ||
+        undefined,
+    },
+    seo: {
+      enableLocalBusiness: data.enableLocalBusiness ?? false,
+      enableFaqSchema: data.enableFaqSchema ?? true,
+      enableBreadcrumbSchema: data.enableBreadcrumbSchema ?? true,
+    },
+    aiCrawlers: {
+      allowGPTBot: data.allowGPTBot ?? true,
+      allowClaudeBot: data.allowClaudeBot ?? true,
+      allowPerplexityBot: data.allowPerplexityBot ?? true,
+      allowGoogleExtended: data.allowGoogleExtended ?? true,
+    },
+  };
+}
 
-  // ============================================================
-  // Analytics & Search Console Verification
-  // ============================================================
-  analytics: {
-    // googleAnalyticsId: "G-XXXXXXXXXX",
-    // googleTagManagerId: "GTM-XXXXXXX",
-    // googleSearchConsoleVerification: "your-verification-code",
-    // naverSearchAdvisorVerification: "your-naver-verification-code",
-  },
-
-  // ============================================================
-  // SEO Feature Toggles
-  // ============================================================
-  seo: {
-    enableLocalBusiness: false, // Set to true for local business clients
-    enableFaqSchema: true, // Auto-generate FAQPage schema from FAQ components
-    enableBreadcrumbSchema: true, // Auto-generate BreadcrumbList schema
-  },
-
-  // ============================================================
-  // AI Crawler Access Control (GEO)
-  // ============================================================
-  aiCrawlers: {
-    allowGPTBot: true, // ChatGPT / OpenAI
-    allowClaudeBot: true, // Claude / Anthropic
-    allowPerplexityBot: true, // Perplexity AI
-    allowGoogleExtended: true, // Google AI (Gemini)
-  },
-};
-
+export const clientConfig: ClientConfigProps = buildClientConfig();
 export default clientConfig;

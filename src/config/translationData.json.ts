@@ -15,6 +15,8 @@ import faqDataEn from "./en/faqData.json";
 import navDataEn from "./en/navData.json";
 import siteDataEn from "./en/siteData.json";
 import testimonialDataEn from "./en/testimonialData.json";
+import footerDataKo from "./ko/footerData.json";
+import footerDataEn from "./en/footerData.json";
 
 import sidebarNavDataKo from "@/docs/config/ko/sidebarNavData.json";
 import sidebarNavDataEn from "@/docs/config/en/sidebarNavData.json";
@@ -26,6 +28,7 @@ export const dataTranslations = {
     navData: navDataKo,
     siteData: siteDataKo,
     testimonialData: testimonialDataKo,
+    footerData: footerDataKo,
     sidebarNavData: sidebarNavDataKo,
   },
   en: {
@@ -33,6 +36,7 @@ export const dataTranslations = {
     navData: navDataEn,
     testimonialData: testimonialDataEn,
     faqData: faqDataEn,
+    footerData: footerDataEn,
     sidebarNavData: sidebarNavDataEn,
   },
 
@@ -76,6 +80,19 @@ export const textTranslations = {
     docs_next: "다음",
     docs_on_this_page: "이 페이지에서",
     docs_search_placeholder: "문서 검색...",
+
+    // related content
+    related_content: "관련 콘텐츠",
+    related_type_service: "서비스",
+    related_type_project: "프로젝트",
+    related_type_blog: "블로그",
+
+    // 404
+    "404_title": "404 - 페이지를 찾을 수 없습니다",
+    "404_description": "요청하신 페이지를 찾을 수 없습니다.",
+    "404_message": "요청하신 페이지를 찾을 수 없습니다.",
+    "404_button": "홈으로 돌아가기",
+    "404_recent_posts": "최근 게시글",
   },
   en: {
     hero_text: "Everything you need for an amazing website.",
@@ -95,6 +112,19 @@ export const textTranslations = {
     docs_next: "Next",
     docs_on_this_page: "On this page",
     docs_search_placeholder: "Search docs...",
+
+    // related content
+    related_content: "Related Content",
+    related_type_service: "Service",
+    related_type_project: "Project",
+    related_type_blog: "Blog",
+
+    // 404
+    "404_title": "404 - Page Not Found",
+    "404_description": "The page you are looking for could not be found.",
+    "404_message": "Sorry, the page you are looking for could not be found.",
+    "404_button": "Return Home",
+    "404_recent_posts": "Recent Posts",
   },
   
 } as const;

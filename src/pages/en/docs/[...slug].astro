@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 
 import ExternalLink from "@/components/markdown-components/ExternalLink.astro";
-import { filterCollectionByLanguage } from "@/js/localeUtils";
+import { filterCollectionByLanguage, getPageLocale } from "@/js/localeUtils";
 import { getTranslatedData } from "@/js/translationUtils";
 import DocsLayout from "@/layouts/DocsLayout.astro";
 
@@ -11,8 +11,8 @@ export async function getStaticPaths() {
     return data.draft !== true;
   });
 
-  const filteredDocs = filterCollectionByLanguage(docs, "en");
-  const sidebarData = getTranslatedData("sidebarNavData", "en");
+  const filteredDocs = filterCollectionByLanguage(docs, getPageLocale(import.meta.url));
+  const sidebarData = getTranslatedData("sidebarNavData", getPageLocale(import.meta.url));
   const documentationTabs = sidebarData.tabs;
 
   const paths: any[] = [];

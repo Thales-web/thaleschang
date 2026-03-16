@@ -16,7 +16,7 @@ import { getCollection } from "astro:content";
 
 import { getLocaleFromUrl } from "@/js/localeUtils";
 import { filterCollectionByLanguage } from "@/js/localeUtils";
-import { getLocalizedRoute } from "@/js/translationUtils";
+import { getLocalizedRoute, useTranslations } from "@/js/translationUtils";
 
 interface Props {
   keywords: string[];
@@ -26,6 +26,7 @@ interface Props {
 
 const { keywords, currentPath, limit = 6 } = Astro.props;
 const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
 
 const normalizedKeywords = keywords.map((k) => k.toLowerCase());
 
@@ -101,16 +102,16 @@ const filtered = items
   .slice(0, limit);
 
 const typeLabels: Record<string, string> = {
-  service: "Service",
-  project: "Project",
-  blog: "Blog",
+  service: t("related_type_service"),
+  project: t("related_type_project"),
+  blog: t("related_type_blog"),
 };
 ---
 
 {
   filtered.length > 0 && (
     <div class="mt-12 border-t pt-8">
-      <h3 class="h3 mb-6">Related Content</h3>
+      <h3 class="h3 mb-6">{t("related_content")}</h3>
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((item) => (
           <a

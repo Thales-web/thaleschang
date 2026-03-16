@@ -581,6 +581,204 @@ const Resume = (locale: (typeof locales)[number]) =>
   });
 
 /**
+ * * Client Settings singleton
+ * Browser-based admin panel for SEO/Schema/Analytics configuration
+ * Stores data in src/data/settings/client-config/index.json
+ */
+const ClientSettings = () =>
+  singleton({
+    label: "Client Settings (SEO/Schema/Analytics)",
+    path: "src/data/settings/client-config/index",
+    format: { data: "json" },
+    schema: {
+      // === Business Information ===
+      businessName: fields.text({
+        label: "Business Name",
+        description: "Organization or business name for structured data",
+        validation: { isRequired: true },
+      }),
+      businessLegalName: fields.text({
+        label: "Legal Name",
+        description: "Official registered legal name (optional)",
+      }),
+      businessType: fields.select({
+        label: "Business Type",
+        description: "Schema.org business type for structured data",
+        options: [
+          { label: "Organization (General)", value: "Organization" },
+          { label: "Local Business", value: "LocalBusiness" },
+          { label: "Professional Service", value: "ProfessionalService" },
+          { label: "Medical Business", value: "MedicalBusiness" },
+          { label: "Restaurant", value: "Restaurant" },
+          { label: "Store", value: "Store" },
+          { label: "Educational Organization", value: "EducationalOrganization" },
+          { label: "Financial Service", value: "FinancialService" },
+          { label: "Real Estate Agent", value: "RealEstateAgent" },
+          { label: "Legal Service", value: "LegalService" },
+          { label: "Auto Repair", value: "AutoRepair" },
+          { label: "Beauty Salon", value: "BeautySalon" },
+          { label: "Fitness Center", value: "FitnessCenter" },
+        ],
+        defaultValue: "Organization",
+      }),
+      businessDescription: fields.text({
+        label: "Business Description",
+        description: "Used in JSON-LD structured data and AI engine context",
+        multiline: true,
+        validation: { isRequired: true },
+      }),
+      businessFoundingDate: fields.text({
+        label: "Founding Date",
+        description: "Format: YYYY-MM-DD",
+      }),
+      businessUrl: fields.text({
+        label: "Site URL",
+        description: "Must match astro.config.mjs site value (e.g. https://yourdomain.com)",
+        validation: { isRequired: true },
+      }),
+      businessLogo: fields.text({
+        label: "Logo Path",
+        description: "Relative to public/ (e.g. /logo.svg) or absolute URL",
+      }),
+      businessImage: fields.text({
+        label: "Default OG Image Path",
+        description: "Relative to public/ (e.g. /images/og-default.jpg)",
+      }),
+      businessPhone: fields.text({
+        label: "Phone",
+        description: "e.g. +82-2-1234-5678",
+      }),
+      businessEmail: fields.text({
+        label: "Email",
+        description: "e.g. contact@yourdomain.com",
+      }),
+      businessPriceRange: fields.text({
+        label: "Price Range",
+        description: "e.g. $, $$, $$$ (for LocalBusiness schema)",
+      }),
+
+      // === Address (for LocalBusiness) ===
+      addressStreetAddress: fields.text({ label: "Street Address" }),
+      addressCity: fields.text({ label: "City" }),
+      addressRegion: fields.text({ label: "Region / State" }),
+      addressPostalCode: fields.text({ label: "Postal Code" }),
+      addressCountry: fields.text({
+        label: "Country Code",
+        description: "ISO 3166-1 alpha-2 (e.g. KR, US, JP)",
+      }),
+
+      // === Geo Coordinates ===
+      geoLatitude: fields.number({
+        label: "Latitude",
+        description: "e.g. 37.5665",
+      }),
+      geoLongitude: fields.number({
+        label: "Longitude",
+        description: "e.g. 126.978",
+      }),
+
+      // === Opening Hours ===
+      openingHours: fields.array(
+        fields.text({
+          label: "Hours Entry",
+          description: "Format: Mo-Fr 09:00-18:00",
+        }),
+        {
+          label: "Opening Hours",
+          itemLabel: (props) => props.value || "New entry",
+        },
+      ),
+
+      // === Social Media ===
+      socialTwitter: fields.text({
+        label: "Twitter / X Handle",
+        description: "e.g. yourbrand (without @)",
+      }),
+      socialFacebook: fields.text({
+        label: "Facebook URL",
+        description: "e.g. https://facebook.com/yourbrand",
+      }),
+      socialInstagram: fields.text({
+        label: "Instagram URL",
+        description: "e.g. https://instagram.com/yourbrand",
+      }),
+      socialLinkedin: fields.text({
+        label: "LinkedIn URL",
+        description: "e.g. https://linkedin.com/company/yourbrand",
+      }),
+      socialYoutube: fields.text({
+        label: "YouTube URL",
+        description: "e.g. https://youtube.com/@yourbrand",
+      }),
+      socialGithub: fields.text({
+        label: "GitHub URL",
+        description: "e.g. https://github.com/yourbrand",
+      }),
+      socialNaver: fields.text({
+        label: "Naver Blog URL",
+        description: "e.g. https://blog.naver.com/yourbrand",
+      }),
+
+      // === Analytics & Verification ===
+      googleAnalyticsId: fields.text({
+        label: "Google Analytics 4 ID",
+        description: "Format: G-XXXXXXXXXX (env var PUBLIC_GA4_ID overrides this)",
+      }),
+      googleTagManagerId: fields.text({
+        label: "Google Tag Manager ID",
+        description: "Format: GTM-XXXXXXX (env var PUBLIC_GTM_ID overrides this)",
+      }),
+      googleSearchConsoleVerification: fields.text({
+        label: "Google Search Console Verification",
+        description: "Verification code (env var PUBLIC_GOOGLE_VERIFICATION overrides this)",
+      }),
+      naverSearchAdvisorVerification: fields.text({
+        label: "Naver Search Advisor Verification",
+        description: "Verification code (env var PUBLIC_NAVER_VERIFICATION overrides this)",
+      }),
+
+      // === SEO Feature Toggles ===
+      enableLocalBusiness: fields.checkbox({
+        label: "Enable Local Business Schema",
+        description: "Turn ON for local business clients (requires address fields above)",
+        defaultValue: false,
+      }),
+      enableFaqSchema: fields.checkbox({
+        label: "Enable FAQ Schema",
+        description: "Auto-generate FAQPage schema from FAQ components",
+        defaultValue: true,
+      }),
+      enableBreadcrumbSchema: fields.checkbox({
+        label: "Enable Breadcrumb Schema",
+        description: "Auto-generate BreadcrumbList schema for navigation",
+        defaultValue: true,
+      }),
+
+      // === AI Crawler Access Control (GEO) ===
+      allowGPTBot: fields.checkbox({
+        label: "Allow GPTBot (ChatGPT / OpenAI)",
+        description: "Allow OpenAI crawler to index your site",
+        defaultValue: true,
+      }),
+      allowClaudeBot: fields.checkbox({
+        label: "Allow ClaudeBot (Anthropic)",
+        description: "Allow Anthropic crawler to index your site",
+        defaultValue: true,
+      }),
+      allowPerplexityBot: fields.checkbox({
+        label: "Allow PerplexityBot",
+        description: "Allow Perplexity AI crawler to index your site",
+        defaultValue: true,
+      }),
+      allowGoogleExtended: fields.checkbox({
+        label: "Allow Google-Extended (Gemini)",
+        description: "Allow Google AI (Gemini) crawler to index your site",
+        defaultValue: true,
+      }),
+    },
+  });
+
+/**
  * * Other Pages collection
  * For items like legal pages, about pages, etc.
  * This gets used by Astro Content Collections, so if you update this, you'll need to update the Astro Content Collections schema
@@ -640,6 +838,38 @@ const OtherPages = (locale: (typeof locales)[number]) =>
     },
   });
 
+/**
+ * * FAQ Data singleton (per locale)
+ * Manages FAQ items via Keystatic admin panel
+ * Stores data in src/data/settings/faq-data/{locale}/index.json
+ */
+const FaqData = (locale: (typeof locales)[number]) =>
+  singleton({
+    label: `FAQ Data (${locale.toUpperCase()})`,
+    path: `src/data/settings/faq-data/${locale}/index`,
+    format: { data: "json" },
+    schema: {
+      items: fields.array(
+        fields.object({
+          question: fields.text({
+            label: "Question",
+            validation: { isRequired: true },
+          }),
+          answer: fields.text({
+            label: "Answer",
+            description: "HTML allowed (e.g. <a> tags for links)",
+            multiline: true,
+            validation: { isRequired: true },
+          }),
+        }),
+        {
+          label: "FAQ Items",
+          itemLabel: (props) => props.fields.question.value || "New FAQ",
+        },
+      ),
+    },
+  });
+
 export default {
   Blog,
   Authors,
@@ -648,4 +878,6 @@ export default {
   Projects,
   Resume,
   OtherPages,
+  ClientSettings,
+  FaqData,
 };
