@@ -70,13 +70,14 @@ const currLocale = getLocaleFromUrl(Astro.url);
     />
   </head>
   <body id="body" class={` ${siteSettings.useAnimations === true ? "use-animations" : ""}`}>
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground">Skip to content</a>
     <GoogleTagManager position="body" />
     <div id="page" class="">
       <!-- Cookie consent banner (GDPR) -->
       <CookieConsent />
 
       <Nav {...navProps} />
-      <main class="relative min-h-[100lvh] overflow-x-clip">
+      <main id="main-content" class="relative min-h-[100lvh] overflow-x-clip">
         <Breadcrumbs />
         <slot />
       </main>

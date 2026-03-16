@@ -56,12 +56,12 @@ const t = useTranslations(currLocale);
     <div class="py-12">
       <div class="mx-auto max-w-3xl">
         <div class="mb-12">
-          <h2 class="h2 mb-4">Technologies Used</h2>
+          <h2 class="h2 mb-4">{t("project_technologies")}</h2>
           <TechStack {technologies} />
         </div>
 
         <div class="mb-12">
-          <h2 class="h2 mb-4">Key Features</h2>
+          <h2 class="h2 mb-4">{t("project_key_features")}</h2>
           <KeyFeatures {keyFeatures} />
         </div>
 
@@ -71,7 +71,7 @@ const t = useTranslations(currLocale);
 
         <div class="mt-10 flex flex-col gap-6">
           <div class="opacity-70">
-            Completed on: {formatDate(completionDate, currLocale)}
+            {t("project_completed_on")} {formatDate(completionDate, currLocale)}
           </div>
 
           <div class="flex flex-wrap gap-4">
@@ -84,7 +84,7 @@ const t = useTranslations(currLocale);
                   arrow="right"
                   class="px-6 py-3"
                 >
-                  Live Demo
+                  {t("project_live_demo")}
                 </Button>
               )
             }
@@ -97,7 +97,7 @@ const t = useTranslations(currLocale);
                   arrow="right"
                   class="px-6 py-3"
                 >
-                  View Source
+                  {t("project_view_source")}
                 </Button>
               )
             }

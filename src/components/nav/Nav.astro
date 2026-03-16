@@ -4,7 +4,7 @@ import LanguageSelect from "@/components/language-select/LanguageSelect.astro";
 import SiteLogo from "@/components/site-logo/SiteLogo.astro";
 import ThemeToggle from "@/components/theme-toggle/ThemeToggle.astro";
 import { getLocaleFromUrl } from "@/js/localeUtils";
-import { getTranslatedData, useTranslations } from "@/js/translationUtils";
+import { getLocalizedRoute, getTranslatedData, useTranslations } from "@/js/translationUtils";
 
 import MobileNav from "./mobile-nav/MobileNav.astro";
 import MegaMenuDropdownToggle from "./nav-dropdown/MegaMenuDropdownToggle.astro";
@@ -73,9 +73,7 @@ const { navStyle = "default" } = Astro.props as Props;
           <Button
             variant="primary"
             class="my-auto hidden px-4 py-2 md:flex"
-            href="https://cosmicthemes.com/all-access/"
-            target="_blank"
-            rel="noreferrer"
+            href={getLocalizedRoute(currLocale, "/contact")}
           >
             {t("get_all_access")}
           </Button>

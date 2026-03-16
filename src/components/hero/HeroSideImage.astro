@@ -49,11 +49,9 @@ const t = useTranslations(currLocale);
           <Button
             variant="ghost"
             arrow="right"
-            href="https://cosmicthemes.com/themes/starter/"
-            target="_blank"
-            rel="noopener noreferrer"
+            href={getLocalizedRoute(currLocale, "/services")}
           >
-            Unlock Starter
+            {t("hero_cta_secondary")}
           </Button>
         </div>
       </div>

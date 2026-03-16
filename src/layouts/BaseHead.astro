@@ -60,12 +60,13 @@ const { analytics } = clientConfig;
 <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg" />
 <link rel="shortcut icon" href="/favicons/favicon.ico" />
 <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
-<meta name="apple-mobile-web-app-title" content="Starter" />
+<meta name="apple-mobile-web-app-title" content={clientConfig.business.name} />
 <link rel="manifest" href="/favicons/site.webmanifest" />
 
 <!-- other -->
 <meta name="generator" content={Astro.generator} />
 <link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="application/rss+xml" title={clientConfig.business.name} href="/rss.xml" />
 
 <!-- Theme change setup. Run early to eliminate Flash of inAccurate coloR Theme (FART) -->
 <script is:inline>

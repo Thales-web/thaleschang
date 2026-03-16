@@ -1,7 +1,7 @@
 ---
 import Button from "@/components/button/Button.astro";
 import { getLocaleFromUrl } from "@/js/localeUtils";
-import { getTranslatedData, useTranslations } from "@/js/translationUtils";
+import { getLocalizedRoute, getTranslatedData, useTranslations } from "@/js/translationUtils";
 
 const currLocale = getLocaleFromUrl(Astro.url);
 const siteData = getTranslatedData("siteData", currLocale);
@@ -18,9 +18,7 @@ const t = useTranslations(currLocale);
     {siteData.title}
   </p>
   <Button
-    href="https://cosmicthemes.com/all-access/"
-    target="_blank"
-    rel="noreferrer"
+    href={getLocalizedRoute(currLocale, "/contact")}
     variant="primary"
     class="mt-10"
     data-mos="fade-up"

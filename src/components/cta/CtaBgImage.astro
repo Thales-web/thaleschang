@@ -9,6 +9,11 @@ import bgImageMobile from "@images/cta/storm-bg-mobile2.webp";
 import { Image } from "astro:assets";
 
 import Button from "@/components/button/Button.astro";
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { getLocalizedRoute, useTranslations } from "@/js/translationUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
 ---
 
 <section id="cta-center" class="dark overflow-hidden">
@@ -39,21 +44,18 @@ import Button from "@/components/button/Button.astro";
 
     <div class="site-container relative">
       <div class="mx-auto max-w-3xl text-center">
-        <h2 class="h2 text-foreground mb-8">Make your next website incredible</h2>
+        <h2 class="h2 text-foreground mb-8">{t("cta_heading")}</h2>
         <p class="text-foreground/80 mx-auto mb-20 max-w-xl tracking-tight md:text-xl">
-          A template for the next killer SaaS. Multiple pages and sections, blog, i18n, animations,
-          CMS - all ready to go.
+          {t("cta_description")}
         </p>
         <div class="relative flex justify-center">
           <Button
             variant="secondary"
-            href="https://cosmicthemes.com/themes/starter/"
-            target="_blank"
+            href={getLocalizedRoute(currLocale, "/contact")}
             arrow="right"
-            rel="noopener noreferrer"
             class="px-8 py-3 text-lg"
           >
-            Get Starter
+            {t("cta_button")}
           </Button>
         </div>
       </div>

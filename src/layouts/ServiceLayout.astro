@@ -5,14 +5,19 @@ import type { CollectionEntry } from "astro:content";
 import AboutNumbers from "@/components/about/AboutNumbers.astro";
 import Contact from "@/components/contact/Contact.astro";
 import FaqAccordions from "@/components/faq/FaqAccordionsSideImage.astro";
-import RelatedContent from "@/components/seo/RelatedContent.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 interface Props {
   service: CollectionEntry<"services">;
+  /** Hide the AboutNumbers section */
+  hideNumbers?: boolean;
+  /** Hide the Contact section */
+  hideContact?: boolean;
+  /** Hide the FAQ section */
+  hideFaq?: boolean;
 }
 
-const { service } = Astro.props as Props;
+const { service, hideNumbers = false, hideContact = false, hideFaq = false } = Astro.props as Props;
 const { data } = service;
 ---
 
@@ -22,7 +27,6 @@ const { data } = service;
       <div class="flex flex-col gap-8">
         <div class="flex flex-col gap-4">
           <h1 class="h1">{data.titleLong}</h1>
-          <!-- <p class="text-muted-foreground text-lg">{data.description}</p> -->
         </div>
 
         <div class="markdown-content max-w-none" data-pagefind-body>
@@ -48,14 +52,7 @@ const { data } = service;
       </div>
     </div>
   </section>
-  <div class="site-container">
-    <RelatedContent
-      keywords={[data.title, ...data.title.split(" ")]}
-      currentPath={Astro.url.pathname}
-      limit={3}
-    />
-  </div>
-  <AboutNumbers />
-  <Contact />
-  <FaqAccordions />
+  {!hideNumbers && <AboutNumbers />}
+  {!hideContact && <Contact />}
+  {!hideFaq && <FaqAccordions />}
 </BaseLayout>

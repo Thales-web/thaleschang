@@ -89,13 +89,44 @@ export const textTranslations = {
     related_type_project: "프로젝트",
     related_type_blog: "블로그",
 
+    // project page
+    project_technologies: "사용 기술",
+    project_key_features: "주요 기능",
+    project_completed_on: "완료일:",
+    project_live_demo: "라이브 데모",
+    project_view_source: "소스 보기",
+
     // nav & cta
-    get_all_access: "전체 이용하기",
+    get_all_access: "상담 신청",
+    cta_heading: "지금 시작하세요",
+    cta_description: "SEO 최적화된 고성능 웹사이트로 비즈니스를 성장시키세요. 무료 상담을 통해 맞춤 솔루션을 제안드립니다.",
+    cta_button: "무료 상담 받기",
+    hero_cta_secondary: "서비스 보기",
     subscribe: "구독하기",
     subscribe_newsletter: "뉴스레터 구독",
     subscribe_description: "최신 뉴스와 업데이트를 받아보세요.",
     subscribe_placeholder: "이메일 주소를 입력하세요",
     subscribe_disclaimer: "구독 시 최신 업데이트를 받게 됩니다. 스팸은 보내지 않습니다!",
+
+    // contact form
+    form_name: "이름",
+    form_name_placeholder: "홍길동",
+    form_email: "이메일",
+    form_email_placeholder: "example@email.com",
+    form_phone: "전화번호",
+    form_phone_placeholder: "010-1234-5678",
+    form_reason: "문의 유형",
+    form_reason_placeholder: "문의 유형을 선택하세요",
+    form_reason_website: "웹사이트 제작 문의",
+    form_reason_seo: "SEO 컨설팅",
+    form_reason_maintenance: "유지보수/관리",
+    form_reason_partnership: "제휴/파트너십",
+    form_reason_other: "기타",
+    form_message: "메시지",
+    form_message_placeholder: "어떻게 도와드릴까요?",
+    form_consent: "개인정보 수집 및 이용에 동의합니다",
+    form_submit: "문의하기",
+    form_success: "문의가 성공적으로 전송되었습니다. 빠른 시일 내에 답변 드리겠습니다.",
 
     // forms
     sign_in: "로그인",
@@ -197,13 +228,44 @@ export const textTranslations = {
     related_type_project: "Project",
     related_type_blog: "Blog",
 
+    // project page
+    project_technologies: "Technologies Used",
+    project_key_features: "Key Features",
+    project_completed_on: "Completed on:",
+    project_live_demo: "Live Demo",
+    project_view_source: "View Source",
+
     // nav & cta
-    get_all_access: "Get All Access",
+    get_all_access: "Contact Us",
+    cta_heading: "Get Started Today",
+    cta_description: "Grow your business with an SEO-optimized, high-performance website. Get a free consultation for a tailored solution.",
+    cta_button: "Free Consultation",
+    hero_cta_secondary: "Our Services",
     subscribe: "Subscribe",
     subscribe_newsletter: "Subscribe to our newsletter",
     subscribe_description: "Enjoy the latest news and updates from our team and community.",
     subscribe_placeholder: "Enter your email address",
     subscribe_disclaimer: "By subscribing, you agree to receive our latest updates. No spam, promise!",
+
+    // contact form
+    form_name: "Full Name",
+    form_name_placeholder: "John Doe",
+    form_email: "Email Address",
+    form_email_placeholder: "example@email.com",
+    form_phone: "Phone Number",
+    form_phone_placeholder: "+1 (555) 123-4567",
+    form_reason: "Reason for Contact",
+    form_reason_placeholder: "Select a reason",
+    form_reason_website: "Website Development",
+    form_reason_seo: "SEO Consulting",
+    form_reason_maintenance: "Maintenance & Support",
+    form_reason_partnership: "Partnership",
+    form_reason_other: "Other",
+    form_message: "Your Message",
+    form_message_placeholder: "How can we help you?",
+    form_consent: "I consent to having my submitted information stored",
+    form_submit: "Send Message",
+    form_success: "Your message has been sent successfully. We'll get back to you soon.",
 
     // forms
     sign_in: "Sign In",
