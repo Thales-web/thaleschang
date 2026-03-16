@@ -90,7 +90,9 @@ const currLocale = getLocaleFromUrl(Astro.url);
 
       import { siteSettings } from "@/config/siteSettings.json";
 
-      if (siteSettings.useAnimations === true) {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (siteSettings.useAnimations === true && !prefersReducedMotion) {
         MOS.init({
           offset: 100,
           duration: 0.8,
@@ -103,6 +105,11 @@ const currLocale = getLocaleFromUrl(Astro.url);
         });
 
         document.addEventListener("astro:after-swap", MOS.refreshHard);
+      } else if (prefersReducedMotion) {
+        // Show all elements immediately without animation
+        document.querySelectorAll("[data-mos]").forEach((el) => {
+          el.classList.add("mos-animate");
+        });
       }
     </script>
   </body>

@@ -1,8 +1,8 @@
-/* Pretendard Variable — Korean + Latin */
+/* Pretendard Variable — Korean + Latin (subset: wght 400-700, essential unicode ranges) */
 @font-face {
   font-family: "Pretendard";
   font-style: normal;
   font-display: swap;
-  font-weight: 100 900;
+  font-weight: 400 700;
   src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
 }

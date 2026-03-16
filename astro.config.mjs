@@ -90,7 +90,7 @@ export default defineConfig({
     compress({
       HTML: true,
       JavaScript: true,
-      CSS: false, // enabling this can cause issues
+      CSS: true,
       Image: false, // astro:assets handles this. Enabling this can dramatically increase build times
       SVG: false, // astro-icon handles this
     }),
