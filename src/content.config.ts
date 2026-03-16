@@ -21,8 +21,26 @@ const blogCollection = defineCollection({
         .optional()
         .transform((str) => (str ? new Date(str) : undefined)),
       heroImage: image().optional(),
-      categories: z.array(z.string()),
-      tags: z.array(z.string()),
+      categories: z
+        .union([z.array(z.string()), z.string()])
+        .transform((val) =>
+          typeof val === "string"
+            ? val
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean)
+            : val,
+        ),
+      tags: z
+        .union([z.array(z.string()), z.string()])
+        .transform((val) =>
+          typeof val === "string"
+            ? val
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean)
+            : val,
+        ),
       // SEO fields
       metaDescription: z.string().optional(), // overrides description for meta/OG tags
       keywords: z.array(z.string()).optional(), // keywords for AEO/GEO optimization

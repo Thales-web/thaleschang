@@ -64,16 +64,16 @@ const Blog = (locale: (typeof locales)[number]) =>
         publicPath: "../",
         validation: { isRequired: true },
       }),
-      categories: fields.array(fields.text({ label: "Category" }), {
+      categories: fields.text({
         label: "Categories",
-        description: "This is NOT case sensitive.",
-        itemLabel: (props) => props.value,
-        validation: { length: { min: 1 } },
+        description:
+          "콤마(,)로 구분하여 입력하세요. 예: geo, marketing, ai",
+        validation: { isRequired: true },
       }),
-      tags: fields.array(fields.text({ label: "Tag" }), {
+      tags: fields.text({
         label: "Tags",
-        itemLabel: (props) => props.value,
-        validation: { length: { min: 1 } },
+        description: "콤마(,)로 구분하여 여러 태그를 입력하세요. 예: seo, geo, marketing",
+        validation: { isRequired: true },
       }),
       content: fields.mdx({
         label: "Content",
