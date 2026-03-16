@@ -1,7 +1,7 @@
 ---
 import ContactForm from "@/components/forms/ContactForm.astro";
 import { getLocaleFromUrl } from "@/js/localeUtils";
-import { getLocalizedRoute, getTranslatedData, useTranslations } from "@/js/translationUtils";
+import { useTranslations } from "@/js/translationUtils";
 const currLocale = getLocaleFromUrl(Astro.url);
 const t = useTranslations(currLocale);
 ---
@@ -15,30 +15,29 @@ const t = useTranslations(currLocale);
       </p>
       <div class="mb-8">
         <h3 class="font-heading mb-4 text-xl leading-normal font-semibold">{t("office_hours")}</h3>
-        <p class="text-muted-foreground">Monday - Friday: 8:00 AM - 6:00 PM</p>
-        <p class="text-muted-foreground">Saturday: 9:00 AM - 1:00 PM</p>
-        <p class="text-muted-foreground">Sunday: Closed</p>
+        <p class="text-muted-foreground">{t("office_hours_weekday")}</p>
+        <p class="text-muted-foreground">{t("office_hours_saturday")}</p>
+        <p class="text-muted-foreground">{t("office_hours_sunday")}</p>
       </div>
       <div class="mb-8">
         <h3 class="font-heading mb-4 text-xl leading-normal font-semibold">{t("contact_info")}</h3>
         <p class="text-muted-foreground mb-2">
-          <span class="font-semibold">{t("phone")}</span>
-          (555) 123-4567
+          <span class="font-semibold">{t("phone")} </span>
+          <a href={`tel:${t("contact_phone_number")}`} class="hover:text-primary-accent transition">{t("contact_phone_number")}</a>
         </p>
         <p class="text-muted-foreground mb-2">
-          <span class="font-semibold">{t("email")}</span>
+          <span class="font-semibold">{t("email")} </span>
           <a
-            class="text-foreground hover:text-primary-accent hover:decoration-primary-accent underline"
-            href={getLocalizedRoute(currLocale, `mailto:info@medicaloffice.com`)}
-            >info@medicaloffice.com</a
-          >
+            class="text-foreground hover:text-primary-accent hover:decoration-primary-accent underline transition"
+            href={`mailto:${t("contact_email_address")}`}
+          >{t("contact_email_address")}</a>
         </p>
       </div>
       <div class="mb-8">
         <h3 class="font-heading mb-4 text-xl leading-normal font-semibold">{t("our_location")}</h3>
         <p class="text-muted-foreground">
           {t("emergency_hotline")}
-          <span class="font-semibold">(555) 911-0000</span>
+          <span class="font-semibold">{t("emergency_phone_number")}</span>
         </p>
       </div>
     </div>

@@ -1,0 +1,17 @@
+---
+import Contact from "@/components/contact/Contact.astro";
+import FaqAccordions from "@/components/faq/FaqAccordions.astro";
+import { getLocaleFromUrl } from "@/js/localeUtils";
+import { useTranslations } from "@/js/translationUtils";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
+---
+
+<BaseLayout title={t("contact_page_title")} description={t("contact_page_description")}>
+  <div class="mt-16">
+    <Contact />
+  </div>
+  <FaqAccordions expandAll />
+</BaseLayout>

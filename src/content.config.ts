@@ -23,14 +23,13 @@ const blogCollection = defineCollection({
       heroImage: image().optional(),
       categories: z
         .union([z.array(z.string()), z.string()])
-        .transform((val) =>
-          typeof val === "string"
-            ? val
-                .split(",")
-                .map((s) => s.trim())
-                .filter(Boolean)
-            : val,
-        ),
+        .transform((val) => {
+          if (typeof val === "string") {
+            return val.split(",").map((s) => s.trim()).filter(Boolean);
+          }
+          // relationship refs may be null — filter them out
+          return val.filter(Boolean);
+        }),
       tags: z
         .union([z.array(z.string()), z.string()])
         .transform((val) =>

@@ -49,6 +49,7 @@ export default config({
     projectsEN: Collections.Projects("en"),
     projectsKO: Collections.Projects("ko"),
 
+    categories: Collections.Categories(),
   },
 
   singletons: {

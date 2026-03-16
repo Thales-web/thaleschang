@@ -2,12 +2,16 @@
 /**
  * * FAQ section in accordions
  * Auto-generates FAQPage JSON-LD schema (AEO)
+ *
+ * Props:
+ *   expandAll - GEO 최적화: true이면 모든 답변을 펼침 상태로 렌더링
+ *               AI 크롤러가 숨겨진 콘텐츠를 무시할 수 있으므로 중요 페이지에 사용
  */
 
 import { clientConfig } from "@/config/clientConfig";
 import { getLocaleFromUrl } from "@/js/localeUtils";
 import { generateFaqPageSchema } from "@/js/jsonLD";
-import { getTranslatedData } from "@/js/translationUtils";
+import { getTranslatedData, useTranslations } from "@/js/translationUtils";
 
 import {
   Accordion,
@@ -16,8 +20,16 @@ import {
   AccordionTrigger,
 } from "./faq-accordion-standard";
 
+interface Props {
+  /** GEO: Expand all FAQ items for AI crawler visibility */
+  expandAll?: boolean;
+}
+
+const { expandAll = false } = Astro.props;
+
 const currLocale = getLocaleFromUrl(Astro.url);
 const faqData = getTranslatedData("faqData", currLocale);
+const t = useTranslations(currLocale);
 
 const faqSchema = clientConfig.seo.enableFaqSchema
   ? generateFaqPageSchema(faqData)
@@ -27,24 +39,34 @@ const faqSchema = clientConfig.seo.enableFaqSchema
 <section id="faq-accordions" class="py-16 md:py-24">
   <div class="site-container">
     <div class="mx-auto mb-16 max-w-3xl text-center" data-mos="fade-up">
-      <h2 class="h2 mb-4">Frequently Asked Questions</h2>
-      <p class="description">Find answers to common questions about our services and process</p>
+      <h2 class="h2 mb-4">{t("faq_title")}</h2>
+      <p class="description">{t("faq_description")}</p>
     </div>
     <div
       class="mx-auto mt-10 flex max-w-3xl flex-col gap-3"
       data-mos="fade-up"
       data-mos-delay="0.4"
     >
-      <Accordion class="space-y-3">
-        {
-          faqData.map((faqItem, idx) => (
+      {expandAll ? (
+        <!-- GEO mode: All answers visible for AI crawlers -->
+        <div class="space-y-4">
+          {faqData.map((faqItem) => (
+            <div class="rounded-lg border p-6">
+              <h3 class="font-heading text-lg font-semibold mb-3">{faqItem.question}</h3>
+              <div class="markdown-content text-muted-foreground" set:html={faqItem.answer} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <Accordion class="space-y-3">
+          {faqData.map((faqItem, idx) => (
             <AccordionItem value={`item-${idx}`}>
               <AccordionTrigger>{faqItem.question}</AccordionTrigger>
               <AccordionContent class="markdown-content" details={faqItem.answer} />
             </AccordionItem>
-          ))
-        }
-      </Accordion>
+          ))}
+        </Accordion>
+      )}
     </div>
   </div>
 

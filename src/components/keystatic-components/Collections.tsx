@@ -64,12 +64,17 @@ const Blog = (locale: (typeof locales)[number]) =>
         publicPath: "../",
         validation: { isRequired: true },
       }),
-      categories: fields.text({
-        label: "Categories",
-        description:
-          "콤마(,)로 구분하여 입력하세요. 예: geo, marketing, ai",
-        validation: { isRequired: true },
-      }),
+      categories: fields.array(
+        fields.relationship({
+          label: "Category",
+          collection: "categories",
+        }),
+        {
+          label: "Categories",
+          validation: { length: { min: 1 } },
+          itemLabel: (props) => props.value || "카테고리를 선택하세요",
+        },
+      ),
       tags: fields.text({
         label: "Tags",
         description: "콤마(,)로 구분하여 여러 태그를 입력하세요. 예: seo, geo, marketing",
@@ -896,6 +901,32 @@ const FaqData = (locale: (typeof locales)[number]) =>
     },
   });
 
+/**
+ * * Blog categories collection
+ * Admin에서 카테고리 추가/수정/삭제 가능
+ */
+const Categories = () =>
+  collection({
+    label: "Categories",
+    slugField: "name",
+    path: "src/data/categories/*/",
+    columns: ["name"],
+    format: { data: "yaml" },
+    schema: {
+      name: fields.slug({
+        name: { label: "Category Name" },
+        slug: {
+          label: "Slug (URL용)",
+          description: "URL에 사용되는 고유 식별자. 한 번 설정하면 변경하지 마세요.",
+        },
+      }),
+      description: fields.text({
+        label: "Description",
+        description: "카테고리 설명 (선택사항)",
+      }),
+    },
+  });
+
 export default {
   Blog,
   Authors,
@@ -906,4 +937,5 @@ export default {
   OtherPages,
   ClientSettings,
   FaqData,
+  Categories,
 };
