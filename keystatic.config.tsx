@@ -25,40 +25,28 @@ export default config({
     brand: { name: "Thales Web" },
   },
   collections: {
-    blogEN: Collections.Blog("en"),
+    // 콘텐츠
     blogKO: Collections.Blog("ko"),
-
-
-    // for now there is a limitation with keystatic where relationship fields don't work well with i18n features
-    // If you need multiple languages here (you might not) just create multiple variants of the same author
-    // this might look like "author-1-en" and "author-1-fr"
+    blogEN: Collections.Blog("en"),
     authors: Collections.Authors(""),
-
-    servicesEN: Collections.Services("en"),
-    servicesKO: Collections.Services("ko"),
-
-
-    careersEN: Collections.Careers("en"),
-    careersKO: Collections.Careers("ko"),
-
-
-    otherPagesEN: Collections.OtherPages("en"),
-    otherPagesKO: Collections.OtherPages("ko"),
-
-
-    projectsEN: Collections.Projects("en"),
-    projectsKO: Collections.Projects("ko"),
-
     categories: Collections.Categories(),
+    // 서비스 & 프로젝트
+    servicesKO: Collections.Services("ko"),
+    servicesEN: Collections.Services("en"),
+    projectsKO: Collections.Projects("ko"),
+    projectsEN: Collections.Projects("en"),
+    // 기타 페이지
+    otherPagesKO: Collections.OtherPages("ko"),
+    otherPagesEN: Collections.OtherPages("en"),
+    careersKO: Collections.Careers("ko"),
+    careersEN: Collections.Careers("en"),
   },
 
   singletons: {
     clientSettings: Collections.ClientSettings(),
-
-    resumeEN: Collections.Resume("en"),
-    resumeKO: Collections.Resume("ko"),
-
-    faqDataEN: Collections.FaqData("en"),
     faqDataKO: Collections.FaqData("ko"),
+    faqDataEN: Collections.FaqData("en"),
+    resumeKO: Collections.Resume("ko"),
+    resumeEN: Collections.Resume("en"),
   },
 });

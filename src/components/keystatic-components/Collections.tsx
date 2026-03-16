@@ -14,10 +14,10 @@ import { locales } from "@/config/siteSettings.json";
  */
 const Blog = (locale: (typeof locales)[number]) =>
   collection({
-    label: `Blog (${locale.toUpperCase()})`,
+    label: `블로그 (${locale.toUpperCase()})`,
     slugField: "title",
     path: `src/data/blog/${locale}/*/`,
-    columns: ["title", "pubDate"],
+    columns: ["title", "draft", "categories", "pubDate", "updatedDate"],
     entryLayout: "content",
     format: { contentField: "content" },
     schema: {
@@ -121,7 +121,7 @@ const Blog = (locale: (typeof locales)[number]) =>
  */
 const Authors = (locale: (typeof locales)[number] | "") =>
   collection({
-    label: `Authors ${locale === "" ? "" : `(${locale.toUpperCase()})`} `,
+    label: `저자 ${locale === "" ? "" : `(${locale.toUpperCase()})`}`,
     slugField: "name",
     path: `src/data/authors/${locale}/*/`,
     columns: ["name"],
@@ -189,7 +189,7 @@ const Authors = (locale: (typeof locales)[number] | "") =>
  */
 const Services = (locale: (typeof locales)[number]) =>
   collection({
-    label: `Services (${locale.toUpperCase()})`,
+    label: `서비스 (${locale.toUpperCase()})`,
     slugField: "title",
     path: `src/data/services/${locale}/*/`,
     columns: ["title", "order"],
@@ -267,7 +267,7 @@ const Services = (locale: (typeof locales)[number]) =>
  */
 const Careers = (locale: (typeof locales)[number]) =>
   collection({
-    label: `Careers (${locale.toUpperCase()})`,
+    label: `채용 (${locale.toUpperCase()})`,
     slugField: "title",
     path: `src/data/careers/${locale}/*/`,
     columns: ["title", "category", "location", "type", "publishDate"],
@@ -359,7 +359,7 @@ const Careers = (locale: (typeof locales)[number]) =>
  */
 const Projects = (locale: (typeof locales)[number]) =>
   collection({
-    label: `Projects (${locale.toUpperCase()})`,
+    label: `프로젝트 (${locale.toUpperCase()})`,
     slugField: "title",
     path: `src/data/projects/${locale}/*/`,
     columns: ["title", "completionDate"],
@@ -449,7 +449,7 @@ const Projects = (locale: (typeof locales)[number]) =>
  */
 const Resume = (locale: (typeof locales)[number]) =>
   singleton({
-    label: `Resume (${locale.toUpperCase()})`,
+    label: `이력서 (${locale.toUpperCase()})`,
     path: `src/data/resume/${locale}/resume/index`,
     format: { data: "json" },
     schema: {
@@ -595,7 +595,7 @@ const Resume = (locale: (typeof locales)[number]) =>
  */
 const ClientSettings = () =>
   singleton({
-    label: "Client Settings (SEO/Schema/Analytics)",
+    label: "사이트 설정 (SEO/Schema/Analytics)",
     path: "src/data/settings/client-config/index",
     format: { data: "json" },
     schema: {
@@ -814,7 +814,7 @@ const ClientSettings = () =>
  */
 const OtherPages = (locale: (typeof locales)[number]) =>
   collection({
-    label: `Other Pages (${locale.toUpperCase()})`,
+    label: `기타 페이지 (${locale.toUpperCase()})`,
     slugField: "title",
     path: `src/data/otherPages/${locale}/*/`,
     columns: ["title"],
@@ -875,7 +875,7 @@ const OtherPages = (locale: (typeof locales)[number]) =>
  */
 const FaqData = (locale: (typeof locales)[number]) =>
   singleton({
-    label: `FAQ Data (${locale.toUpperCase()})`,
+    label: `FAQ (${locale.toUpperCase()})`,
     path: `src/data/settings/faq-data/${locale}/index`,
     format: { data: "json" },
     schema: {
@@ -906,7 +906,7 @@ const FaqData = (locale: (typeof locales)[number]) =>
  */
 const Categories = () =>
   collection({
-    label: "Categories",
+    label: "카테고리",
     slugField: "name",
     path: "src/data/categories/*/",
     columns: ["name"],
