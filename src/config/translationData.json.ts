@@ -63,8 +63,8 @@ export const dataTranslations = {
  */
 export const textTranslations = {
   ko: {
-    hero_text: "AI 마케팅 시스템 설계 & 구축",
-    hero_description: `SEO, GEO, AEO 최적화 홈페이지와 마케팅 자동화 시스템으로 지속가능한 비즈니스 성장을 촉진합니다.`,
+    hero_text: "광고비 없이도 고객이 찾아오는 시스템",
+    hero_description: `SEO, GEO, AEO 최적화가 기본 내장된 홈페이지와 마케팅 자동화 시스템으로, 검색 엔진과 AI 검색 모두에서 발견되는 비즈니스를 만듭니다.`,
 
     // blog
     back_to_all_posts: "전체 글 보기",
@@ -98,9 +98,9 @@ export const textTranslations = {
 
     // nav & cta
     get_all_access: "상담 신청",
-    cta_heading: "지금 시작하세요",
-    cta_description: "SEO 최적화된 고성능 웹사이트로 비즈니스를 성장시키세요. 무료 상담을 통해 맞춤 솔루션을 제안드립니다.",
-    cta_button: "무료 상담 받기",
+    cta_heading: "무료 상담으로 시작하세요",
+    cta_description: "검색에서 찾아지고, AI가 인용하고, 문의가 자동으로 처리되는 시스템. 무료 상담을 신청하시면 현재 웹사이트의 SEO/GEO 진단 결과를 함께 보내드립니다.",
+    cta_button: "무료 상담 신청하기",
     hero_cta_secondary: "서비스 보기",
     subscribe: "구독하기",
     subscribe_newsletter: "뉴스레터 구독",
