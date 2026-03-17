@@ -24,8 +24,8 @@ const footerData: FooterDataProps = {
       title: "Support",
       links: [
         { label: "Contact", href: "#" },
-        { label: "Terms of Service", href: "#" },
-        { label: "Privacy Policy", href: "#" },
+        { label: "Terms of Service", href: "/en/terms-of-service" },
+        { label: "Privacy Policy", href: "/en/privacy-policy" },
       ],
     },
   ],
