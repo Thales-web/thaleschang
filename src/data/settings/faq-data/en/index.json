@@ -1,28 +1,28 @@
 {
   "items": [
     {
-      "question": "Who are the themes for?",
-      "answer": "These themes are for developers who want to have pre-created templates to use in their projects, and have the hard stuff taken care of. Whether that is personal projects, a new SaaS business, a website for a client, etc. They offer speed, customizability with swappable components, built-in SEO, and image optimization. Instead of spending hours figuring out how to do this yourself, you can leverage the themes to save weeks of time and effort. You can easily mix and match sections, update the copy, and change the color theme with just one line of code."
+      "question": "What is GEO (Generative Engine Optimization)?",
+      "answer": "GEO is the practice of optimizing web content so that AI search engines like ChatGPT, Perplexity, and Gemini cite or recommend it when generating answers. While traditional SEO aims for top rankings in search results, GEO focuses on making AI systems trust and select your content as a reliable source."
     },
     {
-      "question": "What all components are included?",
-      "answer": "60+ components. Including 6 feature sections, 3 hero sections, 2 services sections, 2 testimonial sections, 2 faq sections, 404, contact, legal, 2 blog indexes, blog post layout, and a cookie banner."
+      "question": "What is the difference between SEO and GEO?",
+      "answer": "SEO targets traditional search engines like Google and Naver for higher rankings on search result pages. GEO optimizes content for AI-generated answers and citations. SEO focuses on keywords and backlinks, while GEO emphasizes content authority, accuracy, and structured data. Both should be pursued together for maximum impact."
     },
     {
-      "question": "What do you mean by \"free updates\"?",
-      "answer": "When you purchase any of our themes, you get lifetime updates for free. We regularly update our themes to ensure compatibility with the latest version of Astro, and to add new features or bug fixes."
+      "question": "What is a marketing automation system?",
+      "answer": "A marketing automation system uses tools like N8N, MAKE, and Zapier to automatically handle repetitive marketing tasks such as lead collection, CRM integration, email campaigns, and social media posting. It reduces manual work and improves efficiency so you can focus on business growth."
     },
     {
-      "question": "Why Astro?",
-      "answer": "Astro is an excellent framework for content-focused websites, with a great developer experience. It also allows you to use any UI framework you want within it, such as React, Vue, and Svelte. This means you can use any of your existing components, or any of the thousands of components available online."
+      "question": "What kind of businesses need an AI marketing system?",
+      "answer": "Businesses doing digital marketing but struggling with manual processes, businesses wanting to be discovered in AI search, and businesses looking to systematically run content marketing. It is applicable regardless of size, from startups to mid-sized companies."
     },
     {
-      "question": "Can I use a theme for multiple projects?",
-      "answer": "Yes, you can use any of our themes for as many projects as you like. You can even sell websites you create with them to your clients. As long as you don't resell the theme itself, you're likely to go! See our <a href=\"https://cosmicthemes.com/license/\" target=\"_blank\" rel=\"noopener noreferrer\">License</a> page for more details."
+      "question": "What is the project process?",
+      "answer": "1) Free consultation to understand your business goals. 2) Custom strategy and system design proposal. 3) System build and optimization after approval. 4) Post-launch performance monitoring and continuous improvement."
     },
     {
-      "question": "How do I download new versions of the themes?",
-      "answer": "You can download any new versions of the themes by accessing your lemonsqueezy library. When you first purchase the theme, I recommend creating a lemonsqueezy account at app.lemonsqueezy.com. Then you will have access to any theme updates from that page."
+      "question": "How can I request a consultation?",
+      "answer": "You can submit a request through the contact form at the bottom of the page, or send an email to info@funnelhacker.co.kr. Please briefly describe your project scope and goals, and we will respond promptly."
     }
   ]
 }

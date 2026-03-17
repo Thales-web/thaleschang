@@ -63,8 +63,8 @@ export const dataTranslations = {
  */
 export const textTranslations = {
   ko: {
-    hero_text: "멋진 웹사이트를 위한 모든 것.",
-    hero_description: `아이디어를 아름답고 기능적인 디자인으로 변환하여 오래 기억에 남는 인상을 남깁니다.`,
+    hero_text: "AI 마케팅 시스템 설계 & 구축",
+    hero_description: `SEO, GEO, AEO 최적화와 마케팅 자동화로 비즈니스의 디지털 성장을 설계합니다.`,
 
     // blog
     back_to_all_posts: "전체 글 보기",
@@ -214,8 +214,8 @@ export const textTranslations = {
     "404_recent_posts": "최근 게시글",
   },
   en: {
-    hero_text: "Everything you need for an amazing website.",
-    hero_description: `Transforming ideas into beautiful, functional designs that leave lasting impressions.`,
+    hero_text: "AI Marketing System Architecture & Builder",
+    hero_description: `Designing digital growth with SEO, GEO, AEO optimization and marketing automation.`,
 
     // blog
     back_to_all_posts: "Back to all posts",

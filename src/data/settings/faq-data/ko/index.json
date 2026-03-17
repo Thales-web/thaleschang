@@ -1,28 +1,28 @@
 {
   "items": [
     {
-      "question": "Who are the themes for?",
-      "answer": "These themes are for developers who want to have pre-created templates to use in their projects, and have the hard stuff taken care of. Whether that is personal projects, a new SaaS business, a website for a client, etc. They offer speed, customizability with swappable components, built-in SEO, and image optimization. Instead of spending hours figuring out how to do this yourself, you can leverage the themes to save weeks of time and effort. You can easily mix and match sections, update the copy, and change the color theme with just one line of code."
+      "question": "GEO(생성형 엔진 최적화)란 무엇인가요?",
+      "answer": "GEO(Generative Engine Optimization)는 ChatGPT, Perplexity, Gemini 등 AI 검색 엔진이 답변을 생성할 때 나의 콘텐츠를 인용하거나 추천하도록 최적화하는 전략입니다. 기존 SEO가 검색 결과 상위 노출을 목표로 했다면, GEO는 AI가 나를 신뢰할 수 있는 출처로 선택하도록 만드는 것입니다."
     },
     {
-      "question": "What all components are included?",
-      "answer": "60+ components. Including 6 feature sections, 3 hero sections, 2 services sections, 2 testimonial sections, 2 faq sections, 404, contact, legal, 2 blog indexes, blog post layout, and a cookie banner."
+      "question": "SEO와 GEO의 차이점은 무엇인가요?",
+      "answer": "SEO는 구글, 네이버 등 전통적인 검색 엔진의 결과 페이지에서 상위 노출을 목표로 합니다. 반면 GEO는 AI가 답변을 생성할 때 콘텐츠를 인용하도록 최적화합니다. SEO는 키워드와 백링크 중심이고, GEO는 콘텐츠의 권위성, 정확성, 구조화된 데이터를 중시합니다. 둘 다 병행해야 최대 효과를 얻을 수 있습니다."
     },
     {
-      "question": "What do you mean by \"free updates\"?",
-      "answer": "When you purchase any of our themes, you get lifetime updates for free. We regularly update our themes to ensure compatibility with the latest version of Astro, and to add new features or bug fixes."
+      "question": "마케팅 자동화 시스템이란 무엇인가요?",
+      "answer": "마케팅 자동화 시스템은 N8N, MAKE, Zapier 같은 도구를 활용하여 리드 수집, CRM 연동, 이메일 발송, SNS 포스팅 등 반복적인 마케팅 업무를 자동으로 처리하는 시스템입니다. 수작업을 줄이고 효율을 높여 비즈니스 성장에 집중할 수 있게 해줍니다."
     },
     {
-      "question": "Why Astro?",
-      "answer": "Astro is an excellent framework for content-focused websites, with a great developer experience. It also allows you to use any UI framework you want within it, such as React, Vue, and Svelte. This means you can use any of your existing components, or any of the thousands of components available online."
+      "question": "어떤 비즈니스에 AI 마케팅 시스템이 필요한가요?",
+      "answer": "디지털 마케팅을 하고 있지만 수작업이 많아 효율이 떨어지는 비즈니스, AI 검색에서 발견되고 싶은 비즈니스, 콘텐츠 마케팅을 체계적으로 운영하고 싶은 비즈니스에 적합합니다. 스타트업부터 중소기업까지 규모에 관계없이 적용 가능합니다."
     },
     {
-      "question": "Can I use a theme for multiple projects?",
-      "answer": "Yes, you can use any of our themes for as many projects as you like. You can even sell websites you create with them to your clients. As long as you don't resell the theme itself, you're likely to go! See our <a href=\"https://cosmicthemes.com/license/\" target=\"_blank\" rel=\"noopener noreferrer\">License</a> page for more details."
+      "question": "프로젝트 진행 절차는 어떻게 되나요?",
+      "answer": "1) 무료 상담을 통해 비즈니스 목표와 현황을 파악합니다. 2) 맞춤 전략과 시스템 설계안을 제안합니다. 3) 승인 후 시스템 구축 및 최적화를 진행합니다. 4) 런칭 후 성과 모니터링과 지속적인 개선을 지원합니다."
     },
     {
-      "question": "How do I download new versions of the themes?",
-      "answer": "You can download any new versions of the themes by accessing your lemonsqueezy library. When you first purchase the theme, I recommend creating a lemonsqueezy account at app.lemonsqueezy.com. Then you will have access to any theme updates from that page."
+      "question": "상담은 어떻게 신청하나요?",
+      "answer": "페이지 하단의 문의하기 폼을 통해 신청하시거나, info@funnelhacker.co.kr로 이메일을 보내주세요. 프로젝트 규모와 목표를 간단히 알려주시면 빠르게 답변드리겠습니다."
     }
   ]
 }
