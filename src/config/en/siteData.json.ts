@@ -2,24 +2,24 @@ import { type SiteDataProps } from "../types/configDataTypes";
 
 // Update this file with your site specific information
 const siteData: SiteDataProps = {
-  name: "Thales Chang",
+  name: "Thales Web",
   // Your website's title and description (meta fields)
   title:
-    "Thales Chang - AI Marketing System Architecture & Builder",
+    "Thales Web - Astro-based SEO/GEO/AEO Optimized Web Agency",
   description:
-    "Expert in AI marketing system architecture and implementation. Specializing in SEO, GEO, AEO optimization and marketing automation for business growth.",
+    "Web agency specializing in Astro framework-based SEO, GEO, AEO optimized websites. From Google top rankings to ChatGPT citations, we build websites that bring customers without ad spend.",
 
   // Your information for blog post purposes
   author: {
-    name: "Thales Chang",
-    email: "info@funnelhacker.co.kr",
+    name: "Thales Web",
+    email: "contact@thalesweb.com",
     twitter: "",
   },
 
   // default image for meta tags if the page doesn't have an image already
   defaultImage: {
     src: "/images/og-default.jpg",
-    alt: "Thales Chang - AI Marketing System Architect",
+    alt: "Thales Web - SEO/GEO/AEO Optimized Web Agency",
   },
 };
 

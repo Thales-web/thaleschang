@@ -2,24 +2,24 @@ import { type SiteDataProps } from "../types/configDataTypes";
 
 // Update this file with your site specific information
 const siteData: SiteDataProps = {
-  name: "Thales Chang",
+  name: "Thales Web",
   // Your website's title and description (meta fields)
   title:
-    "Thales Chang - AI 마케팅 시스템 설계 & 구축 전문가",
+    "Thales Web - Astro 기반 SEO/GEO/AEO 최적화 홈페이지 전문 에이전시",
   description:
-    "AI 마케팅 시스템 아키텍트 Thales Chang. SEO, GEO(생성형 엔진 최적화), AEO(답변 엔진 최적화) 전략 수립부터 N8N/MAKE 기반 마케팅 자동화 시스템 구축까지. AI 검색 시대에 발견되고 인용되는 비즈니스를 만듭니다.",
+    "Astro 프레임워크 기반 SEO, GEO, AEO 최적화 홈페이지 제작 전문 에이전시. 구글 검색 상위 노출부터 ChatGPT 인용까지, 마케팅 자동화 시스템 구축으로 광고비 없이 고객이 찾아오는 홈페이지를 만듭니다.",
 
   // Your information for blog post purposes
   author: {
-    name: "Thales Chang",
-    email: "info@funnelhacker.co.kr",
+    name: "Thales Web",
+    email: "contact@thalesweb.com",
     twitter: "",
   },
 
   // default image for meta tags if the page doesn't have an image already
   defaultImage: {
     src: "/images/og-default.jpg",
-    alt: "Thales Chang - AI Marketing System Architect",
+    alt: "Thales Web - SEO/GEO/AEO 최적화 홈페이지 전문 에이전시",
   },
 };
 
