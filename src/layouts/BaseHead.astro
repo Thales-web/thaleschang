@@ -52,9 +52,9 @@ const { analytics } = clientConfig;
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- DNS prefetch for third-party analytics domains -->
-<link rel="dns-prefetch" href="//www.googletagmanager.com" />
-<link rel="dns-prefetch" href="//www.google-analytics.com" />
+<!-- Preconnect for critical third-party domains (faster than dns-prefetch) -->
+<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+<link rel="preconnect" href="https://www.google-analytics.com" crossorigin />
 <link rel="dns-prefetch" href="//connect.facebook.net" />
 <link rel="dns-prefetch" href="//wcs.naver.net" />
 <link rel="dns-prefetch" href="//t1.daumcdn.net" />

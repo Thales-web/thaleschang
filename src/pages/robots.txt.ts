@@ -36,6 +36,19 @@ const getRobotsTxt = (sitemapURL: URL) => {
     lines.push("User-agent: Google-Extended", "Disallow: /", "");
   }
 
+  // Additional AI crawlers (always allow for maximum GEO visibility)
+  if (aiCrawlers.allowGPTBot) {
+    lines.push("User-agent: OAI-SearchBot", "Allow: /", "");
+    lines.push("User-agent: ChatGPT-User", "Allow: /", "");
+  } else {
+    lines.push("User-agent: OAI-SearchBot", "Disallow: /", "");
+    lines.push("User-agent: ChatGPT-User", "Disallow: /", "");
+  }
+
+  lines.push("User-agent: Applebot-Extended", "Allow: /", "");
+  lines.push("User-agent: Cohere-ai", "Allow: /", "");
+  lines.push("User-agent: Meta-ExternalAgent", "Allow: /", "");
+
   // Block common scraper bots
   lines.push("User-agent: CCBot", "Disallow: /", "");
 

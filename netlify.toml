@@ -23,3 +23,4 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     X-XSS-Protection = "1; mode=block"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://connect.facebook.net https://wcs.naver.net https://t1.daumcdn.net https://www.clarity.ms https://t1.kakaocdn.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https: blob:; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://www.clarity.ms https://wcs.naver.net https://region1.google-analytics.com; frame-src 'self' https://www.youtube.com; object-src 'none'; base-uri 'self'"

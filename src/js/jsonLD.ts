@@ -21,6 +21,7 @@ export interface BlogProps {
   image: ImageMetadata;
   authors: CollectionEntry<"authors">[];
   canonicalUrl: URL;
+  locale?: string;
 }
 
 interface ServiceProps {
@@ -140,13 +141,20 @@ export function generateBreadcrumbSchema(
 }
 
 export function generateBlogPostingSchema(props: BlogProps): object {
-  const { postFrontmatter, image, authors, canonicalUrl } = props;
+  const { postFrontmatter, image, authors, canonicalUrl, locale } = props;
 
-  const authorsArray = authors.map((author) => ({
-    "@type": "Person" as const,
-    name: author.data.name,
-    url: author.data.authorLink,
-  }));
+  const authorsArray = authors.map((author) => {
+    const person: Record<string, unknown> = {
+      "@type": "Person",
+      name: author.data.name,
+      url: author.data.authorLink,
+    };
+    if (author.data.jobTitle) person.jobTitle = author.data.jobTitle;
+    if (author.data.sameAs && author.data.sameAs.length > 0) {
+      person.sameAs = author.data.sameAs;
+    }
+    return person;
+  });
 
   const schema: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -180,6 +188,12 @@ export function generateBlogPostingSchema(props: BlogProps): object {
       ],
     },
   };
+
+  // GEO enhancements
+  if (locale) schema.inLanguage = locale;
+  if (postFrontmatter.categories && postFrontmatter.categories.length > 0) {
+    schema.articleSection = postFrontmatter.categories[0];
+  }
 
   return schema;
 }
@@ -235,6 +249,22 @@ export function generatePersonSchema(
 
   if (person.data.email) schema.email = person.data.email;
   if (person.data.authorLink) schema.url = person.data.authorLink;
+  if (person.data.jobTitle) schema.jobTitle = person.data.jobTitle;
+  if (person.data.knowsAbout && person.data.knowsAbout.length > 0) {
+    schema.knowsAbout = person.data.knowsAbout;
+  }
+  if (person.data.worksFor) {
+    schema.worksFor = {
+      "@type": "Organization",
+      name: person.data.worksFor,
+    };
+  }
+  if (person.data.sameAs && person.data.sameAs.length > 0) {
+    schema.sameAs = person.data.sameAs;
+  }
+  if (person.data.avatar) {
+    schema.image = person.data.avatar;
+  }
 
   return schema;
 }
