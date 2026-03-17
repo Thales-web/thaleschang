@@ -64,7 +64,7 @@ export const dataTranslations = {
 export const textTranslations = {
   ko: {
     hero_text: "AI 마케팅 시스템 설계 & 구축",
-    hero_description: `SEO, GEO, AEO 최적화와 마케팅 자동화로 비즈니스의 디지털 성장을 설계합니다.`,
+    hero_description: `SEO, GEO, AEO 최적화 홈페이지와 마케팅 자동화 시스템으로 지속가능한 비즈니스 성장을 촉진합니다.`,
 
     // blog
     back_to_all_posts: "전체 글 보기",
