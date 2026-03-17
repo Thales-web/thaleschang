@@ -17,10 +17,6 @@ const navConfig: navItem[] = [
     text: "프로젝트",
     link: "/projects",
   },
-  {
-    text: "문의하기",
-    link: "/contact",
-  },
 ];
 
 export default navConfig;
