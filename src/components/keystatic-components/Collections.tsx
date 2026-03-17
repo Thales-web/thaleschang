@@ -783,25 +783,37 @@ const ClientSettings = () =>
         defaultValue: true,
       }),
 
-      // === AI Crawler Access Control (GEO) ===
+      // === AI Training Crawlers (학습용) ===
       allowGPTBot: fields.checkbox({
-        label: "Allow GPTBot (ChatGPT / OpenAI)",
-        description: "Allow OpenAI crawler to index your site",
+        label: "🤖 GPTBot (OpenAI 학습)",
+        description: "OpenAI 모델 학습용 크롤러. 차단해도 ChatGPT 검색에는 영향 없음",
         defaultValue: true,
       }),
       allowClaudeBot: fields.checkbox({
-        label: "Allow ClaudeBot (Anthropic)",
-        description: "Allow Anthropic crawler to index your site",
-        defaultValue: true,
-      }),
-      allowPerplexityBot: fields.checkbox({
-        label: "Allow PerplexityBot",
-        description: "Allow Perplexity AI crawler to index your site",
+        label: "🤖 ClaudeBot (Anthropic 학습)",
+        description: "Anthropic Claude 모델 학습용 크롤러",
         defaultValue: true,
       }),
       allowGoogleExtended: fields.checkbox({
-        label: "Allow Google-Extended (Gemini)",
-        description: "Allow Google AI (Gemini) crawler to index your site",
+        label: "🤖 Google-Extended (Gemini 학습)",
+        description: "Google Gemini 모델 학습용 크롤러",
+        defaultValue: true,
+      }),
+      allowCCBot: fields.checkbox({
+        label: "🤖 CCBot (Common Crawl)",
+        description: "오픈소스 AI 모델 학습에 사용되는 Common Crawl 크롤러",
+        defaultValue: false,
+      }),
+
+      // === AI Search Crawlers (검색용) ===
+      allowOAISearchBot: fields.checkbox({
+        label: "🔍 OAI-SearchBot (ChatGPT 검색)",
+        description: "ChatGPT 웹 검색용 크롤러. GPTBot과 독립 제어 가능",
+        defaultValue: true,
+      }),
+      allowPerplexityBot: fields.checkbox({
+        label: "🔍 PerplexityBot (Perplexity 검색)",
+        description: "Perplexity AI 검색용 크롤러",
         defaultValue: true,
       }),
     },

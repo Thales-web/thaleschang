@@ -39,6 +39,8 @@
   "enableBreadcrumbSchema": true,
   "allowGPTBot": true,
   "allowClaudeBot": true,
-  "allowPerplexityBot": true,
-  "allowGoogleExtended": true
+  "allowGoogleExtended": true,
+  "allowCCBot": false,
+  "allowOAISearchBot": true,
+  "allowPerplexityBot": true
 }

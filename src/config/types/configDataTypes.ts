@@ -161,9 +161,13 @@ export interface ClientConfigProps {
     enableBreadcrumbSchema: boolean;
   };
   aiCrawlers: {
+    // Training bots (AI 모델 학습용 크롤러)
     allowGPTBot: boolean;
     allowClaudeBot: boolean;
-    allowPerplexityBot: boolean;
     allowGoogleExtended: boolean;
+    allowCCBot: boolean;
+    // Search bots (AI 검색 서비스용 크롤러)
+    allowOAISearchBot: boolean;
+    allowPerplexityBot: boolean;
   };
 }

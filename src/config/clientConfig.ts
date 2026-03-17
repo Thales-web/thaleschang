@@ -88,10 +88,14 @@ function buildClientConfig(): ClientConfigProps {
       enableBreadcrumbSchema: data.enableBreadcrumbSchema ?? true,
     },
     aiCrawlers: {
+      // Training bots — 학습 차단하면서 검색은 허용 가능
       allowGPTBot: data.allowGPTBot ?? true,
       allowClaudeBot: data.allowClaudeBot ?? true,
-      allowPerplexityBot: data.allowPerplexityBot ?? true,
       allowGoogleExtended: data.allowGoogleExtended ?? true,
+      allowCCBot: data.allowCCBot ?? false,
+      // Search bots — 학습과 독립적으로 제어
+      allowOAISearchBot: data.allowOAISearchBot ?? true,
+      allowPerplexityBot: data.allowPerplexityBot ?? true,
     },
   };
 }
