@@ -24,8 +24,8 @@ const footerData: FooterDataProps = {
       title: "고객 지원",
       links: [
         { label: "문의하기", href: "#" },
-        { label: "이용약관", href: "#" },
-        { label: "개인정보처리방침", href: "#" },
+        { label: "이용약관", href: "/terms-of-service" },
+        { label: "개인정보처리방침", href: "/privacy-policy" },
       ],
     },
   ],
