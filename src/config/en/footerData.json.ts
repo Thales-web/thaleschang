@@ -1,39 +1,32 @@
 import { type FooterDataProps } from "../types/configDataTypes";
 
 const footerData: FooterDataProps = {
-  description: "Enter your website description here.",
+  description: "AI Marketing System Architecture & Builder",
   columns: [
     {
       title: "Services",
       links: [
-        { label: "Web Development", href: "/services" },
-        { label: "SEO Optimization", href: "/services" },
-        { label: "GEO Optimization", href: "/services" },
+        { label: "Services", href: "/en/services" },
+        { label: "Projects", href: "/en/projects" },
+        { label: "Contact", href: "/en/contact" },
       ],
     },
     {
-      title: "Company",
+      title: "Content",
       links: [
-        { label: "About", href: "/about" },
-        { label: "Blog", href: "/blog" },
-        { label: "Projects", href: "/projects" },
-        { label: "Careers", href: "/careers" },
+        { label: "Blog", href: "/en/blog" },
+        { label: "Categories", href: "/en/categories" },
       ],
     },
     {
-      title: "Support",
+      title: "Legal",
       links: [
-        { label: "Contact", href: "#" },
         { label: "Terms of Service", href: "/en/terms-of-service" },
         { label: "Privacy Policy", href: "/en/privacy-policy" },
       ],
     },
   ],
-  socials: [
-    { href: "https://twitter.com/", icon: "tabler/brand-x", label: "twitter (x)" },
-    { href: "https://instagram.com/", icon: "tabler/brand-instagram", label: "instagram" },
-    { href: "https://github.com/", icon: "logos/github", label: "github" },
-  ],
+  socials: [],
 };
 
 export default footerData;

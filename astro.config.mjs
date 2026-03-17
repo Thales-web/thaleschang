@@ -39,7 +39,7 @@ function seoConfigValidation() {
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://starter.cosmicthemes.com",
+  site: "https://thaleschang.com",
   adapter: netlify({
     imageCDN: false,
   }),
