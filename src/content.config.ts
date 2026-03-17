@@ -61,6 +61,11 @@ const authorsCollection = defineCollection({
       about: z.string(),
       email: z.string(),
       authorLink: z.string(), // author page link. Could be a personal website, github, twitter, whatever you want
+      // GEO/E-E-A-T fields for enhanced Person schema
+      jobTitle: z.string().optional(),
+      worksFor: z.string().optional(), // organization name
+      knowsAbout: z.array(z.string()).optional(),
+      sameAs: z.array(z.string()).optional(), // social profile URLs
     }),
 });
 

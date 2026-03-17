@@ -79,6 +79,7 @@ if (type === "blog") {
     image: jsonldImage,
     authors: authors,
     canonicalUrl: canonicalUrl,
+    locale: currLocale,
   });
 } else if (type === "service") {
   const { service } = Astro.props as ServiceProps;
@@ -132,8 +133,7 @@ const navSchemaTag = `<script type="application/ld+json">${JSON.stringify(navSch
     },
   }}
   twitter={{
-    site: "@" + siteData.author.twitter,
-    creator: "@" + siteData.author.twitter,
+    ...(siteData.author.twitter ? { site: "@" + siteData.author.twitter, creator: "@" + siteData.author.twitter } : {}),
     card: "summary_large_image",
     title: title,
     description: description,
