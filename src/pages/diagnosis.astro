@@ -1,0 +1,197 @@
+---
+import Button from "@/components/button/Button.astro";
+import { Checkbox } from "@/components/starwind/checkbox";
+import { Input } from "@/components/starwind/input";
+import { Label } from "@/components/starwind/label";
+import { Textarea } from "@/components/starwind/textarea";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="무료 SEO/GEO 진단 신청 - Thales Web"
+  description="현재 웹사이트의 SEO 점수와 GEO 최적화 상태를 무료로 진단해 드립니다. 대표가 직접 검토 후 24시간 이내에 진단 리포트를 보내드립니다."
+>
+  <section class="py-24 md:pt-40">
+    <div class="site-container">
+      <div class="mx-auto max-w-2xl">
+        <!-- Header -->
+        <div class="mb-12 text-center">
+          <h1 class="h1 mb-4">무료 SEO/GEO 진단 신청</h1>
+          <p class="description">
+            현재 웹사이트가 구글에서 몇 점인지, ChatGPT가 당신의 비즈니스를 아는지 —
+            무료 진단 리포트로 확인하세요. 대표가 직접 검토 후 24시간 이내에 결과를 보내드립니다.
+          </p>
+        </div>
+
+        <!-- Form -->
+        <form
+          id="diagnosis-form"
+          name="diagnosis"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          class="flex flex-col gap-6 rounded-xl border p-8 shadow-md"
+        >
+          <input type="hidden" name="form-name" value="diagnosis" />
+          <p class="hidden"><label>Don't fill this out: <input name="bot-field" /></label></p>
+
+          <!-- 진단 유형 선택 -->
+          <div class="flex flex-col gap-3">
+            <Label class="text-base font-semibold">진단 유형 선택</Label>
+            <div class="grid gap-3 md:grid-cols-3">
+              <label class="diagnosis-option group flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-colors hover:bg-muted has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="checkbox" name="diagnosis-type" value="seo" class="accent-primary h-5 w-5" />
+                <div>
+                  <p class="font-semibold">SEO 진단</p>
+                  <p class="text-muted-foreground text-xs">구글 검색 최적화 점수</p>
+                </div>
+              </label>
+              <label class="diagnosis-option group flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-colors hover:bg-muted has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="checkbox" name="diagnosis-type" value="geo" class="accent-primary h-5 w-5" />
+                <div>
+                  <p class="font-semibold">GEO 진단</p>
+                  <p class="text-muted-foreground text-xs">AI 검색 인용 최적화</p>
+                </div>
+              </label>
+              <label class="diagnosis-option group flex cursor-pointer items-center gap-3 rounded-lg border p-4 transition-colors hover:bg-muted has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                <input type="checkbox" name="diagnosis-type" value="both" class="accent-primary h-5 w-5" />
+                <div>
+                  <p class="font-semibold">SEO + GEO 통합</p>
+                  <p class="text-muted-foreground text-xs">종합 진단 리포트</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- 회사 홈페이지 주소 -->
+          <div class="flex flex-col">
+            <Label for="website-url">회사 홈페이지 주소</Label>
+            <Input
+              id="website-url"
+              type="url"
+              name="website-url"
+              required
+              class="min-h-12 px-4 py-3"
+              placeholder="https://example.com"
+            />
+          </div>
+
+          <!-- 회사명 -->
+          <div class="flex flex-col">
+            <Label for="company-name">회사명</Label>
+            <Input
+              id="company-name"
+              type="text"
+              name="company-name"
+              required
+              class="min-h-12 px-4 py-3"
+              placeholder="회사명을 입력하세요"
+            />
+          </div>
+
+          <!-- 이름 + 이메일 -->
+          <div class="grid gap-6 md:grid-cols-2">
+            <div class="flex flex-col">
+              <Label for="full-name">담당자명</Label>
+              <Input
+                id="full-name"
+                type="text"
+                name="full-name"
+                required
+                class="min-h-12 px-4 py-3"
+                placeholder="홍길동"
+              />
+            </div>
+            <div class="flex flex-col">
+              <Label for="email">회사 이메일</Label>
+              <Input
+                id="email"
+                type="email"
+                name="email"
+                required
+                class="min-h-12 px-4 py-3"
+                placeholder="name@company.com"
+              />
+            </div>
+          </div>
+
+          <!-- 전화번호 -->
+          <div class="flex flex-col">
+            <Label for="phone">연락처 (선택)</Label>
+            <Input
+              id="phone"
+              type="tel"
+              name="phone"
+              class="min-h-12 px-4 py-3"
+              placeholder="010-1234-5678"
+            />
+          </div>
+
+          <!-- 추가 메시지 -->
+          <div class="flex flex-col">
+            <Label for="message">현재 고민이나 목표 (선택)</Label>
+            <Textarea
+              id="message"
+              name="message"
+              class="min-h-12 px-4 py-3"
+              placeholder="예: 구글에 검색해도 안 나와요, ChatGPT가 우리 회사를 몰라요, 마케팅 자동화에 관심이 있어요"
+              rows={3}
+            />
+          </div>
+
+          <!-- 동의 -->
+          <div class="flex gap-2">
+            <Checkbox id="consent" variant="primary" name="consent" required />
+            <Label for="consent" class="text-sm">개인정보 수집 및 이용에 동의합니다</Label>
+          </div>
+
+          <!-- 제출 -->
+          <Button variant="primary" type="submit" class="w-full py-3 text-lg">
+            무료 진단 리포트 신청하기
+          </Button>
+
+          <p class="text-muted-foreground text-center text-sm">
+            대표가 직접 검토합니다. 24시간 이내에 진단 결과를 이메일로 보내드립니다.
+          </p>
+        </form>
+
+        <!-- Success -->
+        <div id="form-success" class="hidden rounded-xl border border-green-200 bg-green-50 p-8 text-center dark:border-green-800 dark:bg-green-950">
+          <p class="mb-2 text-2xl font-bold text-green-800 dark:text-green-200">신청 완료!</p>
+          <p class="text-lg text-green-700 dark:text-green-300">24시간 이내에 진단 리포트를 이메일로 보내드리겠습니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  function handleDiagnosisForm() {
+    const form = document.querySelector("#diagnosis-form") as HTMLFormElement;
+    const successMsg = document.querySelector("#form-success") as HTMLElement;
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+
+        try {
+          const response = await fetch("/", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(formData as any).toString(),
+          });
+
+          if (response.ok) {
+            form.classList.add("hidden");
+            successMsg?.classList.remove("hidden");
+          }
+        } catch (error) {
+          console.error("Form submission error:", error);
+        }
+      });
+    }
+  }
+
+  handleDiagnosisForm();
+  document.addEventListener("astro:after-swap", handleDiagnosisForm);
+</script>
