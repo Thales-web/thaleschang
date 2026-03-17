@@ -110,6 +110,9 @@ const Blog = (locale: (typeof locales)[number]) =>
         components: {
           Admonition: ComponentBlocks.Admonition,
           HtmlBlock: ComponentBlocks.HtmlBlock,
+          TldrBlock: ComponentBlocks.TldrBlock,
+          KeyTakeaways: ComponentBlocks.KeyTakeaways,
+          CitationCapsule: ComponentBlocks.CitationCapsule,
         },
       }),
     },
@@ -256,6 +259,9 @@ const Services = (locale: (typeof locales)[number]) =>
         components: {
           Admonition: ComponentBlocks.Admonition,
           HtmlBlock: ComponentBlocks.HtmlBlock,
+          TldrBlock: ComponentBlocks.TldrBlock,
+          KeyTakeaways: ComponentBlocks.KeyTakeaways,
+          CitationCapsule: ComponentBlocks.CitationCapsule,
         },
       }),
     },
@@ -348,6 +354,9 @@ const Careers = (locale: (typeof locales)[number]) =>
         components: {
           Admonition: ComponentBlocks.Admonition,
           HtmlBlock: ComponentBlocks.HtmlBlock,
+          TldrBlock: ComponentBlocks.TldrBlock,
+          KeyTakeaways: ComponentBlocks.KeyTakeaways,
+          CitationCapsule: ComponentBlocks.CitationCapsule,
         },
       }),
     },
@@ -439,6 +448,9 @@ const Projects = (locale: (typeof locales)[number]) =>
         components: {
           Admonition: ComponentBlocks.Admonition,
           HtmlBlock: ComponentBlocks.HtmlBlock,
+          TldrBlock: ComponentBlocks.TldrBlock,
+          KeyTakeaways: ComponentBlocks.KeyTakeaways,
+          CitationCapsule: ComponentBlocks.CitationCapsule,
         },
       }),
     },
@@ -875,6 +887,9 @@ const OtherPages = (locale: (typeof locales)[number]) =>
         components: {
           Admonition: ComponentBlocks.Admonition,
           HtmlBlock: ComponentBlocks.HtmlBlock,
+          TldrBlock: ComponentBlocks.TldrBlock,
+          KeyTakeaways: ComponentBlocks.KeyTakeaways,
+          CitationCapsule: ComponentBlocks.CitationCapsule,
         },
       }),
     },
