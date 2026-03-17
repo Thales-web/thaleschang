@@ -65,6 +65,7 @@ const readingTime = post.body ? getReadingTime(post.body) : 1;
               quality="high"
               class="max-h-[70vh] w-full rounded-xl object-cover md:rounded-2xl"
               loading="eager"
+            fetchpriority="high"
               format="webp"
               transition:name={`post-image-${post.id}`}
             />
@@ -89,6 +90,7 @@ const readingTime = post.body ? getReadingTime(post.body) : 1;
                         src={author.data.avatar}
                         alt={author.data.name}
                         loading="eager"
+            fetchpriority="high"
                         width={100}
                         class="h-full w-full object-cover"
                       />

@@ -65,6 +65,7 @@ const readingTime = post.body ? getReadingTime(post.body) : 1;
                       width={100}
                       quality="high"
                       loading="eager"
+            fetchpriority="high"
                       class="h-full w-full rounded-full object-cover"
                     />
                   </figure>
@@ -100,6 +101,7 @@ const readingTime = post.body ? getReadingTime(post.body) : 1;
               quality="high"
               class="max-h-[70vh] rounded-xl object-cover md:rounded-2xl"
               loading="eager"
+            fetchpriority="high"
               format="webp"
               transition:name={`post-image-${post.id}`}
             />

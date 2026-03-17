@@ -182,8 +182,9 @@ export function generateBlogPostingSchema(props: BlogProps): object {
     speakable: {
       "@type": "SpeakableSpecification",
       cssSelector: [
-        ".key-takeaways",
         ".tldr-block",
+        ".key-takeaways",
+        ".citation-capsule",
         "#blog-post-content > p:first-of-type",
       ],
     },

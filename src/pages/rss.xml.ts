@@ -32,6 +32,7 @@ export async function GET(context) {
     xmlns: {
       media: "http://search.yahoo.com/mrss/",
       atom: "http://www.w3.org/2005/Atom",
+      content: "http://purl.org/rss/1.0/modules/content/",
     },
     // add atom:link to be compatible with atom
     customData: `<atom:link href="${context.site}rss.xml" rel="self" type="application/rss+xml" />`,
@@ -44,8 +45,10 @@ export async function GET(context) {
         post.data.authors[0].id,
       )})`,
 
-      // custom data example, define in XML tags
-      // this adds the blog post image
+      // full article body for AI indexing
+      content: post.body || undefined,
+
+      // blog post image
       customData: post.data.heroImage
         ? `<media:content
           type="image/${post.data.heroImage.format == "jpg" ? "jpeg" : "png"}"
