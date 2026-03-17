@@ -77,7 +77,104 @@ const HtmlBlock = block({
   },
 });
 
+const TldrBlock = wrapper({
+  label: "TL;DR Block",
+  description: "AEO 최적화: 글의 핵심 요약을 2~3문장으로 제공합니다. AI Featured Snippet 추출에 최적화됩니다.",
+  ContentView: (props) => (
+    <div
+      style={{
+        borderLeft: "4px solid #3b82f6",
+        background: "#eff6ff",
+        borderRadius: "8px",
+        padding: "12px",
+      }}
+    >
+      <div style={{ fontSize: "12px", color: "#3b82f6", fontWeight: "bold", marginBottom: "4px" }}>
+        TL;DR
+      </div>
+      <div style={{ fontSize: "14px", color: "#1e293b" }}>{props.children}</div>
+    </div>
+  ),
+  schema: {
+    content: fields.child({
+      kind: "block",
+      formatting: { inlineMarks: "inherit", softBreaks: "inherit" },
+      links: "inherit",
+      editIn: "both",
+      label: "TL;DR Content",
+      placeholder: "글의 핵심 내용을 2~3문장으로 요약하세요",
+    }),
+  },
+});
+
+const KeyTakeaways = wrapper({
+  label: "Key Takeaways",
+  description: "AEO 최적화: 핵심 포인트를 불릿 리스트로 정리합니다.",
+  ContentView: (props) => (
+    <div
+      style={{
+        border: "1px solid #e2e8f0",
+        background: "#f8fafc",
+        borderRadius: "8px",
+        padding: "12px",
+      }}
+    >
+      <div style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "8px", color: "#1e293b" }}>
+        Key Takeaways
+      </div>
+      <div style={{ fontSize: "13px", color: "#475569" }}>{props.children}</div>
+    </div>
+  ),
+  schema: {
+    content: fields.child({
+      kind: "block",
+      formatting: { inlineMarks: "inherit", softBreaks: "inherit", listTypes: "inherit" },
+      links: "inherit",
+      editIn: "both",
+      label: "Key Takeaways Content",
+      placeholder: "- 핵심 포인트 1\n- 핵심 포인트 2\n- 핵심 포인트 3",
+    }),
+  },
+});
+
+const CitationCapsule = wrapper({
+  label: "Citation Capsule",
+  description: "GEO 최적화: AI가 인용하기 좋은 Q&A 형태의 콘텐츠 블록입니다.",
+  ContentView: (props) => (
+    <div
+      style={{
+        borderLeft: "4px solid #6366f1",
+        background: "#eef2ff",
+        borderRadius: "8px",
+        padding: "12px",
+      }}
+    >
+      <div style={{ fontSize: "14px", fontWeight: "bold", color: "#4338ca", marginBottom: "4px" }}>
+        Q: {props.value.question || "(질문을 입력하세요)"}
+      </div>
+      <div style={{ fontSize: "13px", color: "#475569" }}>{props.children}</div>
+    </div>
+  ),
+  schema: {
+    question: fields.text({
+      label: "Question",
+      description: "AI가 답변할 질문을 입력하세요. 예: 'GEO란 무엇인가?'",
+    }),
+    content: fields.child({
+      kind: "block",
+      formatting: { inlineMarks: "inherit", softBreaks: "inherit" },
+      links: "inherit",
+      editIn: "both",
+      label: "Answer",
+      placeholder: "질문에 대한 명확하고 간결한 답변을 작성하세요",
+    }),
+  },
+});
+
 export default {
   Admonition,
   HtmlBlock,
+  TldrBlock,
+  KeyTakeaways,
+  CitationCapsule,
 };
