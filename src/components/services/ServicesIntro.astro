@@ -2,20 +2,13 @@
 import building from "@images/building-2-min.png";
 import { Image } from "astro:assets";
 
-import { getLocaleFromUrl } from "@/js/localeUtils";
-import { getLocalizedRoute, getTranslatedData, useTranslations } from "@/js/translationUtils";
-
-// Amenities list for Space Coast Medicine
-const amenities = [
-  "Personalized care plans for every patient",
-  "State-of-the-art medical equipment and facilities",
-  "Experienced doctors specialized in multiple fields",
-  "Convenient scheduling with minimal wait times",
-  "Comfortable and modern patient rooms",
+const highlights = [
+  "Astro 프레임워크 기반 Lighthouse 98+ 고성능 웹사이트",
+  "SEO + GEO + AEO 3가지 검색 최적화가 기본 내장",
+  "콘텐츠 자동 생성부터 발행, SNS 공유까지 원스톱 자동화",
+  "마케팅 자동화로 운영 리소스 70% 절감, 전환율 1.8배 상승",
+  "Keystatic CMS로 코딩 없이 직접 콘텐츠 관리 가능",
 ];
-
-const currLocale = getLocaleFromUrl(Astro.url);
-const t = useTranslations(currLocale);
 
 interface Props {
   class?: string;
@@ -29,7 +22,7 @@ const { class: className } = Astro.props as Props;
     <div class="aspect-square overflow-clip rounded-xl md:rounded-2xl">
       <Image
         src={building}
-        alt="Space Coast Medicine Building"
+        alt="Thales Web 서비스"
         width={1001}
         densities={[1.5, 2]}
         class="h-full w-full object-cover"
@@ -37,15 +30,14 @@ const { class: className } = Astro.props as Props;
     </div>
 
     <div class="">
-      <h2 class="h1">The Finest Care And Amenities</h2>
+      <h1 class="h1">제작이 아니라, 시스템을 구축합니다</h1>
       <p class="text-muted-foreground mt-3 max-w-lg text-pretty md:text-lg">
-        At Space Coast Medicine, our doctors believe in treating the whole person, not just the
-        symptoms. We prioritize holistic primary.
+        홈페이지를 만들어만 주는 업체는 많습니다. 하지만 그 홈페이지가 구글에 노출되고, AI가 추천하고, 문의가 자동으로 처리되나요? Thales Web은 홈페이지 제작을 넘어, 비즈니스가 알아서 성장하는 시스템을 설계합니다.
       </p>
 
       <ul class="mt-8 space-y-3">
         {
-          amenities.map((item) => (
+          highlights.map((item) => (
             <li class="flex items-start">
               <span class="bg-primary-accent mt-1.5 mr-3 inline-block size-3 shrink-0 rounded-full md:mt-2" />
               <span class="text-muted-foreground md:text-lg">{item}</span>
