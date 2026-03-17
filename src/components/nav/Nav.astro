@@ -73,6 +73,13 @@ const { navStyle = "default" } = Astro.props as Props;
           <Button
             variant="primary"
             class="my-auto hidden px-4 py-2 md:flex"
+            href={getLocalizedRoute(currLocale, "/diagnosis")}
+          >
+            웹사이트 진단
+          </Button>
+          <Button
+            variant="primary"
+            class="my-auto ml-2 hidden px-4 py-2 md:flex"
             href={getLocalizedRoute(currLocale, "/contact")}
           >
             {t("get_all_access")}

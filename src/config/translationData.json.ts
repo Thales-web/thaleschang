@@ -97,7 +97,7 @@ export const textTranslations = {
     project_view_source: "소스 보기",
 
     // nav & cta
-    get_all_access: "상담 신청",
+    get_all_access: "문의하기",
     cta_heading: "마케팅을 잘하려고 애쓰지 마십시오",
     cta_description: "AI가 잘하게 만드는 시스템을 소유하십시오. 현재 웹사이트가 구글에서 몇 점인지, ChatGPT가 당신의 비즈니스를 아는지 — 무료 진단 리포트로 확인하세요. 대표가 직접 검토합니다.",
     cta_button: "무료 진단 리포트 받기",
