@@ -64,7 +64,7 @@ export const dataTranslations = {
 export const textTranslations = {
   ko: {
     hero_text: "광고비 없이도 고객이 찾아오는 시스템",
-    hero_description: `SEO, GEO, AEO 최적화가 기본 내장된 홈페이지와 마케팅 자동화 시스템으로, 검색 엔진과 AI 검색 모두에서 발견되는 비즈니스를 만듭니다.`,
+    hero_description: `구글에서 상위 노출되고, AI가 추천하는 홈페이지. 거기에 마케팅 자동화까지 더하면, 홈페이지가 24시간, 365일 일하는 영업사원이 됩니다.`,
 
     // blog
     back_to_all_posts: "전체 글 보기",
@@ -98,9 +98,9 @@ export const textTranslations = {
 
     // nav & cta
     get_all_access: "상담 신청",
-    cta_heading: "무료 상담으로 시작하세요",
-    cta_description: "검색에서 찾아지고, AI가 인용하고, 문의가 자동으로 처리되는 시스템. 무료 상담을 신청하시면 현재 웹사이트의 SEO/GEO 진단 결과를 함께 보내드립니다.",
-    cta_button: "무료 상담 신청하기",
+    cta_heading: "지금 신청하면, 내일 진단 결과를 받습니다",
+    cta_description: "현재 웹사이트가 구글에서 몇 점인지, ChatGPT가 당신의 비즈니스를 아는지 — 무료 진단 리포트로 확인하세요. 대표가 직접 검토합니다.",
+    cta_button: "무료 진단 리포트 받기",
     hero_cta_secondary: "서비스 보기",
     subscribe: "구독하기",
     subscribe_newsletter: "뉴스레터 구독",
