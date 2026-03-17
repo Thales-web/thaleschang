@@ -1,7 +1,7 @@
 import { type FooterDataProps } from "../types/configDataTypes";
 
 const footerData: FooterDataProps = {
-  description: "AI Marketing System Architecture & Builder",
+  description: "Astro-based SEO/GEO/AEO optimized web agency. We build systems that bring customers without ad spend.",
   columns: [
     {
       title: "Services",

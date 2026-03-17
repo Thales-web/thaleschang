@@ -1,7 +1,7 @@
 import { type FooterDataProps } from "../types/configDataTypes";
 
 const footerData: FooterDataProps = {
-  description: "AI 마케팅 시스템 설계 & 구축 전문가",
+  description: "Astro 기반 SEO/GEO/AEO 최적화 홈페이지 전문 에이전시. 광고비 없이도 고객이 찾아오는 시스템을 설계합니다.",
   columns: [
     {
       title: "서비스",
