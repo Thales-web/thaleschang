@@ -18,6 +18,10 @@ const navConfig: navItem[] = [
     link: "/projects",
   },
   {
+    text: "웹사이트 진단",
+    link: "/diagnosis",
+  },
+  {
     text: "문의하기",
     link: "/contact",
   },
